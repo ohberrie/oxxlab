@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <title>OXX Studio - Projects</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f8f8fd;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .slide {
+            background-color: #f8f8fd;
+            width: 1920px;
+            height: 1080px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Navigation */
+        .nav-home {
+            position: absolute;
+            top: 37px;
+            left: 56px;
+            z-index: 20;
+        }
+
+        .nav-works {
+            position: absolute;
+            top: 37px;
+            left: 1673px;
+            z-index: 20;
+        }
+        
+        .nav-shop {
+            position: absolute;
+            top: 37px;
+            left: 1792px;
+            z-index: 20;
+        }
+        
+        .nav-home a,
+        .nav-works a,
+        .nav-shop a {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #141414;
+            font-size: 20px;
+            text-decoration: none;
+            line-height: 27px;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-home a:hover,
+        .nav-works a:hover,
+        .nav-shop a:hover {
+            opacity: 0.8;
+        }
+
+        /* Left Side - Project Title */
+        .project-info {
+            position: absolute;
+            top: 512px;
+            left: 90px;
+            width: 310px;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .project-info.two-lines {
+            transform: translateY(-57px);
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 512px;
+            left: 58px;
+            width: 20px;
+            height: 18px;
+            color: #141414;
+            transform: translateY(29.5px);
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .play-icon.two-lines {
+            transform: translateY(-9px);
+        }
+
+        .play-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .project-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 77px;
+            letter-spacing: -1.44px;
+            color: #141414;
+            margin-bottom: 30px;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-description {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 19px;
+            font-weight: 700;
+            line-height: 28px;
+            letter-spacing: -0.38px;
+            color: #141414;
+            width: 310px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-description.visible {
+            opacity: 1;
+        }
+
+        /* Right Side - Project Logos */
+        .projects-container {
+            position: absolute;
+            top: 115px;
+            left: 550px;
+            width: 1370px;
+            height: 850px;
+        }
+
+        .project-item {
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .project-logo {
+            width: 200px;
+            height: 200px;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #141414;
+            transition: color 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .project-logo svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .project-item:hover .project-logo {
+            color: #FF4D00;
+        }
+
+        .project-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 26px;
+            font-weight: 700;
+            line-height: 27px;
+            letter-spacing: -0.64px;
+            color: #141414;
+            text-align: center;
+            margin-top: 30px;
+            transition: color 0.3s ease;
+            white-space: pre-line;
+        }
+
+        .project-item:hover .project-name {
+            color: #FF4D00;
+        }
+
+        /* Focus States */
+        .nav-home a:focus,
+        .nav-works a:focus,
+        .nav-shop a:focus {
+            outline: 2px solid #4a90e2;
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="slide">
+        <header role="banner">
+            <nav class="nav-home" role="navigation" aria-label="Home navigation">
+                <a href="1.landing_hover.html">oxx studio</a>
+            </nav>
+            <nav class="nav-works" role="navigation" aria-label="Works navigation">
+                <a href="#works">works</a>
+            </nav>
+            <nav class="nav-shop" role="navigation" aria-label="Shop navigation">
+                <a href="#shop">shop</a>
+            </nav>
+        </header>
+
+        <div class="project-info">
+            <h1 class="project-title">PROJECTS</h1>
+            <p class="project-description">breif info about the project</p>
+        </div>
+
+        <div class="play-icon">
+            <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 9L0.499999 17.6603L0.5 0.339746L20 9Z" fill="currentColor"/>
+            </svg>
+        </div>
+
+        <div class="projects-container" id="projectsContainer"></div>
+    </main>
+
+    <script>
+        const projects = [
+            {
+                name: 'SHAPER',
+                description: 'breif info about the project',
+                link: '3-1.transform.html',
+                svg: `<svg viewBox="0 0 198.84 118.87" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="46.96 0 46.96 47.95 70.94 47.95 70.94 70.92 103.92 70.92 103.92 23.97 150.88 23.97 150.88 46.95 198.84 46.95 198.84 94.9 150.88 94.9 150.88 71.92 116.91 71.92 116.91 118.87 69.94 118.87 69.94 96.9 23.98 96.9 23.98 49.45 22.48 47.95 0 47.95 0 0 46.96 0" fill="currentColor"/>
+                </svg>`
+            },
+            {
+                name: 'INTUITION\nENCODER',
+                description: 'breif info about the project',
+                link: '#',
+                svg: `<svg viewBox="0 0 130.89 169.82" xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                        <rect x="0" width="40.97" height="40.96" fill="currentColor"/>
+                        <rect x="0" y="42.95" width="40.97" height="40.96" fill="currentColor"/>
+                        <rect x="0" y="85.91" width="40.97" height="40.96" fill="currentColor"/>
+                        <rect x="0" y="128.86" width="40.97" height="40.96" fill="currentColor"/>
+                        <rect x="44.96" y="31.97" width="32.97" height="32.96" fill="currentColor"/>
+                        <rect x="44.96" y="66.93" width="32.97" height="32.96" fill="currentColor"/>
+                        <rect x="44.96" y="101.89" width="32.97" height="32.96" fill="currentColor"/>
+                        <rect x="80.93" y="55.94" width="26.98" height="26.97" fill="currentColor"/>
+                        <rect x="80.93" y="84.91" width="26.98" height="26.97" fill="currentColor"/>
+                        <rect x="111.91" y="75.92" width="18.98" height="18.98" fill="currentColor"/>
+                    </g>
+                </svg>`
+            },
+            {
+                name: 'AIAA',
+                description: 'breif info about the project',
+                link: '#',
+                svg: `<svg viewBox="0 0 166.78 147.7" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M39.97,87.83l-14.93,16.62,8.56,9.28,33.84-32.87,27.98,27.93,30.49-30.53,4.35,1.49,5.61-5.41-18.47-18.46-12.49,10.99c.88,2.71,7.95,6.25,6.55,8.96-.62,1.2-17.85,18.68-19.18,18.92l-20.33-19.41,20.95-20.98-19.89-20.84L106.53,0l32.92,31.91-1.15,3.98c3.64,5.33,16.63,14.15,19.12,18.99,1.54,2.99-7.93,7.76-7.48,10.34l16.84,17.26-16.9,17.84c1.55,2.48,10.87,8.88,9.53,11.48l-32.54,32.53c-1.17.93-1.64.11-2.52-.5-4.28-2.94-24.11-26.01-25.95-26.01l-30.11,29.88-26.84-25.88c-1.38,0-16.34,17.9-19.49,19.52-.96.49-1.02.49-1.98,0-4.86-2.5-13.59-15.44-18.97-19.04l15.95-15.98L0,89.33l20.95-20.98c0-1.05-6.19-4.21-4.54-6.48L49.58,28.97l33.26,32.53-32.91,33.89c-2.51,1.63-8.85-8.34-9.97-7.55Z" fill="currentColor"/>
+                </svg>`
+            }
+        ];
+
+        let currentHoveredProject = null;
+
+        // Check if two rectangles overlap
+        function isOverlapping(rect1, rect2) {
+            return !(rect1.right < rect2.left || 
+                     rect1.left > rect2.right || 
+                     rect1.bottom < rect2.top || 
+                     rect1.top > rect2.bottom);
+        }
+
+        // Get random position that doesn't overlap with existing items
+        function getRandomPosition(existingPositions, containerWidth, containerHeight, itemWidth, itemHeight) {
+            const maxAttempts = 100;
+            let attempts = 0;
+            
+            while (attempts < maxAttempts) {
+                const x = Math.random() * (containerWidth - itemWidth);
+                const y = Math.random() * (containerHeight - itemHeight - 60); // 60px for text below
+                
+                const newRect = {
+                    left: x,
+                    top: y,
+                    right: x + itemWidth,
+                    bottom: y + itemHeight + 60 // Include space for text
+                };
+                
+                let overlaps = false;
+                for (const existingRect of existingPositions) {
+                    if (isOverlapping(newRect, existingRect)) {
+                        overlaps = true;
+                        break;
+                    }
+                }
+                
+                if (!overlaps) {
+                    return { x, y, rect: newRect };
+                }
+                
+                attempts++;
+            }
+            
+            // If we can't find a non-overlapping position, just return a random one
+            const x = Math.random() * (containerWidth - itemWidth);
+            const y = Math.random() * (containerHeight - itemHeight - 60);
+            return { 
+                x, 
+                y, 
+                rect: {
+                    left: x,
+                    top: y,
+                    right: x + itemWidth,
+                    bottom: y + itemHeight + 60
+                }
+            };
+        }
+
+        // Create project items
+        function createProjects() {
+            const container = document.getElementById('projectsContainer');
+            const containerWidth = 1370;
+            const containerHeight = 850;
+            const logoSize = 200;
+            const existingPositions = [];
+
+            projects.forEach((project, index) => {
+                const position = getRandomPosition(existingPositions, containerWidth, containerHeight, logoSize, logoSize);
+                existingPositions.push(position.rect);
+
+                const projectItem = document.createElement('div');
+                projectItem.className = 'project-item';
+                projectItem.style.left = position.x + 'px';
+                projectItem.style.top = position.y + 'px';
+
+                const logo = document.createElement('div');
+                logo.className = 'project-logo';
+                
+                // Add SVG if available, otherwise use placeholder
+                if (project.svg) {
+                    logo.innerHTML = project.svg;
+                } else {
+                    logo.style.backgroundColor = '#141414';
+                }
+                
+                const name = document.createElement('div');
+                name.className = 'project-name';
+                name.textContent = project.name;
+
+                projectItem.appendChild(logo);
+                projectItem.appendChild(name);
+                container.appendChild(projectItem);
+
+                // Add click event for navigation
+                projectItem.addEventListener('click', () => {
+                    if (project.link && project.link !== '#') {
+                        window.location.href = project.link;
+                    }
+                });
+
+                // Add hover event listeners
+                projectItem.addEventListener('mouseenter', () => {
+                    currentHoveredProject = project;
+                    updateProjectInfo(project);
+                });
+
+                projectItem.addEventListener('mouseleave', () => {
+                    if (currentHoveredProject === project) {
+                        currentHoveredProject = null;
+                        resetProjectInfo();
+                    }
+                });
+            });
+        }
+
+        // Update project info on hover
+        function updateProjectInfo(project) {
+            const title = document.querySelector('.project-title');
+            const description = document.querySelector('.project-description');
+            const projectInfo = document.querySelector('.project-info');
+            const playIcon = document.querySelector('.play-icon');
+            
+            const displayName = project.name.replace('\n', ' ');
+            title.textContent = displayName;
+            description.textContent = project.description;
+            description.classList.add('visible');
+            
+            // Add two-lines class if the project name contains a line break
+            if (project.name.includes('\n')) {
+                projectInfo.classList.add('two-lines');
+                playIcon.classList.add('two-lines');
+            } else {
+                projectInfo.classList.remove('two-lines');
+                playIcon.classList.remove('two-lines');
+            }
+        }
+
+        // Reset project info
+        function resetProjectInfo() {
+            const title = document.querySelector('.project-title');
+            const description = document.querySelector('.project-description');
+            const projectInfo = document.querySelector('.project-info');
+            const playIcon = document.querySelector('.play-icon');
+            
+            title.textContent = 'PROJECTS';
+            description.classList.remove('visible');
+            projectInfo.classList.remove('two-lines');
+            playIcon.classList.remove('two-lines');
+        }
+
+        // Initialize
+        createProjects();
+    </script>
+</body>
+</html>

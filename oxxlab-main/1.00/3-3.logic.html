@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <title>SHAPER - Logic - OXX Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #F8F8FD;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .slide {
+            background-color: #F8F8FD;
+            width: 1920px;
+            height: 1080px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Navigation */
+        .nav-home {
+            position: absolute;
+            top: 37px;
+            left: 56px;
+            z-index: 20;
+        }
+
+        .nav-works {
+            position: absolute;
+            top: 37px;
+            left: 1673px;
+            z-index: 20;
+        }
+        
+        .nav-shop {
+            position: absolute;
+            top: 38px;
+            left: 1797px;
+            z-index: 20;
+        }
+        
+        .nav-home a,
+        .nav-works a,
+        .nav-shop a {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #141414;
+            font-size: 20px;
+            text-decoration: none;
+            line-height: 27px;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-home a:hover,
+        .nav-works a:hover,
+        .nav-shop a:hover {
+            opacity: 0.7;
+        }
+
+        /* Main Title */
+        .main-title {
+            position: absolute;
+            left: 48px;
+            top: 144px;
+            color: #141414;
+            font-size: 76px;
+            font-weight: 700;
+            line-height: 27px;
+        }
+
+        /* Left side menu */
+        .menu-item {
+            position: absolute;
+            color: #141414;
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 27px;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .menu-item:hover {
+            opacity: 0.6;
+        }
+
+        .menu-transform {
+            left: 53px;
+            top: 272px;
+        }
+
+        .menu-process {
+            left: 53px;
+            top: 329px;
+        }
+
+        .menu-logic {
+            left: 85px;
+            top: 385px;
+        }
+
+        .arrow-icon {
+            position: absolute;
+            left: 48px;
+            top: 390px;
+            width: 20px;
+            height: 18px;
+        }
+
+        /* Scrollable area container */
+        .scrollable-area {
+            position: absolute;
+            width: 1610px;
+            height: 980px;
+            top: 213px;
+            left: 310px;
+            overflow: hidden;
+        }
+
+        /* Inner scrollable content */
+        .scrollable-content {
+            position: relative;
+            width: 1610px;
+            height: 3920px; /* 980 * 4 */
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Logic images container */
+        .logic-images {
+            position: absolute;
+            top: 174px; /* Adjusted for scrollable area (387 - 213) */
+            left: -310px; /* Adjusted for scrollable area */
+            width: 100%;
+            height: 309px;
+        }
+
+        .image-container {
+            position: absolute;
+            width: 309px;
+            height: 309px;
+            border-radius: 16px;
+            overflow: visible;
+            background-color: transparent;
+        }
+        
+        .image-container:nth-child(1) {
+            left: 547px;
+        }
+        
+        .image-container:nth-child(2) {
+            left: 1000px;
+        }
+        
+        .image-container:nth-child(3) {
+            left: 1445px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* SITE label and box */
+        .site-box {
+            position: absolute;
+            width: 100px;
+            height: 165px;
+            left: 939px; /* Adjusted for scrollable area (1249 - 310) */
+            top: 432px; /* Adjusted for scrollable area (645 - 213) */
+            background: rgba(0, 0, 0, 0.90);
+            border-radius: 4px;
+        }
+
+        .site-label {
+            position: absolute;
+            left: 971px; /* Adjusted */
+            top: 449px; /* Adjusted */
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .site-metrics {
+            position: absolute;
+            left: 962px; /* Adjusted */
+            top: 481px; /* Adjusted */
+            color: white;
+            font-family: "JetBrains Mono";
+            font-size: 15px;
+            font-style: normal;
+            font-weight: 300;
+            line-height: 20px;
+        }
+
+        /* GOAL DESIGN label and box */
+        .goal-box {
+            position: absolute;
+            width: 140px;
+            height: 165px;
+            left: 1352px; /* Adjusted */
+            top: 432px; /* Adjusted */
+            background: rgba(0, 0, 0, 0.90);
+            border-radius: 4px;
+        }
+
+        .goal-label {
+            position: absolute;
+            left: 1373px; /* Adjusted */
+            top: 451px; /* Adjusted */
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .goal-metrics {
+            position: absolute;
+            left: 1395px; /* Adjusted */
+            top: 482px; /* Adjusted */
+            color: white;
+            font-family: "JetBrains Mono";
+            font-size: 15px;
+            font-style: normal;
+            font-weight: 300;
+            line-height: 20px;
+        }
+
+        /* Additional images for scroll */
+        .scroll-image-2 {
+            position: absolute;
+            width: 468px;
+            height: 540px;
+            top: 1282px; /* 302 + 980 (1 scroll) */
+            left: 606px; /* 916 - 310 */
+            background-color: #F8F8FD;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .scroll-image-3 {
+            position: absolute;
+            width: 1480px;
+            height: 1050px;
+            top: 2047px; /* 107 + 980*2 (2 scrolls) */
+            left: 194px; /* 504 - 310 */
+            background-color: #F8F8FD;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .scroll-image-2.visible,
+        .scroll-image-3.visible {
+            opacity: 1;
+        }
+
+        .scroll-image-2 img,
+        .scroll-image-3 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Description text */
+        .description {
+            position: absolute;
+            width: 243px;
+            left: 54px;
+            top: 857px;
+            color: #141414;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 21px;
+            letter-spacing: 3.20px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="slide">
+        <header role="banner">
+            <nav class="nav-home" role="navigation" aria-label="Home navigation">
+                <a href="1.landing_hover.html">oxx studio</a>
+            </nav>
+            <nav class="nav-works" role="navigation" aria-label="Works navigation">
+                <a href="2.menu.html">works</a>
+            </nav>
+            <nav class="nav-shop" role="navigation" aria-label="Shop navigation">
+                <a href="#shop">shop</a>
+            </nav>
+        </header>
+
+        <h1 class="main-title">SHAPER</h1>
+
+        <div class="arrow-icon">
+            <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 9L0.499999 17.6603L0.5 0.339746L20 9Z" fill="#141414"/>
+            </svg>
+        </div>
+        
+        <a href="3-1.transform.html" class="menu-item menu-transform">transform</a>
+        <a href="3-2.process.html" class="menu-item menu-process">process</a>
+        <a href="3-3.logic.html" class="menu-item menu-logic">logic</a>
+
+        <!-- Scrollable area -->
+        <div class="scrollable-area">
+            <div class="scrollable-content" id="scrollableContent">
+                <!-- Logic images section -->
+                <div class="logic-images">
+                    <!-- First image - basic park scene -->
+                    <div class="image-container">
+                        <img src="logic1_1.png" alt="Park scene basic">
+                    </div>
+
+                    <!-- Second image - with measurements -->
+                    <div class="image-container">
+                        <img src="logic1_2.png" alt="Park scene with measurements">
+                    </div>
+
+                    <!-- Third image - with black shape -->
+                    <div class="image-container">
+                        <img src="logic1_3.png" alt="Park scene with shape">
+                    </div>
+                </div>
+
+                <!-- SITE Box and content -->
+                <div class="site-box"></div>
+                <div class="site-label">SITE</div>
+                <div class="site-metrics">
+                    F: 1.5<br>
+                    M: 3.2<br>
+                    D: 2.5<br>
+                    V: 3.6<br>
+                    Ma: 2.1
+                </div>
+
+                <!-- GOAL DESIGN Box and content -->
+                <div class="goal-box"></div>
+                <div class="goal-label">GOAL DESIGN</div>
+                <div class="goal-metrics">
+                    F: 3.5<br>
+                    M: 2.8<br>
+                    D: 2.5<br>
+                    V: 1.4<br>
+                    Ma: 2.9
+                </div>
+
+                <!-- Additional images that appear on scroll -->
+                <div class="scroll-image-2" id="scrollImage2">
+                    <img src="logic2.png" alt="Logic image 2">
+                </div>
+
+                <div class="scroll-image-3" id="scrollImage3">
+                    <img src="logic3.png" alt="Logic image 3">
+                </div>
+            </div>
+        </div>
+
+        <div class="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed urna erat, fermentum vel arcu
+        </div>
+    </main>
+
+    <script>
+        // Scrollable area functionality
+        const scrollableContent = document.getElementById('scrollableContent');
+        const scrollImage2 = document.getElementById('scrollImage2');
+        const scrollImage3 = document.getElementById('scrollImage3');
+        let currentY = 0;
+        let maxScroll = -2940; // -(3920 - 980) = -2940
+
+        // Wheel scrolling
+        document.addEventListener('wheel', (e) => {
+            // Only scroll if we're in the scrollable area
+            const scrollableArea = document.querySelector('.scrollable-area');
+            const rect = scrollableArea.getBoundingClientRect();
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            if (mouseX >= rect.left && mouseX <= rect.right && 
+                mouseY >= rect.top && mouseY <= rect.bottom) {
+                e.preventDefault();
+                
+                // Update scroll position
+                currentY = Math.max(maxScroll, Math.min(0, currentY - e.deltaY));
+                scrollableContent.style.transform = `translateY(${currentY}px)`;
+                
+                // Show/hide images based on scroll position
+                updateImageVisibility();
+            }
+        }, { passive: false });
+
+        // Function to update image visibility based on scroll position
+        function updateImageVisibility() {
+            // Show image 2 after scrolling down 1x (980px)
+            if (Math.abs(currentY) >= 980) {
+                scrollImage2.classList.add('visible');
+            } else {
+                scrollImage2.classList.remove('visible');
+            }
+            
+            // Show image 3 after scrolling down 2x (1960px)
+            if (Math.abs(currentY) >= 1960) {
+                scrollImage3.classList.add('visible');
+            } else {
+                scrollImage3.classList.remove('visible');
+            }
+        }
+
+        // Keyboard navigation (optional)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                currentY = Math.max(maxScroll, currentY - 50);
+                scrollableContent.style.transform = `translateY(${currentY}px)`;
+                updateImageVisibility();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                currentY = Math.min(0, currentY + 50);
+                scrollableContent.style.transform = `translateY(${currentY}px)`;
+                updateImageVisibility();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <title>SHAPER - Transform - OXX Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #F8F8FD;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .slide {
+            background-color: #F8F8FD;
+            width: 1920px;
+            height: 1080px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Navigation */
+        .nav-home {
+            position: absolute;
+            top: 37px;
+            left: 56px;
+            z-index: 20;
+        }
+
+        .nav-works {
+            position: absolute;
+            top: 37px;
+            left: 1673px;
+            z-index: 20;
+        }
+        
+        .nav-shop {
+            position: absolute;
+            top: 38px;
+            left: 1797px;
+            z-index: 20;
+        }
+        
+        .nav-home a,
+        .nav-works a,
+        .nav-shop a {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #141414;
+            font-size: 20px;
+            text-decoration: none;
+            line-height: 27px;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-home a:hover,
+        .nav-works a:hover,
+        .nav-shop a:hover {
+            opacity: 0.7;
+        }
+
+        /* Main Title */
+        .main-title {
+            position: absolute;
+            left: 48px;
+            top: 144px;
+            color: #141414;
+            font-size: 76px;
+            font-weight: 700;
+            line-height: 27px;
+        }
+
+        /* Left side menu */
+        .menu-item {
+            position: absolute;
+            color: #141414;
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 27px;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .menu-item:hover {
+            opacity: 0.6;
+        }
+
+        .menu-transform {
+            left: 85px;
+            top: 272px;
+        }
+
+        .menu-process {
+            left: 53px;
+            top: 329px;
+        }
+
+        .menu-logic {
+            left: 53px;
+            top: 385px;
+        }
+
+        .arrow-icon {
+            position: absolute;
+            left: 48px;
+            top: 277px;
+            width: 20px;
+            height: 18px;
+        }
+
+        /* Parameters */
+        .parameter-line {
+            position: absolute;
+            left: 1204px;
+            width: 514px;
+            height: 7px;
+            background-color: #141414;
+        }
+
+        .line-a { top: 421.5px; }
+        .line-b { top: 580.5px; }
+        .line-c { top: 740.5px; }
+
+        .parameter {
+            position: absolute;
+            color: #141414;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 27px;
+            letter-spacing: 4.80px;
+        }
+
+        .parameter-a { left: 1204px; top: 356px; }
+        .parameter-b { left: 1204px; top: 515px; }
+        .parameter-c { left: 1204px; top: 675px; }
+
+        .slider-handle {
+            position: absolute;
+            width: 15px;
+            height: 42px;
+            background-color: #141414;
+            cursor: ew-resize;
+            transition: background-color 0.2s ease;
+        }
+
+        .slider-handle:hover {
+            background-color: #FF4D00;
+        }
+
+        .slider-a { left: 1456px; top: 402px; }
+        .slider-b { left: 1456px; top: 561px; }
+        .slider-c { left: 1456px; top: 721px; }
+
+        .slider-track {
+            position: absolute;
+            height: 7px;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        .track-a { left: 1204px; top: 421.5px; width: 514px; }
+        .track-b { left: 1204px; top: 580.5px; width: 514px; }
+        .track-c { left: 1204px; top: 740.5px; width: 514px; }
+
+        /* Modified center rectangle - now image container */
+        .center-rectangle {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            left: 477px;
+            top: 347px;
+            background: #F8F8FD;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .center-rectangle img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .code-display {
+            position: absolute;
+            width: 287px;
+            height: 36px;
+            left: 1305px;
+            top: 857px;
+            border: 1.5px solid #141414;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .code-text {
+            text-align: center;
+            color: #141414;
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 27px;
+            letter-spacing: 4.80px;
+        }
+
+        .description {
+            position: absolute;
+            width: 243px;
+            left: 54px;
+            top: 857px;
+            color: #141414;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 21px;
+            letter-spacing: 3.20px;
+        }
+
+        /* Focus states */
+        a:focus,
+        .slider-handle:focus {
+            outline: 2px solid #4a90e2;
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="slide">
+        <header role="banner">
+            <nav class="nav-home" role="navigation" aria-label="Home navigation">
+                <a href="1.landing_hover.html">oxx studio</a>
+            </nav>
+            <nav class="nav-works" role="navigation" aria-label="Works navigation">
+                <a href="2.menu.html">works</a>
+            </nav>
+            <nav class="nav-shop" role="navigation" aria-label="Shop navigation">
+                <a href="#shop">shop</a>
+            </nav>
+        </header>
+
+        <h1 class="main-title">SHAPER</h1>
+
+        <div class="arrow-icon">
+            <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 9L0.499999 17.6603L0.5 0.339746L20 9Z" fill="#141414"/>
+            </svg>
+        </div>
+        
+        <a href="3-1.transform.html" class="menu-item menu-transform">transform</a>
+        <a href="3-2.process.html" class="menu-item menu-process">process</a>
+        <a href="3-3.logic.html" class="menu-item menu-logic">logic</a>
+
+        <div class="center-rectangle">
+            <img src="tr1.png" alt="Transform visualization" id="transformImage">
+        </div>
+
+        <div class="parameter parameter-a">parameter A</div>
+        <div class="parameter parameter-b">parameter B</div>
+        <div class="parameter parameter-c">parameter C</div>
+
+        <div class="parameter-line line-a"></div>
+        <div class="parameter-line line-b"></div>
+        <div class="parameter-line line-c"></div>
+
+        <div class="slider-track track-a" data-slider="a"></div>
+        <div class="slider-track track-b" data-slider="b"></div>
+        <div class="slider-track track-c" data-slider="c"></div>
+
+        <div class="slider-handle slider-a" tabindex="0" role="slider" aria-label="Parameter A"></div>
+        <div class="slider-handle slider-b" tabindex="0" role="slider" aria-label="Parameter B"></div>
+        <div class="slider-handle slider-c" tabindex="0" role="slider" aria-label="Parameter C"></div>
+
+        <div class="code-display">
+            <span class="code-text">#0018475</span>
+        </div>
+
+        <div class="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed urna erat, fermentum vel arcu
+        </div>
+    </main>
+
+    <script>
+        // Slider functionality
+        const sliders = {
+            a: { element: document.querySelector('.slider-a'), min: 1204, max: 1703, value: 50 },
+            b: { element: document.querySelector('.slider-b'), min: 1204, max: 1703, value: 50 },
+            c: { element: document.querySelector('.slider-c'), min: 1204, max: 1703, value: 50 }
+        };
+
+        const codeText = document.querySelector('.code-text');
+        const transformImage = document.getElementById('transformImage');
+        const imageOptions = ['tr1.png', 'tr2.png', 'tr3.png'];
+        let isDragging = false;
+        let currentSlider = null;
+
+        function updateSliderPosition(slider, clientX) {
+            const rect = document.querySelector('.slide').getBoundingClientRect();
+            const newLeft = Math.max(slider.min, Math.min(slider.max, clientX - rect.left - 7.5));
+            slider.element.style.left = newLeft + 'px';
+            
+            const percentage = ((newLeft - slider.min) / (slider.max - slider.min)) * 100;
+            slider.value = percentage;
+            slider.element.setAttribute('aria-valuenow', Math.round(percentage));
+            
+            updateVisualization();
+        }
+
+        function updateVisualization() {
+            // Update code display
+            const randomCode = Math.floor(1000000 + Math.random() * 9000000);
+            codeText.textContent = '#' + randomCode.toString();
+            
+            // Update image randomly
+            const randomIndex = Math.floor(Math.random() * imageOptions.length);
+            transformImage.src = imageOptions[randomIndex];
+        }
+
+        // Mouse events for sliders
+        Object.values(sliders).forEach(slider => {
+            slider.element.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                currentSlider = slider;
+                e.preventDefault();
+            });
+        });
+
+        // Track clicks
+        document.querySelectorAll('.slider-track').forEach(track => {
+            track.addEventListener('click', (e) => {
+                const sliderKey = track.dataset.slider;
+                const slider = sliders[sliderKey];
+                const rect = document.querySelector('.slide').getBoundingClientRect();
+                const newLeft = Math.max(slider.min, Math.min(slider.max, e.clientX - rect.left - 7.5));
+                slider.element.style.left = newLeft + 'px';
+                
+                const percentage = ((newLeft - slider.min) / (slider.max - slider.min)) * 100;
+                slider.value = percentage;
+                slider.element.setAttribute('aria-valuenow', Math.round(percentage));
+                
+                updateVisualization();
+            });
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging && currentSlider) {
+                updateSliderPosition(currentSlider, e.clientX);
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            currentSlider = null;
+        });
+
+        // Keyboard controls
+        Object.values(sliders).forEach(slider => {
+            slider.element.addEventListener('keydown', (e) => {
+                let newValue = slider.value;
+                
+                if (e.key === 'ArrowLeft') {
+                    newValue = Math.max(0, slider.value - 5);
+                } else if (e.key === 'ArrowRight') {
+                    newValue = Math.min(100, slider.value + 5);
+                } else {
+                    return;
+                }
+                
+                slider.value = newValue;
+                const newLeft = slider.min + (newValue / 100) * (slider.max - slider.min);
+                slider.element.style.left = newLeft + 'px';
+                slider.element.setAttribute('aria-valuenow', Math.round(newValue));
+                
+                updateVisualization();
+                e.preventDefault();
+            });
+        });
+
+        // Initialize with random image
+        updateVisualization();
+    </script>
+</body>
+</html>
