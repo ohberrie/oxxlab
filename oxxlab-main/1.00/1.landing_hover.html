@@ -3,13 +3,12 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
-    <title>OXX Studio to Lab Animation</title>
+    <title>OXX Lab to Studio Animation</title>
     <meta name="description" content="OXX Studio - Creative design and development studio" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Global Reset */
         * {
             margin: 0;
             padding: 0;
@@ -21,28 +20,24 @@
             overflow: hidden;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
         }
 
-        /* Main Container - Fixed 1920x1080 */
         .slide {
             background-color: transparent;
-            width: 1920px;
-            height: 1080px;
+            width: 100vw;
+            height: 100vh;
             position: relative;
             overflow: hidden;
         }
 
-        /* Cross Pattern Background */
+        /* Cross Pattern */
         .pattern {
             position: absolute;
-            width: 1695px;
-            height: 855px;
-            top: 113px;
-            left: 113px;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
             pointer-events: none;
         }
 
@@ -60,19 +55,19 @@
             color: rgba(0, 0, 0, 0.05);
         }
 
-        /* Navigation - Individual positioning */
+        /* Navigation */
         .nav-works {
-            position: absolute;
+            position: fixed;
             top: 37px;
-            left: 1673px;
-            z-index: 20;
+            right: 128px;
+            z-index: 100;
         }
         
         .nav-shop {
-            position: absolute;
+            position: fixed;
             top: 37px;
-            left: 1792px;
-            z-index: 20;
+            right: 40px;
+            z-index: 100;
         }
         
         .nav-works a,
@@ -96,67 +91,50 @@
             opacity: 0.8;
         }
 
-        /* Logo Container */
-        .logo-group {
-            position: absolute;
-            top: 452px;
-            left: 749px;
-            z-index: 5; /* Lower than pixels so it gets covered */
-        }
-
-        .logo-o {
-            position: absolute;
-            top: 0;
-            left: 0;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 800;
-            color: #f8f8fd;
-            font-size: 260.5px;
-            line-height: 100px;
-            white-space: nowrap;
-        }
-
-        .logo-x1 {
-            position: absolute;
-            top: 3px;
-            left: 140px;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 800;
-            color: #f8f8fd;
-            font-size: 240px;
-            line-height: 100px;
-            white-space: nowrap;
-        }
-
-        .logo-x2 {
-            position: absolute;
-            top: 3px;
-            left: 278px;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 800;
-            color: #f8f8fd;
-            font-size: 240px;
-            line-height: 100px;
-            white-space: nowrap;
-        }
-
-        /* Text Animation Container */
-        .text-container {
-            position: absolute;
-            top: 628px;
+        /* Center container */
+        .center-group {
+            position: fixed;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            width: 600px;
-            height: 40px;
-            z-index: 20;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 15;
+        }
+
+        /* Logo pixel container */
+        .logo-container {
+            position: relative;
+            width: 540px;
+            height: 192px;
+        }
+
+        .logo-pixel {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: transparent;
+            transition: background-color 0.05s ease;
+        }
+        
+        .logo-pixel.show {
+            background-color: #f8f8fd;
+        }
+
+        .logo-pixel.black {
+            background-color: #141414;
+        }
+
+        /* Text */
+        .text-container {
+            margin-top: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Typing Text */
         .typing-text {
-            position: relative;
             font-family: 'JetBrains Mono', monospace;
             font-weight: 700;
             color: #f8f8fd;
@@ -165,29 +143,34 @@
             line-height: 27px;
             white-space: nowrap;
             text-transform: lowercase;
-            transition: color 3s ease;
-            margin-right: -39.78px; /* Remove trailing letter-spacing */
+            transition: color 3s ease, letter-spacing 0.3s ease;
+            margin-right: -39.78px;
         }
 
         .typing-text.black {
             color: #141414;
         }
 
-        /* Pixelation Overlay */
+        .typing-text.compact {
+            letter-spacing: 5.85px;
+            margin-right: -5.85px;
+        }
+
+        /* Pixel Overlay */
         .pixel-overlay {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
-            width: 1920px;
-            height: 1080px;
+            width: 100vw;
+            height: 100vh;
             pointer-events: none;
             z-index: 10;
         }
 
         .pixel {
             position: absolute;
-            width: 18px;
-            height: 18px;
+            width: 12px;
+            height: 12px;
             background: transparent;
             transition: background-color 0.05s ease;
         }
@@ -196,37 +179,30 @@
             background-color: #f8f8fd;
         }
 
-        /* Logo pixel styling - 9px pixels */
-        .logo-pixel {
-            position: absolute;
-            width: 9px;
-            height: 9px;
+        /* Separated pixels */
+        .separated-pixel {
+            position: fixed;
+            width: 12px;
+            height: 12px;
             background-color: transparent;
-            z-index: 15;
-            transition: background-color 0.05s ease, left 0.8s ease, top 0.8s ease;
+            z-index: 20;
+            transition: background-color 0.05s ease;
         }
-        
-        .logo-pixel.show {
+
+        .separated-pixel.show {
             background-color: #141414;
         }
 
-        /* Logo hover area */
-        .logo-hover-area {
+        /* Letter hover areas - 센터 그룹 내 각 글자용 */
+        .letter-hover-center {
             position: absolute;
-            top: 451px;
-            left: 766px;
-            width: 405px;
-            height: 144px;
             z-index: 25;
             cursor: pointer;
-            opacity: 0;
-            pointer-events: none;
-            display: none;
         }
 
-        /* Separated letter hover areas */
+        /* Letter hover areas - 분리된 글자용 */
         .letter-hover {
-            position: absolute;
+            position: fixed;
             z-index: 25;
             cursor: pointer;
             opacity: 0;
@@ -237,14 +213,6 @@
             pointer-events: auto;
         }
 
-        /* Focus States for Accessibility */
-        .nav-works a:focus,
-        .nav-shop a:focus {
-            outline: 2px solid #4a90e2;
-            outline-offset: 2px;
-        }
-
-        /* Reduced Motion Support */
         @media (prefers-reduced-motion: reduce) {
             * {
                 transition: none !important;
@@ -256,172 +224,96 @@
 <body>
     <main class="slide">
         <header role="banner">
-            <nav class="nav-works" role="navigation" aria-label="Works navigation">
+            <nav class="nav-works" role="navigation">
                 <a href="2.menu.html">works</a>
             </nav>
-            <nav class="nav-shop" role="navigation" aria-label="Shop navigation">
+            <nav class="nav-shop" role="navigation">
                 <a href="#shop">shop</a>
             </nav>
         </header>
         
-        <div class="logo-group" role="img" aria-label="OXX brand logo">
-            <span class="logo-o">o</span>
-            <span class="logo-x1">x</span>
-            <span class="logo-x2">x</span>
-        </div>
-        
-        <div class="text-container">
-            <span class="typing-text">studio</span>
+        <!-- 중앙 고정 그룹 -->
+        <div class="center-group" id="centerGroup">
+            <div class="logo-container" id="logoContainer"></div>
+            <div class="text-container">
+                <span class="typing-text" id="typingText">lab</span>
+            </div>
         </div>
         
         <div class="pattern" role="presentation" aria-hidden="true"></div>
-        
-        <!-- Pixelation overlay -->
         <div class="pixel-overlay" id="pixelOverlay"></div>
-        
-        <!-- Logo hover area -->
-        <div class="logo-hover-area" id="logoHoverArea"></div>
     </main>
 
     <script>
-        // Global variables
         let animationComplete = false;
-        let logoSeparated = false;
         let letterPixels = { o: [], x1: [], x2: [] };
+        let letterSeparated = { o: false, x1: false, x2: false };
+        let separatedPixelGroups = { o: [], x1: [], x2: [] };
         let occupiedPositions = [];
 
-        // Generate cross pattern matching the image
+        // 각 글자의 열 범위 정의
+        const letterBounds = {
+            o: { startCol: 0, endCol: 14 },    // 0-14 (15 columns)
+            x1: { startCol: 15, endCol: 29 },  // 15-29 (15 columns)
+            x2: { startCol: 30, endCol: 44 }   // 30-44 (15 columns)
+        };
+
+        const oxxPattern = [
+            '000001110100000000000000000000000000000000000',
+            '000111011110000011100000011100011110000001111',
+            '001101101011000010110000110100010101000011010',
+            '011011011101100001111001111000001110000110100',
+            '011100000011100000101101010000000101100101100',
+            '010110000010110000110110110000000111100111000',
+            '111010000011100000011011100000000001011100000',
+            '010100000010110000001101000000000001111110000',
+            '011100000011100000001111000000000000110100000',
+            '101100000011010000010101100000000001101110000',
+            '011010000011100000111110110000000110110101000',
+            '011110000101100000101001101000000111010111100',
+            '010101010110100001110101110000001011000101000',
+            '001111111111000011010000011100001110000011110',
+            '000101010101000011110000110100011010000001011',
+            '000010110100000110000000001110101100000001101'
+        ];
+
         function generateCrosses() {
             const pattern = document.querySelector('.pattern');
             pattern.innerHTML = '';
             
-            // Create a 9x5 grid of crosses matching the image
-            const rowSpacing = 160;
-            const colSpacing = 160;
+            const cols = Math.ceil(window.innerWidth / 160) + 1;
+            const rows = Math.ceil(window.innerHeight / 160) + 1;
+            const offsetX = (window.innerWidth - (cols - 1) * 160) / 2;
+            const offsetY = (window.innerHeight - (rows - 1) * 160) / 2;
             
-            for (let row = 0; row < 5; row++) {
-                for (let col = 0; col < 9; col++) {
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
                     const cross = document.createElement('span');
                     cross.className = 'cross';
                     cross.textContent = '+';
-                    
-                    // Calculate position
-                    const x = col * colSpacing + 90;
-                    const y = row * rowSpacing + 90;
-                    
-                    cross.style.left = x + 'px';
-                    cross.style.top = y + 'px';
-                    
+                    cross.style.left = (offsetX + col * 160) + 'px';
+                    cross.style.top = (offsetY + row * 160) + 'px';
                     pattern.appendChild(cross);
                 }
             }
         }
 
-        // Typing animation
-        function typeAnimation() {
-            const textContainer = document.querySelector('.text-container');
-            const typingText = document.querySelector('.typing-text');
-            const currentText = 'studio';
-            const newText = 'lab';
-            let charIndex = currentText.length;
-            
-            // Delete animation
-            const deleteInterval = setInterval(() => {
-                if (charIndex > 0) {
-                    charIndex--;
-                    typingText.textContent = currentText.substring(0, charIndex);
-                } else {
-                    clearInterval(deleteInterval);
-                    
-                    // Wait 0.5 second before typing lab
-                    setTimeout(() => {
-                        // Change to fixed position for lab
-                        textContainer.style.left = '922px';
-                        textContainer.style.transform = 'none';
-                        textContainer.style.justifyContent = 'flex-start';
-                        
-                        // Change letter-spacing for lab
-                        typingText.style.letterSpacing = '5.85px';
-                        typingText.style.marginRight = '-5.85px'; // Update margin for new letter-spacing
-                        
-                        // Start typing "lab"
-                        let labIndex = 0;
-                        const typeInterval = setInterval(() => {
-                            if (labIndex < newText.length) {
-                                labIndex++;
-                                typingText.textContent = newText.substring(0, labIndex);
-                            } else {
-                                clearInterval(typeInterval);
-                            }
-                        }, 100); // Back to original speed
-                    }, 500);
-                }
-            }, 70); // Faster deletion
-        }
-
-        // Type additional text
-        function typeStudioAddition() {
-            const textContainer = document.querySelector('.text-container');
-            const typingText = document.querySelector('.typing-text');
-            const currentText = 'lab';
-            const additionText = ' & studio';
-            let charIndex = 0;
-            
-            // Move to centered position for full text
-            textContainer.style.left = '788px';
-            
-            const typeInterval = setInterval(() => {
-                if (charIndex < additionText.length) {
-                    charIndex++;
-                    typingText.textContent = currentText + additionText.substring(0, charIndex);
-                } else {
-                    clearInterval(typeInterval);
-                }
-            }, 70);
-        }
-
-        // Create OXX logo pixels directly
         function createOXXLogoPixels() {
-            const pixelOverlay = document.getElementById('pixelOverlay');
-            const logoPixels = [];
+            const logoContainer = document.getElementById('logoContainer');
+            logoContainer.innerHTML = '';
+            letterPixels = { o: [], x1: [], x2: [] };
             
-            // Define OXX logo pattern exactly as provided
-            // 0 = no pixel, 1 = black pixel
-            const oxxPattern = [
-                '000001110100000000000000000000000000000000000',
-                '000111011110000011100000011100011110000001111',
-                '001101101011000010110000110100010101000011010',
-                '011011011101100001111001111000001110000110100',
-                '011100000011100000101101010000000101100101100',
-                '010110000010110000110110110000000111100111000',
-                '111010000011100000011011100000000001011100000',
-                '010100000010110000001101000000000001111110000',
-                '011100000011100000001111000000000000110100000',
-                '101100000011010000010101100000000001101110000',
-                '011010000011100000111110110000000110110101000',
-                '011110000101100000101001101000000111010111100',
-                '010101010110100001110101110000001011000101000',
-                '001111111111000011010000011100001110000011110',
-                '000101010101000011110000110100011010000001011',
-                '000010110100000110000000001110101100000001101'
-            ];
-            
-            // Starting position for the logo
-            const logoStartX = 766;
-            const logoStartY = 451;
-            const pixelSize = 9; // 9x9 pixel size
-            
-            // Create logo pixels and categorize them
             for (let row = 0; row < oxxPattern.length; row++) {
                 for (let col = 0; col < oxxPattern[row].length; col++) {
                     if (oxxPattern[row][col] === '1') {
                         const pixel = document.createElement('div');
                         pixel.className = 'logo-pixel';
-                        pixel.style.left = (logoStartX + col * pixelSize) + 'px';
-                        pixel.style.top = (logoStartY + row * pixelSize) + 'px';
-                        pixelOverlay.appendChild(pixel);
+                        pixel.style.left = (col * 12) + 'px';
+                        pixel.style.top = (row * 12) + 'px';
+                        pixel.dataset.col = col;
+                        pixel.dataset.row = row;
+                        logoContainer.appendChild(pixel);
                         
-                        // Categorize pixels by letter (15 columns each)
                         if (col < 15) {
                             letterPixels.o.push(pixel);
                             pixel.dataset.letter = 'o';
@@ -432,165 +324,222 @@
                             letterPixels.x2.push(pixel);
                             pixel.dataset.letter = 'x2';
                         }
-                        
-                        logoPixels.push(pixel);
                     }
                 }
             }
-            
-            return logoPixels;
         }
-        
-        // Animate logo pixels to appear randomly
-        function animateLogoPixels(logoPixels) {
-            const shuffledPixels = [...logoPixels].sort(() => Math.random() - 0.5);
-            const totalDuration = 4000; // Same as background animation
+
+        function animateLogoPixels() {
+            const allPixels = [...letterPixels.o, ...letterPixels.x1, ...letterPixels.x2];
+            const shuffled = allPixels.sort(() => Math.random() - 0.5);
             
-            shuffledPixels.forEach((pixel) => {
-                const randomDelay = Math.random() * totalDuration;
-                
-                setTimeout(() => {
-                    pixel.classList.add('show');
-                }, randomDelay);
+            shuffled.forEach((pixel) => {
+                const delay = Math.random() * 4000;
+                setTimeout(() => pixel.classList.add('show'), delay);
             });
         }
 
-        // Create background pixel grid
+        // 초기 타이핑: lab → studio
+        function typeAnimation() {
+            const typingText = document.getElementById('typingText');
+            let charIndex = 3;
+            
+            const deleteInterval = setInterval(() => {
+                if (charIndex > 0) {
+                    charIndex--;
+                    typingText.textContent = 'lab'.substring(0, charIndex);
+                } else {
+                    clearInterval(deleteInterval);
+                    setTimeout(() => {
+                        let studioIndex = 0;
+                        const typeInterval = setInterval(() => {
+                            if (studioIndex < 6) {
+                                studioIndex++;
+                                typingText.textContent = 'studio'.substring(0, studioIndex);
+                            } else {
+                                clearInterval(typeInterval);
+                            }
+                        }, 100);
+                    }, 500);
+                }
+            }, 70);
+        }
+
+        // 모자이크 후 자동 타이핑: studio → lab & studio
+        function typeLabAndStudio() {
+            const typingText = document.getElementById('typingText');
+            const currentText = 'studio';
+            let charIndex = currentText.length;
+            
+            // 먼저 studio 지우기
+            const deleteInterval = setInterval(() => {
+                if (charIndex > 0) {
+                    charIndex--;
+                    typingText.textContent = currentText.substring(0, charIndex);
+                } else {
+                    clearInterval(deleteInterval);
+                    
+                    // letter-spacing 변경
+                    typingText.classList.add('compact');
+                    
+                    // lab & studio 타이핑
+                    setTimeout(() => {
+                        const fullText = 'lab & studio';
+                        let typeIndex = 0;
+                        
+                        const typeInterval = setInterval(() => {
+                            if (typeIndex < fullText.length) {
+                                typeIndex++;
+                                typingText.textContent = fullText.substring(0, typeIndex);
+                            } else {
+                                clearInterval(typeInterval);
+                                // 타이핑 완료 후 호버 인터랙션 활성화
+                                setupLetterHoverAreas();
+                            }
+                        }, 70);
+                    }, 300);
+                }
+            }, 50);
+        }
+
         function createPixelGrid() {
             const pixelOverlay = document.getElementById('pixelOverlay');
-            const pixelSize = 18;
-            const cols = Math.ceil(1920 / pixelSize);
-            const rows = Math.ceil(1080 / pixelSize);
+            const cols = Math.ceil(window.innerWidth / 12);
+            const rows = Math.ceil(window.innerHeight / 12);
             const pixels = [];
 
             for (let row = 0; row < rows; row++) {
                 for (let col = 0; col < cols; col++) {
-                    const x = col * pixelSize;
-                    const y = row * pixelSize;
-                    
-                    // Create pixel for all positions
                     const pixel = document.createElement('div');
                     pixel.className = 'pixel';
-                    pixel.style.left = x + 'px';
-                    pixel.style.top = y + 'px';
-                    
+                    pixel.style.left = (col * 12) + 'px';
+                    pixel.style.top = (row * 12) + 'px';
                     pixelOverlay.appendChild(pixel);
-                    
-                    pixels.push({
-                        element: pixel,
-                        row: row,
-                        col: col
-                    });
+                    pixels.push({ element: pixel });
                 }
             }
-
             return pixels;
         }
 
-        // Pixelation animation
         function animatePixels(pixels) {
-            const shuffledPixels = [...pixels].sort(() => Math.random() - 0.5);
-            const totalDuration = 4000;
-            
-            shuffledPixels.forEach((pixel) => {
-                // Random delay for each pixel
-                const randomDelay = Math.random() * totalDuration;
-                
-                setTimeout(() => {
-                    pixel.element.classList.add('white');
-                }, randomDelay);
+            const shuffled = [...pixels].sort(() => Math.random() - 0.5);
+            shuffled.forEach((pixel) => {
+                const delay = Math.random() * 4000;
+                setTimeout(() => pixel.element.classList.add('white'), delay);
             });
         }
 
-        // Get random position in grid
+        // 각 글자별 호버 영역 생성 (센터 그룹 내)
+        function setupLetterHoverAreas() {
+            const logoContainer = document.getElementById('logoContainer');
+            
+            Object.keys(letterBounds).forEach(letter => {
+                if (letterSeparated[letter]) return; // 이미 분리된 글자는 스킵
+                
+                const bounds = letterBounds[letter];
+                const hoverArea = document.createElement('div');
+                hoverArea.className = 'letter-hover-center';
+                hoverArea.id = `hover-center-${letter}`;
+                hoverArea.style.left = (bounds.startCol * 12) + 'px';
+                hoverArea.style.top = '0px';
+                hoverArea.style.width = ((bounds.endCol - bounds.startCol + 1) * 12) + 'px';
+                hoverArea.style.height = '192px';
+                
+                hoverArea.addEventListener('mouseenter', () => {
+                    if (!letterSeparated[letter]) {
+                        separateSingleLetter(letter);
+                    }
+                });
+                
+                logoContainer.appendChild(hoverArea);
+            });
+            
+            animationComplete = true;
+        }
+
         function getRandomGridPosition() {
             const gridCols = 8;
             const gridRows = 5;
-            const cellWidth = 1697 / gridCols;
-            const cellHeight = 855 / gridRows;
+            const cellWidth = window.innerWidth / gridCols;
+            const cellHeight = window.innerHeight / gridRows;
+            const padding = 80;
             
             let position;
             let attempts = 0;
-            const maxAttempts = 100;
             
             do {
                 const col = Math.floor(Math.random() * gridCols);
                 const row = Math.floor(Math.random() * gridRows);
                 
                 position = {
-                    x: 112 + (col * cellWidth) + (cellWidth / 2),
-                    y: 112 + (row * cellHeight) + (cellHeight / 2),
+                    x: padding + (col * cellWidth) + (cellWidth / 2) - 90,
+                    y: padding + (row * cellHeight) + (cellHeight / 2) - 96,
                     gridKey: `${col}-${row}`
                 };
-                
                 attempts++;
-                if (attempts >= maxAttempts) {
-                    // If we can't find a free spot, just use this position
-                    break;
-                }
+                if (attempts >= 100) break;
             } while (occupiedPositions.includes(position.gridKey));
             
             occupiedPositions.push(position.gridKey);
-            
             return position;
         }
 
-        // Animate letter separation
-        function separateLetters(letter, pixels, callback) {
-            // Hide pixels first
-            pixels.forEach(pixel => {
-                pixel.style.transition = 'background-color 0.05s ease';
-                pixel.classList.remove('show');
-            });
+        // 단일 글자만 분리
+        function separateSingleLetter(letter) {
+            letterSeparated[letter] = true;
             
-            // Get new position
+            const pixels = letterPixels[letter];
+            const bounds = letterBounds[letter];
             const newPos = getRandomGridPosition();
             
-            // Calculate offset for centering letter group
-            let minX = Infinity, maxX = -Infinity;
-            let minY = Infinity, maxY = -Infinity;
+            // 센터 호버 영역 제거
+            const centerHover = document.getElementById(`hover-center-${letter}`);
+            if (centerHover) centerHover.remove();
+            
+            // 원본 픽셀 숨기기
+            pixels.forEach(pixel => {
+                pixel.classList.remove('show');
+                pixel.classList.remove('black');
+            });
+
+            // 새 위치에 픽셀 생성
+            const newPixels = [];
             
             pixels.forEach(pixel => {
-                const x = parseInt(pixel.style.left);
-                const y = parseInt(pixel.style.top);
-                minX = Math.min(minX, x);
-                maxX = Math.max(maxX, x);
-                minY = Math.min(minY, y);
-                maxY = Math.max(maxY, y);
+                const col = parseInt(pixel.dataset.col);
+                const row = parseInt(pixel.dataset.row);
+                const relCol = col - bounds.startCol;
+                const relRow = row;
+                
+                const newPixel = document.createElement('div');
+                newPixel.className = 'separated-pixel';
+                newPixel.style.left = (newPos.x + relCol * 12) + 'px';
+                newPixel.style.top = (newPos.y + relRow * 12) + 'px';
+                newPixel.dataset.letter = letter;
+                newPixel.dataset.relCol = relCol;
+                newPixel.dataset.relRow = relRow;
+                document.body.appendChild(newPixel);
+                newPixels.push(newPixel);
             });
-            
-            const letterWidth = maxX - minX;
-            const letterHeight = maxY - minY;
-            const offsetX = newPos.x - minX - letterWidth / 2;
-            const offsetY = newPos.y - minY - letterHeight / 2;
-            
-            // Move pixels
+
+            separatedPixelGroups[letter] = newPixels;
+
+            // 랜덤하게 나타남
+            const shuffled = [...newPixels].sort(() => Math.random() - 0.5);
+            shuffled.forEach((pixel, index) => {
+                setTimeout(() => pixel.classList.add('show'), index * 20);
+            });
+
+            // 분리된 글자용 호버 영역 생성
             setTimeout(() => {
-                pixels.forEach(pixel => {
-                    const currentX = parseInt(pixel.style.left);
-                    const currentY = parseInt(pixel.style.top);
-                    pixel.style.left = (currentX + offsetX) + 'px';
-                    pixel.style.top = (currentY + offsetY) + 'px';
-                });
-                
-                // Show pixels again with random animation
-                const shuffledPixels = [...pixels].sort(() => Math.random() - 0.5);
-                shuffledPixels.forEach((pixel, index) => {
-                    setTimeout(() => {
-                        pixel.classList.add('show');
-                    }, index * 20);
-                });
-                
-                // Create hover area for this letter
-                setTimeout(() => {
-                    createLetterHoverArea(letter, pixels, minX + offsetX, minY + offsetY, letterWidth, letterHeight);
-                    if (callback) callback();
-                }, pixels.length * 20 + 100);
-            }, 300);
+                const width = (bounds.endCol - bounds.startCol + 1) * 12;
+                const height = 192;
+                createSeparatedLetterHoverArea(letter, newPixels, newPos.x, newPos.y, width, height);
+            }, newPixels.length * 20 + 100);
         }
 
-        // Create hover area for separated letter
-        function createLetterHoverArea(letter, pixels, x, y, width, height) {
+        // 분리된 글자용 호버 영역
+        function createSeparatedLetterHoverArea(letter, pixels, x, y, width, height) {
             const hoverArea = document.createElement('div');
             hoverArea.className = 'letter-hover active';
             hoverArea.style.left = x + 'px';
@@ -603,92 +552,92 @@
             hoverArea.addEventListener('mouseenter', () => {
                 if (isMoving) return;
                 isMoving = true;
-                
-                // Remove current hover area
                 hoverArea.remove();
                 
-                // Remove from occupied positions
+                // occupied에서 제거
                 const currentGridKey = occupiedPositions.find(key => {
                     const [col, row] = key.split('-').map(Number);
-                    const cellWidth = 1697 / 8;
-                    const cellHeight = 855 / 5;
-                    const cellX = 112 + (col * cellWidth) + (cellWidth / 2);
-                    const cellY = 112 + (row * cellHeight) + (cellHeight / 2);
-                    return Math.abs(cellX - (x + width/2)) < cellWidth/2 && Math.abs(cellY - (y + height/2)) < cellHeight/2;
+                    const cellWidth = window.innerWidth / 8;
+                    const cellHeight = window.innerHeight / 5;
+                    const cellX = 80 + (col * cellWidth) + (cellWidth / 2) - 90;
+                    const cellY = 80 + (row * cellHeight) + (cellHeight / 2) - 96;
+                    return Math.abs(cellX - x) < cellWidth/2 && Math.abs(cellY - y) < cellHeight/2;
                 });
                 
                 if (currentGridKey) {
-                    occupiedPositions = occupiedPositions.filter(key => key !== currentGridKey);
+                    occupiedPositions = occupiedPositions.filter(k => k !== currentGridKey);
                 }
                 
-                // Move to new position
-                separateLetters(letter, pixels);
+                moveLetterToNewPosition(letter, pixels, width, height);
             });
             
-            document.querySelector('.slide').appendChild(hoverArea);
+            document.body.appendChild(hoverArea);
         }
 
-        // Handle logo separation on mouse move after animation
-        function setupMouseMoveSeparation() {
-            let mouseMoveListener = function(event) {
-                if (!logoSeparated && animationComplete) {
-                    logoSeparated = true;
-                    
-                    // Remove the event listener so it only triggers once
-                    document.removeEventListener('mousemove', mouseMoveListener);
-                    
-                    // Type additional text
-                    typeStudioAddition();
-                    
-                    // Separate letters
-                    occupiedPositions = [];
-                    separateLetters('o', letterPixels.o);
-                    setTimeout(() => separateLetters('x1', letterPixels.x1), 200);
-                    setTimeout(() => separateLetters('x2', letterPixels.x2), 400);
-                }
-            };
+        // 분리된 글자 새 위치로 이동
+        function moveLetterToNewPosition(letter, pixels, width, height) {
+            const newPos = getRandomGridPosition();
             
-            document.addEventListener('mousemove', mouseMoveListener);
+            // 픽셀 숨기기
+            pixels.forEach(p => p.classList.remove('show'));
+            
+            setTimeout(() => {
+                pixels.forEach(pixel => {
+                    const relCol = parseInt(pixel.dataset.relCol);
+                    const relRow = parseInt(pixel.dataset.relRow);
+                    pixel.style.left = (newPos.x + relCol * 12) + 'px';
+                    pixel.style.top = (newPos.y + relRow * 12) + 'px';
+                });
+                
+                // 랜덤하게 나타남
+                const shuffled = [...pixels].sort(() => Math.random() - 0.5);
+                shuffled.forEach((pixel, index) => {
+                    setTimeout(() => pixel.classList.add('show'), index * 20);
+                });
+
+                // 호버 영역 재생성
+                setTimeout(() => {
+                    createSeparatedLetterHoverArea(letter, pixels, newPos.x, newPos.y, width, height);
+                }, pixels.length * 20 + 100);
+            }, 100);
         }
 
-        // Main animation function
         function startAnimation() {
-            // Start typing animation
             typeAnimation();
             
-            // Create background pixels and logo pixels after typing completes
             setTimeout(() => {
                 const pixels = createPixelGrid();
-                const logoPixels = createOXXLogoPixels();
-                
-                // Start pixelation after text transition
                 animatePixels(pixels);
+                animateLogoPixels();
                 
-                // Animate logo pixels to appear randomly
-                animateLogoPixels(logoPixels);
-                
-                // Change navigation and lab text colors
+                // 색상 변경
                 setTimeout(() => {
                     document.querySelector('.nav-works').classList.add('black');
                     document.querySelector('.nav-shop').classList.add('black');
-                    document.querySelector('.typing-text').classList.add('black');
-                    document.querySelectorAll('.cross').forEach(cross => {
-                        cross.classList.add('black');
+                    document.getElementById('typingText').classList.add('black');
+                    document.querySelectorAll('.cross').forEach(c => c.classList.add('black'));
+                    document.querySelectorAll('.logo-pixel.show').forEach(p => p.classList.add('black'));
+                    
+                    const observer = new MutationObserver(() => {
+                        document.querySelectorAll('.logo-pixel.show:not(.black)').forEach(p => p.classList.add('black'));
                     });
+                    observer.observe(document.getElementById('logoContainer'), { childList: true, subtree: true, attributes: true });
                 }, 1500);
                 
-                // Enable mouse move detection after animation completes
+                // 모자이크 완료 후 자동으로 lab & studio 타이핑
                 setTimeout(() => {
-                    animationComplete = true;
-                    setupMouseMoveSeparation();
+                    typeLabAndStudio();
                 }, 4000);
-            }, 2800); // After typing animation completes + 1.5 second delay
+            }, 2800);
         }
 
-        // Initialize
         generateCrosses();
+        createOXXLogoPixels();
         
-        // Start animation after 1.5 seconds
+        window.addEventListener('resize', () => {
+            if (!animationComplete) generateCrosses();
+        });
+        
         setTimeout(startAnimation, 1500);
     </script>
 </body>
