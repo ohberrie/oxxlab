@@ -86,20 +86,43 @@
 
         .typing-text a {
             color: #f8f8fd;
-            text-decoration: underline;
-            text-decoration-thickness: 1px;
-            text-underline-offset: 4px;
+            text-decoration: none;
             opacity: 0.8;
-            transition: opacity 0.3s ease, text-decoration-color 0.3s ease;
+            transition: opacity 0.3s ease;
+            position: relative;
+        }
+
+        .typing-text a::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 100%;
+            height: 1px;
+            background-color: #f8f8fd;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .typing-text a.animate-in::after {
+            transform: translateX(-50%) scaleX(1);
         }
 
         .typing-text:hover a {
             opacity: 0.25;
         }
 
+        .typing-text:hover a::after {
+            opacity: 0.25;
+        }
+
         .typing-text a:hover {
             opacity: 1;
-            text-decoration: none;
+        }
+
+        .typing-text a:hover::after {
+            transform: translateX(-50%) scaleX(0);
+            opacity: 1;
         }
 
         .typing-text .ampersand {
@@ -140,7 +163,7 @@
         const CELL_SIZE = 28;
         const OX_CHARS = ['O', 'X'];
         const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const CHANGE_INTERVAL = 100;
+        const CHANGE_INTERVAL = 80;
         const CHANGE_PROBABILITY = 0.06;
 
         // === State ===
@@ -226,9 +249,9 @@
             cols = Math.floor(screenWidth / CELL_SIZE);
             rows = Math.floor(screenHeight / CELL_SIZE);
 
-            // 정확한 중앙 계산
+            // 정확한 중앙 계산 (텍스트 영역 고려하여 약간 위로)
             const patternOffsetCol = Math.floor((cols - PATTERN_COLS) / 2);
-            const patternOffsetRow = Math.floor((rows - PATTERN_ROWS) / 2);
+            const patternOffsetRow = Math.floor((rows - PATTERN_ROWS) / 2) - 1;
 
             // Reset letter masks
             letterMasks = { o: [], x1: [], x2: [] };
@@ -305,7 +328,7 @@
 
         function updateTextPosition() {
             const textOverlay = document.getElementById('textOverlay');
-            const patternOffsetRow = Math.floor((rows - PATTERN_ROWS) / 2);
+            const patternOffsetRow = Math.floor((rows - PATTERN_ROWS) / 2) - 1;
             const patternOffsetCol = Math.floor((cols - PATTERN_COLS) / 2);
             const bottomOfPattern = (patternOffsetRow + PATTERN_ROWS) * CELL_SIZE;
             
@@ -313,7 +336,7 @@
             const x1CenterCol = patternOffsetCol + 8;
             const x1CenterX = x1CenterCol * CELL_SIZE + CELL_SIZE / 2;
             
-            textOverlay.style.top = (bottomOfPattern + 30) + 'px';
+            textOverlay.style.top = (bottomOfPattern + 38) + 'px';
             textOverlay.style.left = x1CenterX + 'px';
             textOverlay.style.transform = 'translateX(-50%)';
         }
@@ -379,8 +402,8 @@
                                 typingText.textContent = fullText.substring(0, typeIndex);
                             } else {
                                 clearInterval(typeInterval);
-                                // 링크로 변환
-                                typingText.innerHTML = '<a href="2.menu.html">lab</a><span class="ampersand"> & </span><a href="#shop">studio</a>';
+                                // 링크로 변환 (밑줄 애니메이션)
+                                typingText.innerHTML = '<a href="2.menu.html" class="animate-in">lab</a><span class="ampersand"> & </span><a href="#shop" class="animate-in">studio</a>';
                                 animationComplete = true;
                                 setupLetterHoverAreas();
                             }
