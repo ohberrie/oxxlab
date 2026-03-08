@@ -1,12 +1,611 @@
-<!doctype html>
-<html>
-  <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="0; url=oxxlab-main/1.00/1.landing_hover.html" />
-    <link rel="canonical" href="oxxlab-main/1.00/1.landing_hover.html" />
-    <title>OXX Lab</title>
-  </head>
-  <body>
-    <p>Redirecting… <a href="oxxlab-main/1.00/1.landing_hover.html">Enter OXX Lab</a></p>
-  </body>
+    <title>OXX Lab — Algorithmic Design Studio</title>
+    <meta name="description" content="OXX Lab is a computational design studio exploring algorithmic form, spatial systems, and AI-driven design." />
+    <link rel="canonical" href="https://oxxlab.com/" />
+    <meta property="og:title" content="OXX Lab — Algorithmic Design Studio" />
+    <meta property="og:description" content="Computational design studio exploring algorithmic form and spatial systems." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://oxxlab.com/" />
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "OXX Lab",
+        "url": "https://oxxlab.com/"
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #141414;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Grid container - absolute positioning */
+        .grid-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Cell - absolute positioned */
+        .cell {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+        }
+
+        .cell.background {
+            background: #141414;
+            color: rgba(255, 255, 255, 0.12);
+            font-weight: 400;
+        }
+
+        .cell.masked {
+            background: #f8f8fd;
+            color: #141414;
+            font-weight: 800;
+        }
+
+        /* Text overlay */
+        .text-overlay {
+            position: fixed;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .typing-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: clamp(16px, 2.5vw, 26px);
+            letter-spacing: clamp(3px, 0.5vw, 6px);
+            color: #f8f8fd;
+            text-transform: lowercase;
+            white-space: nowrap;
+        }
+
+        .typing-text a {
+            color: #f8f8fd;
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 4px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease, text-decoration-color 0.3s ease;
+        }
+
+        .typing-text:hover a {
+            opacity: 0.25;
+        }
+
+        .typing-text a:hover {
+            opacity: 1;
+            text-decoration: none;
+        }
+
+        .typing-text .ampersand {
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .typing-text:hover .ampersand {
+            opacity: 0.4;
+        }
+
+        /* Letter hover areas */
+        .letter-hover {
+            position: fixed;
+            z-index: 60;
+            cursor: pointer;
+        }
+
+        /* SEO: visible site identity text, hidden visually but readable by crawlers */
+        .site-identity {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="slide">
+        <h1 class="site-identity">OXX Lab — Algorithmic Design Studio</h1>
+        <div class="grid-container" id="gridContainer"></div>
+
+        <div class="text-overlay" id="textOverlay">
+            <span class="typing-text" id="typingText">lab</span>
+        </div>
+    </main>
+
+    <script>
+        // === Configuration ===
+        function getCellSize() {
+            const vw = window.innerWidth;
+            if (vw <= 480) return 16;
+            if (vw <= 768) return 20;
+            if (vw <= 1024) return 24;
+            return 28;
+        }
+        let CELL_SIZE = getCellSize();
+
+        function getCellFontSize() {
+            const vw = window.innerWidth;
+            if (vw <= 480) return 10;
+            if (vw <= 768) return 12;
+            if (vw <= 1024) return 14;
+            return 17;
+        }
+
+        const OX_CHARS = ['O', 'X'];
+        const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const CHANGE_INTERVAL = 100;
+        const CHANGE_PROBABILITY = 0.06;
+
+        // === State ===
+        let cells = [];
+        let cols = 0;
+        let rows = 0;
+        let animationComplete = false;
+        let letterMasks = { o: [], x1: [], x2: [] };
+        let letterShapes = { o: [], x1: [], x2: [] };
+        let letterSeparated = { o: false, x1: false, x2: false };
+        let occupiedPositions = [];
+        let animationInterval = null;
+
+        // === Narrow OXX Pattern ===
+        const oxxPattern = [
+            '01110011011011011',
+            '11011011011011011',
+            '11011001110001110',
+            '11011000100000100',
+            '11011001110001110',
+            '11011011011011011',
+            '01110011011011011',
+        ];
+
+        const PATTERN_COLS = oxxPattern[0].length;
+        const PATTERN_ROWS = oxxPattern.length;
+
+        // === Utility Functions ===
+        function getRandomOX() {
+            return OX_CHARS[Math.floor(Math.random() * OX_CHARS.length)];
+        }
+
+        function getRandomChar() {
+            return ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
+        }
+
+        function getCellIndex(row, col) {
+            return row * cols + col;
+        }
+
+        function extractLetterShapes() {
+            letterShapes = { o: [], x1: [], x2: [] };
+
+            for (let row = 0; row < PATTERN_ROWS; row++) {
+                for (let col = 0; col < PATTERN_COLS; col++) {
+                    if (oxxPattern[row][col] === '1') {
+                        let letter = null;
+                        let relCol, relRow;
+
+                        if (col <= 4) {
+                            letter = 'o';
+                            relCol = col;
+                            relRow = row;
+                        } else if (col >= 6 && col <= 10) {
+                            letter = 'x1';
+                            relCol = col - 6;
+                            relRow = row;
+                        } else if (col >= 12 && col <= 16) {
+                            letter = 'x2';
+                            relCol = col - 12;
+                            relRow = row;
+                        }
+
+                        if (letter) {
+                            letterShapes[letter].push({ relCol, relRow });
+                        }
+                    }
+                }
+            }
+        }
+
+        // === Grid Creation ===
+        function createGrid() {
+            const container = document.getElementById('gridContainer');
+            container.innerHTML = '';
+            cells = [];
+
+            CELL_SIZE = getCellSize();
+            const fontSize = getCellFontSize();
+
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            cols = Math.floor(screenWidth / CELL_SIZE);
+            rows = Math.floor(screenHeight / CELL_SIZE);
+
+            const patternOffsetCol = Math.floor((cols - PATTERN_COLS) / 2);
+            const patternOffsetRow = Math.floor((rows - PATTERN_ROWS) / 2);
+
+            letterMasks = { o: [], x1: [], x2: [] };
+
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell background';
+                    cell.textContent = getRandomChar();
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+
+                    cell.style.left = (col * CELL_SIZE) + 'px';
+                    cell.style.top = (row * CELL_SIZE) + 'px';
+                    cell.style.width = CELL_SIZE + 'px';
+                    cell.style.height = CELL_SIZE + 'px';
+                    cell.style.fontSize = fontSize + 'px';
+
+                    const patternRow = row - patternOffsetRow;
+                    const patternCol = col - patternOffsetCol;
+
+                    let isMasked = false;
+                    let letter = null;
+
+                    if (patternRow >= 0 && patternRow < PATTERN_ROWS &&
+                        patternCol >= 0 && patternCol < PATTERN_COLS) {
+                        if (oxxPattern[patternRow][patternCol] === '1') {
+                            isMasked = true;
+                            cell.className = 'cell masked';
+                            cell.textContent = getRandomOX();
+
+                            let relCol, relRow;
+
+                            if (patternCol <= 4) {
+                                letter = 'o';
+                                relCol = patternCol;
+                                relRow = patternRow;
+                            } else if (patternCol >= 6 && patternCol <= 10) {
+                                letter = 'x1';
+                                relCol = patternCol - 6;
+                                relRow = patternRow;
+                            } else if (patternCol >= 12 && patternCol <= 16) {
+                                letter = 'x2';
+                                relCol = patternCol - 12;
+                                relRow = patternRow;
+                            }
+
+                            if (letter) {
+                                letterMasks[letter].push({
+                                    row: row,
+                                    col: col,
+                                    relCol: relCol,
+                                    relRow: relRow,
+                                    element: cell
+                                });
+                            }
+                        }
+                    }
+
+                    cell.dataset.masked = isMasked;
+                    cell.dataset.letter = letter || '';
+
+                    container.appendChild(cell);
+                    cells.push({
+                        element: cell,
+                        row: row,
+                        col: col,
+                        isMasked: isMasked,
+                        letter: letter
+                    });
+                }
+            }
+
+            updateTextPosition();
+        }
+
+        function updateTextPosition() {
+            const textOverlay = document.getElementById('textOverlay');
+            const patternOffsetRow = Math.floor((rows - PATTERN_ROWS) / 2);
+            const patternOffsetCol = Math.floor((cols - PATTERN_COLS) / 2);
+            const bottomOfPattern = (patternOffsetRow + PATTERN_ROWS) * CELL_SIZE;
+
+            const x1CenterCol = patternOffsetCol + 8;
+            const x1CenterX = x1CenterCol * CELL_SIZE + CELL_SIZE / 2;
+
+            textOverlay.style.top = (bottomOfPattern + 30) + 'px';
+            textOverlay.style.left = x1CenterX + 'px';
+            textOverlay.style.transform = 'translateX(-50%)';
+        }
+
+        // === Animation ===
+        function startRandomAnimation() {
+            animationInterval = setInterval(() => {
+                cells.forEach(cell => {
+                    if (Math.random() < CHANGE_PROBABILITY) {
+                        if (cell.isMasked) {
+                            cell.element.textContent = getRandomOX();
+                        } else {
+                            cell.element.textContent = getRandomChar();
+                        }
+                    }
+                });
+            }, CHANGE_INTERVAL);
+        }
+
+        // === Typing Animation ===
+        function typeAnimation() {
+            const typingText = document.getElementById('typingText');
+            let charIndex = 3;
+
+            const deleteInterval = setInterval(() => {
+                if (charIndex > 0) {
+                    charIndex--;
+                    typingText.textContent = 'lab'.substring(0, charIndex);
+                } else {
+                    clearInterval(deleteInterval);
+                    setTimeout(() => {
+                        let studioIndex = 0;
+                        const typeInterval = setInterval(() => {
+                            if (studioIndex < 6) {
+                                studioIndex++;
+                                typingText.textContent = 'studio'.substring(0, studioIndex);
+                            } else {
+                                clearInterval(typeInterval);
+                                setTimeout(typeLabAndStudio, 2000);
+                            }
+                        }, 77);
+                    }, 500);
+                }
+            }, 54);
+        }
+
+        function typeLabAndStudio() {
+            const typingText = document.getElementById('typingText');
+            let charIndex = 6;
+
+            const deleteInterval = setInterval(() => {
+                if (charIndex > 0) {
+                    charIndex--;
+                    typingText.textContent = 'studio'.substring(0, charIndex);
+                } else {
+                    clearInterval(deleteInterval);
+                    setTimeout(() => {
+                        const fullText = 'lab & studio';
+                        let typeIndex = 0;
+                        const typeInterval = setInterval(() => {
+                            if (typeIndex < fullText.length) {
+                                typeIndex++;
+                                typingText.textContent = fullText.substring(0, typeIndex);
+                            } else {
+                                clearInterval(typeInterval);
+                                typingText.innerHTML = '<a href="/lab">lab</a><span class="ampersand"> & </span><a href="#shop">studio</a>';
+                                animationComplete = true;
+                                setupLetterHoverAreas();
+                            }
+                        }, 54);
+                    }, 300);
+                }
+            }, 38);
+        }
+
+        // === Hover Interaction ===
+        function setupLetterHoverAreas() {
+            Object.keys(letterMasks).forEach(letter => {
+                if (letterSeparated[letter] || letterMasks[letter].length === 0) return;
+                createHoverAreaForLetter(letter);
+            });
+        }
+
+        function createHoverAreaForLetter(letter) {
+            const maskCells = letterMasks[letter];
+            if (maskCells.length === 0) return;
+
+            const existingHover = document.getElementById(`hover-${letter}`);
+            if (existingHover) existingHover.remove();
+
+            let minRow = Infinity, maxRow = -Infinity;
+            let minCol = Infinity, maxCol = -Infinity;
+
+            maskCells.forEach(cell => {
+                minRow = Math.min(minRow, cell.row);
+                maxRow = Math.max(maxRow, cell.row);
+                minCol = Math.min(minCol, cell.col);
+                maxCol = Math.max(maxCol, cell.col);
+            });
+
+            const hoverArea = document.createElement('div');
+            hoverArea.className = 'letter-hover';
+            hoverArea.id = `hover-${letter}`;
+            hoverArea.style.left = (minCol * CELL_SIZE) + 'px';
+            hoverArea.style.top = (minRow * CELL_SIZE) + 'px';
+            hoverArea.style.width = ((maxCol - minCol + 1) * CELL_SIZE) + 'px';
+            hoverArea.style.height = ((maxRow - minRow + 1) * CELL_SIZE) + 'px';
+
+            hoverArea.addEventListener('mouseenter', () => {
+                moveLetter(letter);
+            });
+
+            document.body.appendChild(hoverArea);
+        }
+
+        function getRandomGridPosition(letterWidth, letterHeight) {
+            const marginX = 3;
+            const marginY = 3;
+
+            const maxCol = cols - letterWidth - marginX;
+            const maxRow = rows - letterHeight - marginY;
+
+            let position;
+            let attempts = 0;
+
+            do {
+                position = {
+                    col: marginX + Math.floor(Math.random() * Math.max(1, maxCol - marginX)),
+                    row: marginY + Math.floor(Math.random() * Math.max(1, maxRow - marginY)),
+                };
+
+                const gridKey = `${Math.floor(position.col / 10)}-${Math.floor(position.row / 5)}`;
+                position.gridKey = gridKey;
+
+                attempts++;
+            } while (occupiedPositions.includes(position.gridKey) && attempts < 30);
+
+            if (occupiedPositions.length > 3) {
+                occupiedPositions.shift();
+            }
+            occupiedPositions.push(position.gridKey);
+
+            return position;
+        }
+
+        function moveLetter(letter) {
+            const hoverArea = document.getElementById(`hover-${letter}`);
+            if (hoverArea) hoverArea.remove();
+
+            const currentCells = letterMasks[letter];
+            if (currentCells.length === 0) return;
+
+            currentCells.forEach(cellData => {
+                const idx = getCellIndex(cellData.row, cellData.col);
+                if (idx >= 0 && idx < cells.length) {
+                    cells[idx].element.className = 'cell background';
+                    cells[idx].element.textContent = getRandomChar();
+                    cells[idx].element.dataset.masked = 'false';
+                    cells[idx].element.dataset.letter = '';
+                    cells[idx].isMasked = false;
+                    cells[idx].letter = null;
+                }
+            });
+
+            const shape = letterShapes[letter];
+            if (!shape || shape.length === 0) return;
+
+            let maxRelCol = 0, maxRelRow = 0;
+            shape.forEach(s => {
+                maxRelCol = Math.max(maxRelCol, s.relCol);
+                maxRelRow = Math.max(maxRelRow, s.relRow);
+            });
+            const letterWidth = maxRelCol + 1;
+            const letterHeight = maxRelRow + 1;
+
+            const newPos = getRandomGridPosition(letterWidth, letterHeight);
+
+            const newMaskCells = [];
+            const shuffledShape = [...shape].sort(() => Math.random() - 0.5);
+
+            shuffledShape.forEach((s, index) => {
+                const newCol = newPos.col + s.relCol;
+                const newRow = newPos.row + s.relRow;
+
+                if (newCol >= 0 && newCol < cols && newRow >= 0 && newRow < rows) {
+                    const cellIndex = getCellIndex(newRow, newCol);
+                    if (cellIndex >= 0 && cellIndex < cells.length) {
+                        const targetCell = cells[cellIndex];
+
+                        setTimeout(() => {
+                            targetCell.element.className = 'cell masked';
+                            targetCell.element.textContent = getRandomOX();
+                            targetCell.element.dataset.masked = 'true';
+                            targetCell.element.dataset.letter = letter;
+                            targetCell.isMasked = true;
+                            targetCell.letter = letter;
+                        }, index * 15);
+
+                        newMaskCells.push({
+                            row: newRow,
+                            col: newCol,
+                            relCol: s.relCol,
+                            relRow: s.relRow,
+                            element: targetCell.element
+                        });
+                    }
+                }
+            });
+
+            letterMasks[letter] = newMaskCells;
+            letterSeparated[letter] = true;
+
+            const totalDelay = shuffledShape.length * 15 + 50;
+            setTimeout(() => {
+                createHoverAreaForLetter(letter);
+            }, totalDelay);
+        }
+
+        // === Skip to final state (for returning visitors) ===
+        function skipToFinalState() {
+            const typingText = document.getElementById('typingText');
+            typingText.innerHTML = '<a href="/lab">lab</a><span class="ampersand"> & </span><a href="#shop">studio</a>';
+            animationComplete = true;
+            setupLetterHoverAreas();
+        }
+
+        // === Initialization ===
+        function init() {
+            extractLetterShapes();
+            createGrid();
+            startRandomAnimation();
+
+            const hasVisited = sessionStorage.getItem('oxx_visited');
+            if (hasVisited) {
+                skipToFinalState();
+            } else {
+                sessionStorage.setItem('oxx_visited', 'true');
+                setTimeout(typeAnimation, 1500);
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            clearTimeout(window.resizeTimeout);
+            window.resizeTimeout = setTimeout(() => {
+                CELL_SIZE = getCellSize();
+                createGrid();
+                if (animationComplete) {
+                    setupLetterHoverAreas();
+                }
+            }, 200);
+        });
+
+        init();
+    </script>
+</body>
 </html>
