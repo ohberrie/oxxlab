@@ -32,6 +32,7 @@
             height: 1080px;
             position: relative;
             overflow: hidden;
+            transform-origin: top left;
         }
 
         /* Navigation */
@@ -315,8 +316,10 @@
         let currentSlider = null;
 
         function updateSliderPosition(slider, clientX) {
-            const rect = document.querySelector('.slide').getBoundingClientRect();
-            const newLeft = Math.max(slider.min, Math.min(slider.max, clientX - rect.left - 7.5));
+            const slide = document.querySelector('.slide');
+            const rect = slide.getBoundingClientRect();
+            const scale = rect.width / 1920;
+            const newLeft = Math.max(slider.min, Math.min(slider.max, (clientX - rect.left) / scale - 7.5));
             slider.element.style.left = newLeft + 'px';
             
             const percentage = ((newLeft - slider.min) / (slider.max - slider.min)) * 100;
@@ -350,8 +353,10 @@
             track.addEventListener('click', (e) => {
                 const sliderKey = track.dataset.slider;
                 const slider = sliders[sliderKey];
-                const rect = document.querySelector('.slide').getBoundingClientRect();
-                const newLeft = Math.max(slider.min, Math.min(slider.max, e.clientX - rect.left - 7.5));
+                const slide = document.querySelector('.slide');
+                const rect = slide.getBoundingClientRect();
+                const scale = rect.width / 1920;
+                const newLeft = Math.max(slider.min, Math.min(slider.max, (e.clientX - rect.left) / scale - 7.5));
                 slider.element.style.left = newLeft + 'px';
                 
                 const percentage = ((newLeft - slider.min) / (slider.max - slider.min)) * 100;
@@ -398,6 +403,22 @@
 
         // Initialize with random image
         updateVisualization();
+
+        // Responsive scaling
+        function scaleSlide() {
+            const slide = document.querySelector('.slide');
+            const scaleX = window.innerWidth / 1920;
+            const scaleY = window.innerHeight / 1080;
+            const scale = Math.min(scaleX, scaleY);
+            slide.style.transform = `scale(${scale})`;
+            // Center the slide
+            const scaledWidth = 1920 * scale;
+            const scaledHeight = 1080 * scale;
+            slide.style.marginLeft = ((window.innerWidth - scaledWidth) / 2) + 'px';
+            slide.style.marginTop = ((window.innerHeight - scaledHeight) / 2) + 'px';
+        }
+        scaleSlide();
+        window.addEventListener('resize', scaleSlide);
     </script>
 </body>
 </html>
