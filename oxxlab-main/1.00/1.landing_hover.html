@@ -87,7 +87,7 @@
         .typing-text a {
             color: #f8f8fd;
             text-decoration: underline;
-            text-decoration-thickness: 0.5px;
+            text-decoration-thickness: 1px;
             text-underline-offset: 4px;
             opacity: 0.8;
             transition: opacity 0.3s ease, text-decoration-color 0.3s ease;
@@ -496,10 +496,13 @@
             // 새 위치
             const newPos = getRandomGridPosition(letterWidth, letterHeight);
 
-            // 새 위치에 형태 그리기
+            // 새 위치에 형태 그리기 (랜덤하게)
             const newMaskCells = [];
+            
+            // 랜덤 셔플
+            const shuffledShape = [...shape].sort(() => Math.random() - 0.5);
 
-            shape.forEach(s => {
+            shuffledShape.forEach((s, index) => {
                 const newCol = newPos.col + s.relCol;
                 const newRow = newPos.row + s.relRow;
 
@@ -507,12 +510,16 @@
                     const cellIndex = getCellIndex(newRow, newCol);
                     if (cellIndex >= 0 && cellIndex < cells.length) {
                         const targetCell = cells[cellIndex];
-                        targetCell.element.className = 'cell masked';
-                        targetCell.element.textContent = getRandomOX();
-                        targetCell.element.dataset.masked = 'true';
-                        targetCell.element.dataset.letter = letter;
-                        targetCell.isMasked = true;
-                        targetCell.letter = letter;
+                        
+                        // 순차적 딜레이
+                        setTimeout(() => {
+                            targetCell.element.className = 'cell masked';
+                            targetCell.element.textContent = getRandomOX();
+                            targetCell.element.dataset.masked = 'true';
+                            targetCell.element.dataset.letter = letter;
+                            targetCell.isMasked = true;
+                            targetCell.letter = letter;
+                        }, index * 15);
 
                         newMaskCells.push({
                             row: newRow,
@@ -528,9 +535,11 @@
             letterMasks[letter] = newMaskCells;
             letterSeparated[letter] = true;
 
+            // 애니메이션 완료 후 호버 영역 생성
+            const totalDelay = shuffledShape.length * 15 + 50;
             setTimeout(() => {
                 createHoverAreaForLetter(letter);
-            }, 50);
+            }, totalDelay);
         }
 
         // === Initialization ===
