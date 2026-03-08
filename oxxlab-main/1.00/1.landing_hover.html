@@ -31,36 +31,6 @@
         }
 
         /* Navigation - 80% size */
-        .nav-works {
-            position: fixed;
-            top: 30px;
-            right: 102px;
-            z-index: 100;
-        }
-        
-        .nav-shop {
-            position: fixed;
-            top: 30px;
-            right: 32px;
-            z-index: 100;
-        }
-        
-        .nav-works a,
-        .nav-shop a {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            color: #f8f8fd;
-            font-size: 16px;
-            text-decoration: none;
-            line-height: 22px;
-            transition: opacity 0.3s ease;
-        }
-
-        .nav-works a:hover,
-        .nav-shop a:hover {
-            opacity: 0.8;
-        }
-
         /* Grid container - absolute positioning */
         .grid-container {
             position: fixed;
@@ -114,6 +84,33 @@
             white-space: nowrap;
         }
 
+        .typing-text a {
+            color: #f8f8fd;
+            text-decoration: underline;
+            text-decoration-thickness: 0.5px;
+            text-underline-offset: 4px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease, text-decoration-color 0.3s ease;
+        }
+
+        .typing-text:hover a {
+            opacity: 0.25;
+        }
+
+        .typing-text a:hover {
+            opacity: 1;
+            text-decoration: none;
+        }
+
+        .typing-text .ampersand {
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .typing-text:hover .ampersand {
+            opacity: 0.4;
+        }
+
         /* Letter hover areas */
         .letter-hover {
             position: fixed;
@@ -131,15 +128,6 @@
 </head>
 <body>
     <main class="slide">
-        <header role="banner">
-            <nav class="nav-works" role="navigation">
-                <a href="2.menu.html">works</a>
-            </nav>
-            <nav class="nav-shop" role="navigation">
-                <a href="#shop">shop</a>
-            </nav>
-        </header>
-        
         <div class="grid-container" id="gridContainer"></div>
         
         <div class="text-overlay" id="textOverlay">
@@ -366,10 +354,10 @@
                                 clearInterval(typeInterval);
                                 setTimeout(typeLabAndStudio, 2000);
                             }
-                        }, 100);
+                        }, 77);
                     }, 500);
                 }
-            }, 70);
+            }, 54);
         }
 
         function typeLabAndStudio() {
@@ -391,13 +379,15 @@
                                 typingText.textContent = fullText.substring(0, typeIndex);
                             } else {
                                 clearInterval(typeInterval);
+                                // 링크로 변환
+                                typingText.innerHTML = '<a href="2.menu.html">lab</a><span class="ampersand"> & </span><a href="#shop">studio</a>';
                                 animationComplete = true;
                                 setupLetterHoverAreas();
                             }
-                        }, 70);
+                        }, 54);
                     }, 300);
                 }
-            }, 50);
+            }, 38);
         }
 
         // === Hover Interaction ===
