@@ -24,49 +24,24 @@
         }
 
         .slide {
-            background-color: transparent;
             width: 100vw;
             height: 100vh;
             position: relative;
             overflow: hidden;
         }
 
-        /* Cross Pattern */
-        .pattern {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-        }
-
-        .cross {
-            position: absolute;
-            color: rgba(255, 255, 255, 0.05);
-            font-size: 14px;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 400;
-            line-height: 1;
-            transition: color 3s ease;
-        }
-
-        .cross.black {
-            color: rgba(0, 0, 0, 0.05);
-        }
-
-        /* Navigation */
+        /* Navigation - 80% size */
         .nav-works {
             position: fixed;
-            top: 37px;
-            right: 128px;
+            top: 30px;
+            right: 102px;
             z-index: 100;
         }
         
         .nav-shop {
             position: fixed;
-            top: 37px;
-            right: 40px;
+            top: 30px;
+            right: 32px;
             z-index: 100;
         }
         
@@ -75,15 +50,10 @@
             font-family: 'JetBrains Mono', monospace;
             font-weight: 700;
             color: #f8f8fd;
-            font-size: 20px;
+            font-size: 16px;
             text-decoration: none;
-            line-height: 27px;
-            transition: color 3s ease, opacity 0.3s ease;
-        }
-
-        .nav-works.black a,
-        .nav-shop.black a {
-            color: #141414;
+            line-height: 22px;
+            transition: opacity 0.3s ease;
         }
 
         .nav-works a:hover,
@@ -91,126 +61,64 @@
             opacity: 0.8;
         }
 
-        /* Center container */
-        .center-group {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 15;
-        }
-
-        /* Logo pixel container */
-        .logo-container {
-            position: relative;
-            width: 540px;
-            height: 192px;
-        }
-
-        .logo-pixel {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background-color: transparent;
-            transition: background-color 0.05s ease;
-        }
-        
-        .logo-pixel.show {
-            background-color: #f8f8fd;
-        }
-
-        .logo-pixel.black {
-            background-color: #141414;
-        }
-
-        /* Text */
-        .text-container {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .typing-text {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            color: #f8f8fd;
-            font-size: 39px;
-            letter-spacing: 39.78px;
-            line-height: 27px;
-            white-space: nowrap;
-            text-transform: lowercase;
-            transition: color 3s ease, letter-spacing 0.3s ease;
-            margin-right: -39.78px;
-        }
-
-        .typing-text.black {
-            color: #141414;
-        }
-
-        .typing-text.compact {
-            letter-spacing: 5.85px;
-            margin-right: -5.85px;
-        }
-
-        /* Pixel Overlay */
-        .pixel-overlay {
+        /* Grid container - absolute positioning */
+        .grid-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            pointer-events: none;
-            z-index: 10;
         }
 
-        .pixel {
+        /* Cell - absolute positioned */
+        .cell {
             position: absolute;
-            width: 12px;
-            height: 12px;
-            background: transparent;
-            transition: background-color 0.05s ease;
+            width: 28px;
+            height: 28px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
         }
 
-        .pixel.white {
-            background-color: #f8f8fd;
+        .cell.background {
+            background: #141414;
+            color: rgba(255, 255, 255, 0.12);
+            font-weight: 400;
         }
 
-        /* Separated pixels */
-        .separated-pixel {
+        .cell.masked {
+            background: #f8f8fd;
+            color: #141414;
+            font-weight: 800;
+        }
+
+        /* Text overlay - 80% size */
+        .text-overlay {
             position: fixed;
-            width: 12px;
-            height: 12px;
-            background-color: transparent;
-            z-index: 20;
-            transition: background-color 0.05s ease;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .separated-pixel.show {
-            background-color: #141414;
+        .typing-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 26px;
+            letter-spacing: 6px;
+            color: #f8f8fd;
+            text-transform: lowercase;
+            white-space: nowrap;
         }
 
-        /* Letter hover areas - 센터 그룹 내 각 글자용 */
-        .letter-hover-center {
-            position: absolute;
-            z-index: 25;
-            cursor: pointer;
-        }
-
-        /* Letter hover areas - 분리된 글자용 */
+        /* Letter hover areas */
         .letter-hover {
             position: fixed;
-            z-index: 25;
+            z-index: 60;
             cursor: pointer;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .letter-hover.active {
-            pointer-events: auto;
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -232,118 +140,216 @@
             </nav>
         </header>
         
-        <!-- 중앙 고정 그룹 -->
-        <div class="center-group" id="centerGroup">
-            <div class="logo-container" id="logoContainer"></div>
-            <div class="text-container">
-                <span class="typing-text" id="typingText">lab</span>
-            </div>
-        </div>
+        <div class="grid-container" id="gridContainer"></div>
         
-        <div class="pattern" role="presentation" aria-hidden="true"></div>
-        <div class="pixel-overlay" id="pixelOverlay"></div>
+        <div class="text-overlay" id="textOverlay">
+            <span class="typing-text" id="typingText">lab</span>
+        </div>
     </main>
 
     <script>
+        // === Configuration ===
+        const CELL_SIZE = 28;
+        const OX_CHARS = ['O', 'X'];
+        const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const CHANGE_INTERVAL = 100;
+        const CHANGE_PROBABILITY = 0.06;
+
+        // === State ===
+        let cells = [];
+        let cols = 0;
+        let rows = 0;
         let animationComplete = false;
-        let letterPixels = { o: [], x1: [], x2: [] };
+        let letterMasks = { o: [], x1: [], x2: [] };
+        let letterShapes = { o: [], x1: [], x2: [] };
         let letterSeparated = { o: false, x1: false, x2: false };
-        let separatedPixelGroups = { o: [], x1: [], x2: [] };
         let occupiedPositions = [];
+        let animationInterval = null;
 
-        // 각 글자의 열 범위 정의
-        const letterBounds = {
-            o: { startCol: 0, endCol: 14 },    // 0-14 (15 columns)
-            x1: { startCol: 15, endCol: 29 },  // 15-29 (15 columns)
-            x2: { startCol: 30, endCol: 44 }   // 30-44 (15 columns)
-        };
-
+        // === Narrow OXX Pattern (5열 per letter, gap 1칸, 허리 1칸) ===
+        // O(5) + gap(1) + X(5) + gap(1) + X(5) = 17열, 7행
         const oxxPattern = [
-            '000001110100000000000000000000000000000000000',
-            '000111011110000011100000011100011110000001111',
-            '001101101011000010110000110100010101000011010',
-            '011011011101100001111001111000001110000110100',
-            '011100000011100000101101010000000101100101100',
-            '010110000010110000110110110000000111100111000',
-            '111010000011100000011011100000000001011100000',
-            '010100000010110000001101000000000001111110000',
-            '011100000011100000001111000000000000110100000',
-            '101100000011010000010101100000000001101110000',
-            '011010000011100000111110110000000110110101000',
-            '011110000101100000101001101000000111010111100',
-            '010101010110100001110101110000001011000101000',
-            '001111111111000011010000011100001110000011110',
-            '000101010101000011110000110100011010000001011',
-            '000010110100000110000000001110101100000001101'
+            '01110011011011011',  // row 0
+            '11011011011011011',  // row 1
+            '11011001110001110',  // row 2
+            '11011000100000100',  // row 3 허리 (1칸)
+            '11011001110001110',  // row 4
+            '11011011011011011',  // row 5
+            '01110011011011011',  // row 6
         ];
 
-        function generateCrosses() {
-            const pattern = document.querySelector('.pattern');
-            pattern.innerHTML = '';
-            
-            const cols = Math.ceil(window.innerWidth / 160) + 1;
-            const rows = Math.ceil(window.innerHeight / 160) + 1;
-            const offsetX = (window.innerWidth - (cols - 1) * 160) / 2;
-            const offsetY = (window.innerHeight - (rows - 1) * 160) / 2;
-            
-            for (let row = 0; row < rows; row++) {
-                for (let col = 0; col < cols; col++) {
-                    const cross = document.createElement('span');
-                    cross.className = 'cross';
-                    cross.textContent = '+';
-                    cross.style.left = (offsetX + col * 160) + 'px';
-                    cross.style.top = (offsetY + row * 160) + 'px';
-                    pattern.appendChild(cross);
-                }
-            }
+        const PATTERN_COLS = oxxPattern[0].length; // 17
+        const PATTERN_ROWS = oxxPattern.length;    // 7
+
+        // === Utility Functions ===
+        function getRandomOX() {
+            return OX_CHARS[Math.floor(Math.random() * OX_CHARS.length)];
         }
 
-        function createOXXLogoPixels() {
-            const logoContainer = document.getElementById('logoContainer');
-            logoContainer.innerHTML = '';
-            letterPixels = { o: [], x1: [], x2: [] };
+        function getRandomChar() {
+            return ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
+        }
+
+        function getCellIndex(row, col) {
+            return row * cols + col;
+        }
+
+        // === 원본 글자 형태 추출 ===
+        function extractLetterShapes() {
+            letterShapes = { o: [], x1: [], x2: [] };
             
-            for (let row = 0; row < oxxPattern.length; row++) {
-                for (let col = 0; col < oxxPattern[row].length; col++) {
+            for (let row = 0; row < PATTERN_ROWS; row++) {
+                for (let col = 0; col < PATTERN_COLS; col++) {
                     if (oxxPattern[row][col] === '1') {
-                        const pixel = document.createElement('div');
-                        pixel.className = 'logo-pixel';
-                        pixel.style.left = (col * 12) + 'px';
-                        pixel.style.top = (row * 12) + 'px';
-                        pixel.dataset.col = col;
-                        pixel.dataset.row = row;
-                        logoContainer.appendChild(pixel);
+                        let letter = null;
+                        let relCol, relRow;
                         
-                        if (col < 15) {
-                            letterPixels.o.push(pixel);
-                            pixel.dataset.letter = 'o';
-                        } else if (col < 30) {
-                            letterPixels.x1.push(pixel);
-                            pixel.dataset.letter = 'x1';
-                        } else {
-                            letterPixels.x2.push(pixel);
-                            pixel.dataset.letter = 'x2';
+                        if (col <= 4) {
+                            letter = 'o';
+                            relCol = col;
+                            relRow = row;
+                        } else if (col >= 6 && col <= 10) {
+                            letter = 'x1';
+                            relCol = col - 6;
+                            relRow = row;
+                        } else if (col >= 12 && col <= 16) {
+                            letter = 'x2';
+                            relCol = col - 12;
+                            relRow = row;
+                        }
+                        
+                        if (letter) {
+                            letterShapes[letter].push({ relCol, relRow });
                         }
                     }
                 }
             }
         }
 
-        function animateLogoPixels() {
-            const allPixels = [...letterPixels.o, ...letterPixels.x1, ...letterPixels.x2];
-            const shuffled = allPixels.sort(() => Math.random() - 0.5);
+        // === Grid Creation with Absolute Positioning ===
+        function createGrid() {
+            const container = document.getElementById('gridContainer');
+            container.innerHTML = '';
+            cells = [];
             
-            shuffled.forEach((pixel) => {
-                const delay = Math.random() * 4000;
-                setTimeout(() => pixel.classList.add('show'), delay);
-            });
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            cols = Math.floor(screenWidth / CELL_SIZE);
+            rows = Math.floor(screenHeight / CELL_SIZE);
+
+            // 정확한 중앙 계산
+            const patternOffsetCol = Math.floor((cols - PATTERN_COLS) / 2);
+            const patternOffsetRow = Math.floor((rows - PATTERN_ROWS) / 2);
+
+            // Reset letter masks
+            letterMasks = { o: [], x1: [], x2: [] };
+
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell background';
+                    cell.textContent = getRandomChar();
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    
+                    // Absolute positioning
+                    cell.style.left = (col * CELL_SIZE) + 'px';
+                    cell.style.top = (row * CELL_SIZE) + 'px';
+
+                    const patternRow = row - patternOffsetRow;
+                    const patternCol = col - patternOffsetCol;
+
+                    let isMasked = false;
+                    let letter = null;
+
+                    if (patternRow >= 0 && patternRow < PATTERN_ROWS &&
+                        patternCol >= 0 && patternCol < PATTERN_COLS) {
+                        if (oxxPattern[patternRow][patternCol] === '1') {
+                            isMasked = true;
+                            cell.className = 'cell masked';
+                            cell.textContent = getRandomOX();
+
+                            let relCol, relRow;
+                            
+                            if (patternCol <= 4) {
+                                letter = 'o';
+                                relCol = patternCol;
+                                relRow = patternRow;
+                            } else if (patternCol >= 6 && patternCol <= 10) {
+                                letter = 'x1';
+                                relCol = patternCol - 6;
+                                relRow = patternRow;
+                            } else if (patternCol >= 12 && patternCol <= 16) {
+                                letter = 'x2';
+                                relCol = patternCol - 12;
+                                relRow = patternRow;
+                            }
+
+                            if (letter) {
+                                letterMasks[letter].push({
+                                    row: row,
+                                    col: col,
+                                    relCol: relCol,
+                                    relRow: relRow,
+                                    element: cell
+                                });
+                            }
+                        }
+                    }
+
+                    cell.dataset.masked = isMasked;
+                    cell.dataset.letter = letter || '';
+
+                    container.appendChild(cell);
+                    cells.push({
+                        element: cell,
+                        row: row,
+                        col: col,
+                        isMasked: isMasked,
+                        letter: letter
+                    });
+                }
+            }
+
+            updateTextPosition();
         }
 
-        // 초기 타이핑: lab → studio
+        function updateTextPosition() {
+            const textOverlay = document.getElementById('textOverlay');
+            const patternOffsetRow = Math.floor((rows - PATTERN_ROWS) / 2);
+            const patternOffsetCol = Math.floor((cols - PATTERN_COLS) / 2);
+            const bottomOfPattern = (patternOffsetRow + PATTERN_ROWS) * CELL_SIZE;
+            
+            // X1 중심 (col 6-10, 중심 = 8)
+            const x1CenterCol = patternOffsetCol + 8;
+            const x1CenterX = x1CenterCol * CELL_SIZE + CELL_SIZE / 2;
+            
+            textOverlay.style.top = (bottomOfPattern + 30) + 'px';
+            textOverlay.style.left = x1CenterX + 'px';
+            textOverlay.style.transform = 'translateX(-50%)';
+        }
+
+        // === Animation ===
+        function startRandomAnimation() {
+            animationInterval = setInterval(() => {
+                cells.forEach(cell => {
+                    if (Math.random() < CHANGE_PROBABILITY) {
+                        if (cell.isMasked) {
+                            cell.element.textContent = getRandomOX();
+                        } else {
+                            cell.element.textContent = getRandomChar();
+                        }
+                    }
+                });
+            }, CHANGE_INTERVAL);
+        }
+
+        // === Typing Animation ===
         function typeAnimation() {
             const typingText = document.getElementById('typingText');
             let charIndex = 3;
-            
+
             const deleteInterval = setInterval(() => {
                 if (charIndex > 0) {
                     charIndex--;
@@ -358,6 +364,7 @@
                                 typingText.textContent = 'studio'.substring(0, studioIndex);
                             } else {
                                 clearInterval(typeInterval);
+                                setTimeout(typeLabAndStudio, 2000);
                             }
                         }, 100);
                     }, 500);
@@ -365,35 +372,26 @@
             }, 70);
         }
 
-        // 모자이크 후 자동 타이핑: studio → lab & studio
         function typeLabAndStudio() {
             const typingText = document.getElementById('typingText');
-            const currentText = 'studio';
-            let charIndex = currentText.length;
-            
-            // 먼저 studio 지우기
+            let charIndex = 6;
+
             const deleteInterval = setInterval(() => {
                 if (charIndex > 0) {
                     charIndex--;
-                    typingText.textContent = currentText.substring(0, charIndex);
+                    typingText.textContent = 'studio'.substring(0, charIndex);
                 } else {
                     clearInterval(deleteInterval);
-                    
-                    // letter-spacing 변경
-                    typingText.classList.add('compact');
-                    
-                    // lab & studio 타이핑
                     setTimeout(() => {
                         const fullText = 'lab & studio';
                         let typeIndex = 0;
-                        
                         const typeInterval = setInterval(() => {
                             if (typeIndex < fullText.length) {
                                 typeIndex++;
                                 typingText.textContent = fullText.substring(0, typeIndex);
                             } else {
                                 clearInterval(typeInterval);
-                                // 타이핑 완료 후 호버 인터랙션 활성화
+                                animationComplete = true;
                                 setupLetterHoverAreas();
                             }
                         }, 70);
@@ -402,243 +400,167 @@
             }, 50);
         }
 
-        function createPixelGrid() {
-            const pixelOverlay = document.getElementById('pixelOverlay');
-            const cols = Math.ceil(window.innerWidth / 12);
-            const rows = Math.ceil(window.innerHeight / 12);
-            const pixels = [];
-
-            for (let row = 0; row < rows; row++) {
-                for (let col = 0; col < cols; col++) {
-                    const pixel = document.createElement('div');
-                    pixel.className = 'pixel';
-                    pixel.style.left = (col * 12) + 'px';
-                    pixel.style.top = (row * 12) + 'px';
-                    pixelOverlay.appendChild(pixel);
-                    pixels.push({ element: pixel });
-                }
-            }
-            return pixels;
-        }
-
-        function animatePixels(pixels) {
-            const shuffled = [...pixels].sort(() => Math.random() - 0.5);
-            shuffled.forEach((pixel) => {
-                const delay = Math.random() * 4000;
-                setTimeout(() => pixel.element.classList.add('white'), delay);
-            });
-        }
-
-        // 각 글자별 호버 영역 생성 (센터 그룹 내)
+        // === Hover Interaction ===
         function setupLetterHoverAreas() {
-            const logoContainer = document.getElementById('logoContainer');
-            
-            Object.keys(letterBounds).forEach(letter => {
-                if (letterSeparated[letter]) return; // 이미 분리된 글자는 스킵
-                
-                const bounds = letterBounds[letter];
-                const hoverArea = document.createElement('div');
-                hoverArea.className = 'letter-hover-center';
-                hoverArea.id = `hover-center-${letter}`;
-                hoverArea.style.left = (bounds.startCol * 12) + 'px';
-                hoverArea.style.top = '0px';
-                hoverArea.style.width = ((bounds.endCol - bounds.startCol + 1) * 12) + 'px';
-                hoverArea.style.height = '192px';
-                
-                hoverArea.addEventListener('mouseenter', () => {
-                    if (!letterSeparated[letter]) {
-                        separateSingleLetter(letter);
-                    }
-                });
-                
-                logoContainer.appendChild(hoverArea);
+            Object.keys(letterMasks).forEach(letter => {
+                if (letterSeparated[letter] || letterMasks[letter].length === 0) return;
+                createHoverAreaForLetter(letter);
             });
-            
-            animationComplete = true;
         }
 
-        function getRandomGridPosition() {
-            const gridCols = 8;
-            const gridRows = 5;
-            const cellWidth = window.innerWidth / gridCols;
-            const cellHeight = window.innerHeight / gridRows;
-            const padding = 80;
-            
-            let position;
-            let attempts = 0;
-            
-            do {
-                const col = Math.floor(Math.random() * gridCols);
-                const row = Math.floor(Math.random() * gridRows);
-                
-                position = {
-                    x: padding + (col * cellWidth) + (cellWidth / 2) - 90,
-                    y: padding + (row * cellHeight) + (cellHeight / 2) - 96,
-                    gridKey: `${col}-${row}`
-                };
-                attempts++;
-                if (attempts >= 100) break;
-            } while (occupiedPositions.includes(position.gridKey));
-            
-            occupiedPositions.push(position.gridKey);
-            return position;
-        }
+        function createHoverAreaForLetter(letter) {
+            const maskCells = letterMasks[letter];
+            if (maskCells.length === 0) return;
 
-        // 단일 글자만 분리
-        function separateSingleLetter(letter) {
-            letterSeparated[letter] = true;
-            
-            const pixels = letterPixels[letter];
-            const bounds = letterBounds[letter];
-            const newPos = getRandomGridPosition();
-            
-            // 센터 호버 영역 제거
-            const centerHover = document.getElementById(`hover-center-${letter}`);
-            if (centerHover) centerHover.remove();
-            
-            // 원본 픽셀 숨기기
-            pixels.forEach(pixel => {
-                pixel.classList.remove('show');
-                pixel.classList.remove('black');
+            const existingHover = document.getElementById(`hover-${letter}`);
+            if (existingHover) existingHover.remove();
+
+            let minRow = Infinity, maxRow = -Infinity;
+            let minCol = Infinity, maxCol = -Infinity;
+
+            maskCells.forEach(cell => {
+                minRow = Math.min(minRow, cell.row);
+                maxRow = Math.max(maxRow, cell.row);
+                minCol = Math.min(minCol, cell.col);
+                maxCol = Math.max(maxCol, cell.col);
             });
 
-            // 새 위치에 픽셀 생성
-            const newPixels = [];
-            
-            pixels.forEach(pixel => {
-                const col = parseInt(pixel.dataset.col);
-                const row = parseInt(pixel.dataset.row);
-                const relCol = col - bounds.startCol;
-                const relRow = row;
-                
-                const newPixel = document.createElement('div');
-                newPixel.className = 'separated-pixel';
-                newPixel.style.left = (newPos.x + relCol * 12) + 'px';
-                newPixel.style.top = (newPos.y + relRow * 12) + 'px';
-                newPixel.dataset.letter = letter;
-                newPixel.dataset.relCol = relCol;
-                newPixel.dataset.relRow = relRow;
-                document.body.appendChild(newPixel);
-                newPixels.push(newPixel);
-            });
-
-            separatedPixelGroups[letter] = newPixels;
-
-            // 랜덤하게 나타남
-            const shuffled = [...newPixels].sort(() => Math.random() - 0.5);
-            shuffled.forEach((pixel, index) => {
-                setTimeout(() => pixel.classList.add('show'), index * 20);
-            });
-
-            // 분리된 글자용 호버 영역 생성
-            setTimeout(() => {
-                const width = (bounds.endCol - bounds.startCol + 1) * 12;
-                const height = 192;
-                createSeparatedLetterHoverArea(letter, newPixels, newPos.x, newPos.y, width, height);
-            }, newPixels.length * 20 + 100);
-        }
-
-        // 분리된 글자용 호버 영역
-        function createSeparatedLetterHoverArea(letter, pixels, x, y, width, height) {
             const hoverArea = document.createElement('div');
-            hoverArea.className = 'letter-hover active';
-            hoverArea.style.left = x + 'px';
-            hoverArea.style.top = y + 'px';
-            hoverArea.style.width = width + 'px';
-            hoverArea.style.height = height + 'px';
-            
-            let isMoving = false;
-            
+            hoverArea.className = 'letter-hover';
+            hoverArea.id = `hover-${letter}`;
+            hoverArea.style.left = (minCol * CELL_SIZE) + 'px';
+            hoverArea.style.top = (minRow * CELL_SIZE) + 'px';
+            hoverArea.style.width = ((maxCol - minCol + 1) * CELL_SIZE) + 'px';
+            hoverArea.style.height = ((maxRow - minRow + 1) * CELL_SIZE) + 'px';
+
             hoverArea.addEventListener('mouseenter', () => {
-                if (isMoving) return;
-                isMoving = true;
-                hoverArea.remove();
-                
-                // occupied에서 제거
-                const currentGridKey = occupiedPositions.find(key => {
-                    const [col, row] = key.split('-').map(Number);
-                    const cellWidth = window.innerWidth / 8;
-                    const cellHeight = window.innerHeight / 5;
-                    const cellX = 80 + (col * cellWidth) + (cellWidth / 2) - 90;
-                    const cellY = 80 + (row * cellHeight) + (cellHeight / 2) - 96;
-                    return Math.abs(cellX - x) < cellWidth/2 && Math.abs(cellY - y) < cellHeight/2;
-                });
-                
-                if (currentGridKey) {
-                    occupiedPositions = occupiedPositions.filter(k => k !== currentGridKey);
-                }
-                
-                moveLetterToNewPosition(letter, pixels, width, height);
+                moveLetter(letter);
             });
-            
+
             document.body.appendChild(hoverArea);
         }
 
-        // 분리된 글자 새 위치로 이동
-        function moveLetterToNewPosition(letter, pixels, width, height) {
-            const newPos = getRandomGridPosition();
+        function getRandomGridPosition(letterWidth, letterHeight) {
+            const marginX = 3;
+            const marginY = 3;
             
-            // 픽셀 숨기기
-            pixels.forEach(p => p.classList.remove('show'));
-            
-            setTimeout(() => {
-                pixels.forEach(pixel => {
-                    const relCol = parseInt(pixel.dataset.relCol);
-                    const relRow = parseInt(pixel.dataset.relRow);
-                    pixel.style.left = (newPos.x + relCol * 12) + 'px';
-                    pixel.style.top = (newPos.y + relRow * 12) + 'px';
-                });
-                
-                // 랜덤하게 나타남
-                const shuffled = [...pixels].sort(() => Math.random() - 0.5);
-                shuffled.forEach((pixel, index) => {
-                    setTimeout(() => pixel.classList.add('show'), index * 20);
-                });
+            const maxCol = cols - letterWidth - marginX;
+            const maxRow = rows - letterHeight - marginY;
 
-                // 호버 영역 재생성
-                setTimeout(() => {
-                    createSeparatedLetterHoverArea(letter, pixels, newPos.x, newPos.y, width, height);
-                }, pixels.length * 20 + 100);
-            }, 100);
+            let position;
+            let attempts = 0;
+
+            do {
+                position = {
+                    col: marginX + Math.floor(Math.random() * Math.max(1, maxCol - marginX)),
+                    row: marginY + Math.floor(Math.random() * Math.max(1, maxRow - marginY)),
+                };
+                
+                const gridKey = `${Math.floor(position.col / 10)}-${Math.floor(position.row / 5)}`;
+                position.gridKey = gridKey;
+                
+                attempts++;
+            } while (occupiedPositions.includes(position.gridKey) && attempts < 30);
+
+            if (occupiedPositions.length > 3) {
+                occupiedPositions.shift();
+            }
+            occupiedPositions.push(position.gridKey);
+            
+            return position;
         }
 
-        function startAnimation() {
-            typeAnimation();
-            
+        function moveLetter(letter) {
+            const hoverArea = document.getElementById(`hover-${letter}`);
+            if (hoverArea) hoverArea.remove();
+
+            const currentCells = letterMasks[letter];
+            if (currentCells.length === 0) return;
+
+            // 현재 셀들 초기화
+            currentCells.forEach(cellData => {
+                const idx = getCellIndex(cellData.row, cellData.col);
+                if (idx >= 0 && idx < cells.length) {
+                    cells[idx].element.className = 'cell background';
+                    cells[idx].element.textContent = getRandomChar();
+                    cells[idx].element.dataset.masked = 'false';
+                    cells[idx].element.dataset.letter = '';
+                    cells[idx].isMasked = false;
+                    cells[idx].letter = null;
+                }
+            });
+
+            // 원본 형태 사용
+            const shape = letterShapes[letter];
+            if (!shape || shape.length === 0) return;
+
+            // 형태 크기 계산
+            let maxRelCol = 0, maxRelRow = 0;
+            shape.forEach(s => {
+                maxRelCol = Math.max(maxRelCol, s.relCol);
+                maxRelRow = Math.max(maxRelRow, s.relRow);
+            });
+            const letterWidth = maxRelCol + 1;
+            const letterHeight = maxRelRow + 1;
+
+            // 새 위치
+            const newPos = getRandomGridPosition(letterWidth, letterHeight);
+
+            // 새 위치에 형태 그리기
+            const newMaskCells = [];
+
+            shape.forEach(s => {
+                const newCol = newPos.col + s.relCol;
+                const newRow = newPos.row + s.relRow;
+
+                if (newCol >= 0 && newCol < cols && newRow >= 0 && newRow < rows) {
+                    const cellIndex = getCellIndex(newRow, newCol);
+                    if (cellIndex >= 0 && cellIndex < cells.length) {
+                        const targetCell = cells[cellIndex];
+                        targetCell.element.className = 'cell masked';
+                        targetCell.element.textContent = getRandomOX();
+                        targetCell.element.dataset.masked = 'true';
+                        targetCell.element.dataset.letter = letter;
+                        targetCell.isMasked = true;
+                        targetCell.letter = letter;
+
+                        newMaskCells.push({
+                            row: newRow,
+                            col: newCol,
+                            relCol: s.relCol,
+                            relRow: s.relRow,
+                            element: targetCell.element
+                        });
+                    }
+                }
+            });
+
+            letterMasks[letter] = newMaskCells;
+            letterSeparated[letter] = true;
+
             setTimeout(() => {
-                const pixels = createPixelGrid();
-                animatePixels(pixels);
-                animateLogoPixels();
-                
-                // 색상 변경
-                setTimeout(() => {
-                    document.querySelector('.nav-works').classList.add('black');
-                    document.querySelector('.nav-shop').classList.add('black');
-                    document.getElementById('typingText').classList.add('black');
-                    document.querySelectorAll('.cross').forEach(c => c.classList.add('black'));
-                    document.querySelectorAll('.logo-pixel.show').forEach(p => p.classList.add('black'));
-                    
-                    const observer = new MutationObserver(() => {
-                        document.querySelectorAll('.logo-pixel.show:not(.black)').forEach(p => p.classList.add('black'));
-                    });
-                    observer.observe(document.getElementById('logoContainer'), { childList: true, subtree: true, attributes: true });
-                }, 1500);
-                
-                // 모자이크 완료 후 자동으로 lab & studio 타이핑
-                setTimeout(() => {
-                    typeLabAndStudio();
-                }, 4000);
-            }, 2800);
+                createHoverAreaForLetter(letter);
+            }, 50);
         }
 
-        generateCrosses();
-        createOXXLogoPixels();
-        
+        // === Initialization ===
+        function init() {
+            extractLetterShapes();
+            createGrid();
+            startRandomAnimation();
+            setTimeout(typeAnimation, 1500);
+        }
+
         window.addEventListener('resize', () => {
-            if (!animationComplete) generateCrosses();
+            clearTimeout(window.resizeTimeout);
+            window.resizeTimeout = setTimeout(() => {
+                if (!animationComplete) {
+                    createGrid();
+                }
+            }, 200);
         });
-        
-        setTimeout(startAnimation, 1500);
+
+        init();
     </script>
 </body>
 </html>
