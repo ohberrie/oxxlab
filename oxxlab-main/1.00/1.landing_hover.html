@@ -43,10 +43,7 @@
         /* Cell - absolute positioned */
         .cell {
             position: absolute;
-            width: 28px;
-            height: 28px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 17px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -77,8 +74,8 @@
         .typing-text {
             font-family: 'JetBrains Mono', monospace;
             font-weight: 700;
-            font-size: 26px;
-            letter-spacing: 6px;
+            font-size: clamp(16px, 2.5vw, 26px);
+            letter-spacing: clamp(3px, 0.5vw, 6px);
             color: #f8f8fd;
             text-transform: lowercase;
             white-space: nowrap;
@@ -160,7 +157,23 @@
 
     <script>
         // === Configuration ===
-        const CELL_SIZE = 28;
+        function getCellSize() {
+            const vw = window.innerWidth;
+            if (vw <= 480) return 16;
+            if (vw <= 768) return 20;
+            if (vw <= 1024) return 24;
+            return 28;
+        }
+        let CELL_SIZE = getCellSize();
+
+        function getCellFontSize() {
+            const vw = window.innerWidth;
+            if (vw <= 480) return 10;
+            if (vw <= 768) return 12;
+            if (vw <= 1024) return 14;
+            return 17;
+        }
+
         const OX_CHARS = ['O', 'X'];
         const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const CHANGE_INTERVAL = 80;
@@ -242,10 +255,13 @@
             const container = document.getElementById('gridContainer');
             container.innerHTML = '';
             cells = [];
-            
+
+            CELL_SIZE = getCellSize();
+            const fontSize = getCellFontSize();
+
             const screenWidth = window.innerWidth;
             const screenHeight = window.innerHeight;
-            
+
             cols = Math.floor(screenWidth / CELL_SIZE);
             rows = Math.floor(screenHeight / CELL_SIZE);
 
@@ -263,10 +279,13 @@
                     cell.textContent = getRandomChar();
                     cell.dataset.row = row;
                     cell.dataset.col = col;
-                    
-                    // Absolute positioning
+
+                    // Absolute positioning with dynamic size
                     cell.style.left = (col * CELL_SIZE) + 'px';
                     cell.style.top = (row * CELL_SIZE) + 'px';
+                    cell.style.width = CELL_SIZE + 'px';
+                    cell.style.height = CELL_SIZE + 'px';
+                    cell.style.fontSize = fontSize + 'px';
 
                     const patternRow = row - patternOffsetRow;
                     const patternCol = col - patternOffsetCol;
@@ -565,19 +584,38 @@
             }, totalDelay);
         }
 
+        // === Skip to final state (for returning visitors) ===
+        function skipToFinalState() {
+            const typingText = document.getElementById('typingText');
+            typingText.innerHTML = '<a href="2.menu.html">lab</a><span class="ampersand"> & </span><a href="#shop">studio</a>';
+            animationComplete = true;
+            setupLetterHoverAreas();
+        }
+
         // === Initialization ===
         function init() {
             extractLetterShapes();
             createGrid();
             startRandomAnimation();
-            setTimeout(typeAnimation, 1500);
+
+            const hasVisited = sessionStorage.getItem('oxx_visited');
+            if (hasVisited) {
+                // Returning visitor: skip typing animation, show final state immediately
+                skipToFinalState();
+            } else {
+                // First visit: play full animation
+                sessionStorage.setItem('oxx_visited', 'true');
+                setTimeout(typeAnimation, 1500);
+            }
         }
 
         window.addEventListener('resize', () => {
             clearTimeout(window.resizeTimeout);
             window.resizeTimeout = setTimeout(() => {
-                if (!animationComplete) {
-                    createGrid();
+                CELL_SIZE = getCellSize();
+                createGrid();
+                if (animationComplete) {
+                    setupLetterHoverAreas();
                 }
             }, 200);
         });

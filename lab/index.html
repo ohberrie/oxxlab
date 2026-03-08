@@ -3,7 +3,9 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
-    <title>OXX Studio - Projects</title>
+    <title>Projects — OXX Lab</title>
+    <meta name="description" content="Explore OXX Lab projects: SHAPER, Intuition Encoder, AIAA — computational design tools and systems." />
+    <link rel="canonical" href="https://oxxlab.com/lab" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
@@ -308,9 +310,9 @@
     <main class="slide">
         <header role="banner">
             <nav class="nav-bar" role="navigation" aria-label="Main navigation">
-                <a href="1.landing_hover.html">oxx studio</a>
+                <a href="/">oxx studio</a>
                 <div class="nav-right">
-                    <a href="#works">works</a>
+                    <a href="/works">works</a>
                     <a href="#shop">shop</a>
                 </div>
             </nav>
@@ -338,7 +340,7 @@
             {
                 name: 'SHAPER',
                 description: 'breif info about the project',
-                link: '3-1.transform.html',
+                link: '/lab/shaper/transform',
                 svg: `<svg viewBox="0 0 198.84 118.87" xmlns="http://www.w3.org/2000/svg">
                     <polygon points="46.96 0 46.96 47.95 70.94 47.95 70.94 70.92 103.92 70.92 103.92 23.97 150.88 23.97 150.88 46.95 198.84 46.95 198.84 94.9 150.88 94.9 150.88 71.92 116.91 71.92 116.91 118.87 69.94 118.87 69.94 96.9 23.98 96.9 23.98 49.45 22.48 47.95 0 47.95 0 0 46.96 0" fill="currentColor"/>
                 </svg>`
@@ -374,14 +376,11 @@
 
         let currentHoveredProject = null;
 
-        // Get the current logo size based on viewport
         function getLogoSize() {
             const vw = window.innerWidth;
-            // Matches clamp(100px, 10.4vw, 200px)
             return Math.min(200, Math.max(100, vw * 0.104));
         }
 
-        // Check if two rectangles overlap
         function isOverlapping(rect1, rect2) {
             return !(rect1.right < rect2.left ||
                      rect1.left > rect2.right ||
@@ -389,7 +388,6 @@
                      rect1.top > rect2.bottom);
         }
 
-        // Get random position that doesn't overlap with existing items
         function getRandomPosition(existingPositions, containerWidth, containerHeight, itemWidth, itemHeight) {
             const maxAttempts = 100;
             let attempts = 0;
@@ -435,7 +433,6 @@
             };
         }
 
-        // Create project items
         function createProjects() {
             const container = document.getElementById('projectsContainer');
             container.innerHTML = '';
@@ -490,26 +487,23 @@
             });
         }
 
-        // Debounced resize handler
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(createProjects, 250);
         });
 
-        // Update project info on hover
         function updateProjectInfo(project) {
             const title = document.querySelector('.project-title');
             const description = document.querySelector('.project-description');
             const projectInfo = document.querySelector('.project-info');
             const playIcon = document.querySelector('.play-icon');
-            
+
             const displayName = project.name.replace('\n', ' ');
             title.textContent = displayName;
             description.textContent = project.description;
             description.classList.add('visible');
-            
-            // Add two-lines class if the project name contains a line break
+
             if (project.name.includes('\n')) {
                 projectInfo.classList.add('two-lines');
                 playIcon.classList.add('two-lines');
@@ -519,20 +513,18 @@
             }
         }
 
-        // Reset project info
         function resetProjectInfo() {
             const title = document.querySelector('.project-title');
             const description = document.querySelector('.project-description');
             const projectInfo = document.querySelector('.project-info');
             const playIcon = document.querySelector('.play-icon');
-            
+
             title.textContent = 'PROJECTS';
             description.classList.remove('visible');
             projectInfo.classList.remove('two-lines');
             playIcon.classList.remove('two-lines');
         }
 
-        // Initialize
         createProjects();
     </script>
 </body>

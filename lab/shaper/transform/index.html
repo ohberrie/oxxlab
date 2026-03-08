@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
     <title>SHAPER - Transform - OXX Studio</title>
+    <link rel="canonical" href="https://oxxlab.com/lab/shaper/transform" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
@@ -49,14 +50,14 @@
             left: 1673px;
             z-index: 20;
         }
-        
+
         .nav-shop {
             position: absolute;
             top: 38px;
             left: 1797px;
             z-index: 20;
         }
-        
+
         .nav-home a,
         .nav-works a,
         .nav-shop a {
@@ -250,10 +251,10 @@
     <main class="slide">
         <header role="banner">
             <nav class="nav-home" role="navigation" aria-label="Home navigation">
-                <a href="1.landing_hover.html">oxx studio</a>
+                <a href="/">oxx studio</a>
             </nav>
             <nav class="nav-works" role="navigation" aria-label="Works navigation">
-                <a href="2.menu.html">works</a>
+                <a href="/lab">works</a>
             </nav>
             <nav class="nav-shop" role="navigation" aria-label="Shop navigation">
                 <a href="#shop">shop</a>
@@ -267,13 +268,13 @@
                 <path d="M20 9L0.499999 17.6603L0.5 0.339746L20 9Z" fill="#141414"/>
             </svg>
         </div>
-        
-        <a href="3-1.transform.html" class="menu-item menu-transform">transform</a>
-        <a href="3-2.process.html" class="menu-item menu-process">process</a>
-        <a href="3-3.logic.html" class="menu-item menu-logic">logic</a>
+
+        <a href="/lab/shaper/transform" class="menu-item menu-transform">transform</a>
+        <a href="/lab/shaper/process" class="menu-item menu-process">process</a>
+        <a href="/lab/shaper/logic" class="menu-item menu-logic">logic</a>
 
         <div class="center-rectangle">
-            <img src="tr1.png" alt="Transform visualization" id="transformImage">
+            <img src="/assets/img/tr1.png" alt="Transform visualization" id="transformImage">
         </div>
 
         <div class="parameter parameter-a">parameter A</div>
@@ -311,7 +312,7 @@
 
         const codeText = document.querySelector('.code-text');
         const transformImage = document.getElementById('transformImage');
-        const imageOptions = ['tr1.png', 'tr2.png', 'tr3.png'];
+        const imageOptions = ['/assets/img/tr1.png', '/assets/img/tr2.png', '/assets/img/tr3.png'];
         let isDragging = false;
         let currentSlider = null;
 
@@ -321,11 +322,11 @@
             const scale = rect.width / 1920;
             const newLeft = Math.max(slider.min, Math.min(slider.max, (clientX - rect.left) / scale - 7.5));
             slider.element.style.left = newLeft + 'px';
-            
+
             const percentage = ((newLeft - slider.min) / (slider.max - slider.min)) * 100;
             slider.value = percentage;
             slider.element.setAttribute('aria-valuenow', Math.round(percentage));
-            
+
             updateVisualization();
         }
 
@@ -333,7 +334,7 @@
             // Update code display
             const randomCode = Math.floor(1000000 + Math.random() * 9000000);
             codeText.textContent = '#' + randomCode.toString();
-            
+
             // Update image randomly
             const randomIndex = Math.floor(Math.random() * imageOptions.length);
             transformImage.src = imageOptions[randomIndex];
@@ -358,11 +359,11 @@
                 const scale = rect.width / 1920;
                 const newLeft = Math.max(slider.min, Math.min(slider.max, (e.clientX - rect.left) / scale - 7.5));
                 slider.element.style.left = newLeft + 'px';
-                
+
                 const percentage = ((newLeft - slider.min) / (slider.max - slider.min)) * 100;
                 slider.value = percentage;
                 slider.element.setAttribute('aria-valuenow', Math.round(percentage));
-                
+
                 updateVisualization();
             });
         });
@@ -382,7 +383,7 @@
         Object.values(sliders).forEach(slider => {
             slider.element.addEventListener('keydown', (e) => {
                 let newValue = slider.value;
-                
+
                 if (e.key === 'ArrowLeft') {
                     newValue = Math.max(0, slider.value - 5);
                 } else if (e.key === 'ArrowRight') {
@@ -390,12 +391,12 @@
                 } else {
                     return;
                 }
-                
+
                 slider.value = newValue;
                 const newLeft = slider.min + (newValue / 100) * (slider.max - slider.min);
                 slider.element.style.left = newLeft + 'px';
                 slider.element.setAttribute('aria-valuenow', Math.round(newValue));
-                
+
                 updateVisualization();
                 e.preventDefault();
             });
