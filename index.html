@@ -95,20 +95,40 @@
 
         .typing-text a {
             color: #f8f8fd;
-            text-decoration: underline;
-            text-decoration-thickness: 1px;
-            text-underline-offset: 4px;
+            text-decoration: none;
             opacity: 0.8;
-            transition: opacity 0.3s ease, text-decoration-color 0.3s ease;
+            transition: opacity 0.3s ease;
+            position: relative;
+            display: inline-block;
+        }
+
+        .typing-text a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 100%;
+            height: 1px;
+            background-color: #f8f8fd;
+            transform: scaleX(1);
+            transform-origin: left;
+            transition: transform 0.3s ease;
         }
 
         .typing-text:hover a {
             opacity: 0.25;
         }
 
+        .typing-text:hover a::after {
+            transform: scaleX(0.3);
+        }
+
         .typing-text a:hover {
             opacity: 1;
-            text-decoration: none;
+        }
+
+        .typing-text a:hover::after {
+            transform: scaleX(0);
         }
 
         .typing-text .ampersand {
@@ -418,7 +438,7 @@
                                 typingText.textContent = fullText.substring(0, typeIndex);
                             } else {
                                 clearInterval(typeInterval);
-                                typingText.innerHTML = '<a href="/lab">lab</a><span class="ampersand"> & </span><a href="#shop">studio</a>';
+                                typingText.innerHTML = '<a href="/lab">lab</a><span class="ampersand"> & </span><a href="/works">studio</a>';
                                 animationComplete = true;
                                 setupLetterHoverAreas();
                             }
@@ -574,7 +594,7 @@
         // === Skip to final state (for returning visitors) ===
         function skipToFinalState() {
             const typingText = document.getElementById('typingText');
-            typingText.innerHTML = '<a href="/lab">lab</a><span class="ampersand"> & </span><a href="#shop">studio</a>';
+            typingText.innerHTML = '<a href="/lab">lab</a><span class="ampersand"> & </span><a href="/works">studio</a>';
             animationComplete = true;
             setupLetterHoverAreas();
         }

@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
     <title>SHAPER - Logic - OXX Studio</title>
+    <link rel="canonical" href="https://oxxlab.com/works/shaper/logic" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&display=swap" rel="stylesheet">
@@ -19,9 +20,6 @@
             overflow: hidden;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
             font-family: 'JetBrains Mono', monospace;
         }
@@ -49,14 +47,14 @@
             left: 1673px;
             z-index: 20;
         }
-        
+
         .nav-shop {
             position: absolute;
             top: 38px;
             left: 1797px;
             z-index: 20;
         }
-        
+
         .nav-home a,
         .nav-works a,
         .nav-shop a {
@@ -101,25 +99,20 @@
             opacity: 0.6;
         }
 
-        .menu-transform {
+        .menu-configure {
             left: 53px;
             top: 272px;
         }
 
-        .menu-process {
-            left: 53px;
-            top: 329px;
-        }
-
         .menu-logic {
             left: 85px;
-            top: 385px;
+            top: 329px;
         }
 
         .arrow-icon {
             position: absolute;
             left: 48px;
-            top: 390px;
+            top: 334px;
             width: 20px;
             height: 18px;
         }
@@ -159,15 +152,15 @@
             overflow: visible;
             background-color: transparent;
         }
-        
+
         .image-container:nth-child(1) {
             left: 547px;
         }
-        
+
         .image-container:nth-child(2) {
             left: 1000px;
         }
-        
+
         .image-container:nth-child(3) {
             left: 1445px;
         }
@@ -304,13 +297,13 @@
     <main class="slide">
         <header role="banner">
             <nav class="nav-home" role="navigation" aria-label="Home navigation">
-                <a href="1.landing_hover.html">oxx studio</a>
+                <a href="/">oxx studio</a>
             </nav>
-            <nav class="nav-works" role="navigation" aria-label="Works navigation">
-                <a href="2.menu.html">works</a>
+            <nav class="nav-works" role="navigation" aria-label="Lab navigation">
+                <a href="/lab">lab</a>
             </nav>
-            <nav class="nav-shop" role="navigation" aria-label="Shop navigation">
-                <a href="#shop">shop</a>
+            <nav class="nav-shop" role="navigation" aria-label="Works navigation">
+                <a href="/works">works</a>
             </nav>
         </header>
 
@@ -321,10 +314,9 @@
                 <path d="M20 9L0.499999 17.6603L0.5 0.339746L20 9Z" fill="#141414"/>
             </svg>
         </div>
-        
-        <a href="3-1.transform.html" class="menu-item menu-transform">transform</a>
-        <a href="3-2.process.html" class="menu-item menu-process">process</a>
-        <a href="3-3.logic.html" class="menu-item menu-logic">logic</a>
+
+        <a href="/works/shaper/configure" class="menu-item menu-configure">configure</a>
+        <a href="/works/shaper/logic" class="menu-item menu-logic">logic</a>
 
         <!-- Scrollable area -->
         <div class="scrollable-area">
@@ -333,17 +325,17 @@
                 <div class="logic-images">
                     <!-- First image - basic park scene -->
                     <div class="image-container">
-                        <img src="logic1_1.png" alt="Park scene basic">
+                        <img src="/assets/img/logic1_1.png" alt="Park scene basic">
                     </div>
 
                     <!-- Second image - with measurements -->
                     <div class="image-container">
-                        <img src="logic1_2.png" alt="Park scene with measurements">
+                        <img src="/assets/img/logic1_2.png" alt="Park scene with measurements">
                     </div>
 
                     <!-- Third image - with black shape -->
                     <div class="image-container">
-                        <img src="logic1_3.png" alt="Park scene with shape">
+                        <img src="/assets/img/logic1_3.png" alt="Park scene with shape">
                     </div>
                 </div>
 
@@ -371,11 +363,11 @@
 
                 <!-- Additional images that appear on scroll -->
                 <div class="scroll-image-2" id="scrollImage2">
-                    <img src="logic2.png" alt="Logic image 2">
+                    <img src="/assets/img/logic2.png" alt="Logic image 2">
                 </div>
 
                 <div class="scroll-image-3" id="scrollImage3">
-                    <img src="logic3.png" alt="Logic image 3">
+                    <img src="/assets/img/logic3.png" alt="Logic image 3">
                 </div>
             </div>
         </div>
@@ -413,7 +405,7 @@
             } else {
                 scrollImage2.classList.remove('visible');
             }
-            
+
             // Show image 3 after scrolling down 2x (1960px)
             if (Math.abs(currentY) >= 1960) {
                 scrollImage3.classList.add('visible');
