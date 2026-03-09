@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
     <title>SHAPER - Process - OXX Studio</title>
+    <link rel="canonical" href="https://oxxlab.com/lab/shaper/process" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&display=swap" rel="stylesheet">
@@ -19,9 +20,6 @@
             overflow: hidden;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
             font-family: 'JetBrains Mono', monospace;
         }
@@ -49,14 +47,14 @@
             left: 1673px;
             z-index: 20;
         }
-        
+
         .nav-shop {
             position: absolute;
             top: 38px;
             left: 1797px;
             z-index: 20;
         }
-        
+
         .nav-home a,
         .nav-works a,
         .nav-shop a {
@@ -323,10 +321,10 @@
     <main class="slide">
         <header role="banner">
             <nav class="nav-home" role="navigation" aria-label="Home navigation">
-                <a href="1.landing_hover.html">oxx studio</a>
+                <a href="/">oxx studio</a>
             </nav>
             <nav class="nav-works" role="navigation" aria-label="Works navigation">
-                <a href="2.menu.html">works</a>
+                <a href="/lab">works</a>
             </nav>
             <nav class="nav-shop" role="navigation" aria-label="Shop navigation">
                 <a href="#shop">shop</a>
@@ -340,10 +338,10 @@
                 <path d="M20 9L0.499999 17.6603L0.5 0.339746L20 9Z" fill="#141414"/>
             </svg>
         </div>
-        
-        <a href="3-1.transform.html" class="menu-item menu-transform">transform</a>
-        <a href="3-2.process.html" class="menu-item menu-process">process</a>
-        <a href="3-3.logic.html" class="menu-item menu-logic">logic</a>
+
+        <a href="/lab/shaper/transform" class="menu-item menu-transform">transform</a>
+        <a href="/lab/shaper/process" class="menu-item menu-process">process</a>
+        <a href="/lab/shaper/logic" class="menu-item menu-logic">logic</a>
 
         <!-- Scrollable area with process tags -->
         <div class="scrollable-area">
@@ -360,22 +358,22 @@
 
                 <!-- FDMV and style_sel elements (now inside scrollable content) -->
                 <div class="process-container" style="position: absolute; left: 1px; top: 123px;"></div>
-                
+
                 <div class="process-label" style="position: absolute; left: 13px; top: 159px;" id="label-f">F</div>
                 <div class="process-slider" style="position: absolute; left: 63px; top: 159px;" id="slider-f">
                     <div class="process-slider-fill" style="width: 73.6%"></div>
                 </div>
-                
+
                 <div class="process-label" style="position: absolute; left: 13px; top: 228px;" id="label-m">M</div>
                 <div class="process-slider" style="position: absolute; left: 63px; top: 228px;" id="slider-m">
                     <div class="process-slider-fill" style="width: 32.6%"></div>
                 </div>
-                
+
                 <div class="process-label" style="position: absolute; left: 13px; top: 297px;" id="label-d">D</div>
                 <div class="process-slider" style="position: absolute; left: 63px; top: 297px;" id="slider-d">
                     <div class="process-slider-fill" style="width: 79.1%"></div>
                 </div>
-                
+
                 <div class="process-label" style="position: absolute; left: 13px; top: 366px;" id="label-v">V</div>
                 <div class="process-slider" style="position: absolute; left: 63px; top: 366px;" id="slider-v">
                     <div class="process-slider-fill" style="width: 57.4%"></div>
@@ -435,7 +433,7 @@
                 <div class="process-tag tag-extra-gray" style="left: 3780px; top: 450px;">ORG_VAR</div>
             </div>
         </div>
-        
+
         <div class="tooltip" id="tooltip">
             <div class="tooltip-text"></div>
         </div>
@@ -513,7 +511,7 @@
         document.addEventListener('mousemove', (e) => {
             const windowWidth = window.innerWidth;
             const mouseX = e.clientX;
-            
+
             // Check if mouse is in the right 20% of the screen (scroll right)
             if (mouseX > windowWidth * 0.8) {
                 const intensity = (mouseX - windowWidth * 0.8) / (windowWidth * 0.2);
@@ -522,7 +520,7 @@
                     isScrolling = true;
                     animateScroll();
                 }
-            } 
+            }
             // Check if mouse is in the left 20% of the screen (scroll left)
             else if (mouseX < windowWidth * 0.2) {
                 const intensity = (windowWidth * 0.2 - mouseX) / (windowWidth * 0.2);
@@ -531,7 +529,7 @@
                     isScrolling = true;
                     animateScroll();
                 }
-            } 
+            }
             else {
                 scrollVelocity = 0;
                 isScrolling = false;
@@ -590,7 +588,7 @@
         function getElementPosition(element) {
             const rect = element.getBoundingClientRect();
             const scrollableRect = scrollableContent.getBoundingClientRect();
-            
+
             return {
                 x: rect.left - scrollableRect.left,
                 y: rect.top - scrollableRect.top,
@@ -605,7 +603,7 @@
             const controlY1 = startY;
             const controlX2 = startX + (endX - startX) * 0.7;
             const controlY2 = endY;
-            
+
             return `M ${startX} ${startY} C ${controlX1} ${controlY1}, ${controlX2} ${controlY2}, ${endX} ${endY}`;
         }
 
@@ -613,14 +611,14 @@
         function changeSliderValues(number) {
             const preset = sliderPresets[number];
             if (!preset) return;
-            
+
             const sliderMap = {
                 'slider-f': preset.f,
                 'slider-m': preset.m,
                 'slider-d': preset.d,
                 'slider-v': preset.v
             };
-            
+
             Object.keys(sliderMap).forEach(sliderId => {
                 const slider = document.getElementById(sliderId);
                 if (slider) {
@@ -640,7 +638,7 @@
                 'slider-d': 79.1,
                 'slider-v': 57.4
             };
-            
+
             Object.keys(originalValues).forEach(sliderId => {
                 const slider = document.getElementById(sliderId);
                 if (slider) {
@@ -680,11 +678,11 @@
             // Get the starting dot position
             const dot = document.getElementById(`dot${number}`);
             if (!dot) return;
-            
+
             const dotPos = getElementPosition(dot);
             let pathData = '';
             let connectedTags = new Set(); // Track connected tags
-            
+
             const connections = connectionConfigs[number];
             if (!connections) return;
 
@@ -696,30 +694,30 @@
                 let chainX = startX;
                 let chainY = startY;
                 let lastRightEdgeX = startX; // Track the rightmost edge
-                
+
                 chain.forEach((tagName, index) => {
                     // Find the tag element
                     const tags = Array.from(document.querySelectorAll('.process-tag'));
                     const tag = tags.find(t => t.textContent.trim() === tagName);
-                    
+
                     if (tag) {
                         const tagPos = getElementPosition(tag);
-                        
+
                         // Only connect if tag is to the right of the last tag's right edge
                         // Exception for the first connection from dot
                         if (chainIndex === 0 || tagPos.x >= lastRightEdgeX) {
                             // Connect to left edge center of tag
                             const endX = tagPos.x;
                             const endY = tagPos.y + tagPos.height / 2;
-                            
+
                             pathData += createCurvedPath(chainX, chainY, endX, endY) + ' ';
-                            
+
                             // Mark this tag as connected, restore opacity, and change color
                             connectedTags.add(tag);
                             tag.style.opacity = '1';
                             tag.style.backgroundColor = '#141414';
                             tag.style.color = '#FFFFFF'; // Ensure text is white on black background
-                            
+
                             // Update position for next connection (from right edge)
                             chainX = tagPos.x + tagPos.width;
                             chainY = endY;
@@ -754,7 +752,7 @@
                     setTimeout(() => path.setAttribute('d', ''), 500);
                 }
             }
-            
+
             // Restore all tags opacity and original colors
             document.querySelectorAll('.process-tag').forEach(tag => {
                 tag.style.opacity = '1';
@@ -769,7 +767,7 @@
                     }
                 }
             });
-            
+
             // Reset FMDV values to original when style_sel is clicked
             resetSliderValues();
         }
@@ -800,20 +798,20 @@
                 currentHoveredTag = tag;
                 const tagText = tag.textContent.trim();
                 const text = tooltipTexts[tagText] || "explanation of this parameter";
-                
+
                 tooltipTextElement.textContent = text;
                 tooltip.style.display = 'block';
-                
+
                 // Initial position at mouse cursor
                 updateTooltipPosition(e);
             });
-            
+
             tag.addEventListener('mousemove', (e) => {
                 if (currentHoveredTag === tag) {
                     updateTooltipPosition(e);
                 }
             });
-            
+
             tag.addEventListener('mouseleave', () => {
                 currentHoveredTag = null;
                 tooltip.style.display = 'none';
