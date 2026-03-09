@@ -108,10 +108,14 @@
             bottom: 1px;
             left: 50%;
             transform: translateX(-50%) scaleX(0);
-            width: 100%;
+            width: 85%;
             height: 1px;
             background-color: #f8f8fd;
             transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .typing-text a.link-studio::after {
+            width: 92%;
         }
 
         .typing-text a.animate-in::after {
@@ -377,7 +381,7 @@
             const x1CenterCol = patternOffsetCol + 8;
             const x1CenterX = x1CenterCol * CELL_SIZE + CELL_SIZE / 2;
 
-            textOverlay.style.top = (bottomOfPattern + 38) + 'px';
+            textOverlay.style.top = (bottomOfPattern + 48) + 'px';
             textOverlay.style.left = x1CenterX + 'px';
             textOverlay.style.transform = 'translateX(-50%)';
         }
@@ -444,7 +448,7 @@
                             } else {
                                 clearInterval(typeInterval);
                                 // 밑줄 애니메이션 포함
-                                typingText.innerHTML = '<a href="/lab" class="animate-in">lab</a><span class="ampersand"> & </span><a href="/works" class="animate-in">studio</a>';
+                                typingText.innerHTML = '<a href="/lab" class="animate-in">lab</a><span class="ampersand"> & </span><a href="/works" class="animate-in link-studio">studio</a>';
                                 animationComplete = true;
                                 setupLetterHoverAreas();
                             }
@@ -600,7 +604,7 @@
         // === Skip to final state (for returning visitors) ===
         function skipToFinalState() {
             const typingText = document.getElementById('typingText');
-            typingText.innerHTML = '<a href="/lab" class="animate-in">lab</a><span class="ampersand"> & </span><a href="/works" class="animate-in">studio</a>';
+            typingText.innerHTML = '<a href="/lab" class="animate-in">lab</a><span class="ampersand"> & </span><a href="/works" class="animate-in link-studio">studio</a>';
             animationComplete = true;
             setupLetterHoverAreas();
         }
