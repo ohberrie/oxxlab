@@ -463,8 +463,8 @@ export function HomePage() {
           opacity: 0.4;
         }
       `}</style>
-      <h1 className="sr-only">OXX Lab — Algorithmic Design & Research Studio</h1>
-      <div ref={gridRef} className="fixed top-0 left-0 w-screen h-screen" aria-hidden="true" role="presentation" />
+      <h1 className="sr-only">OXX — Algorithmic Design lab</h1>
+      <div ref={gridRef} className="fixed top-0 left-0 w-screen h-screen" aria-hidden="true" role="presentation" data-nosnippet />
       <div
         ref={overlayRef}
         className="fixed z-50 flex items-center justify-center"
