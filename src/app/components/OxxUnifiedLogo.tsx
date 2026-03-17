@@ -9,7 +9,7 @@ function PixelDot({ additionalClassNames = '' }: { additionalClassNames?: string
     <div className={clsx('bg-black h-[2.892px] w-[3px]', additionalClassNames)}>
       <div
         aria-hidden="true"
-        className="absolute border-[0.1px] border-solid border-white inset-[-0.05px] pointer-events-none"
+        className="absolute border-[0.5px] border-solid border-white inset-[-0.25px] pointer-events-none"
       />
     </div>
   );
