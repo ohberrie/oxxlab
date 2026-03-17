@@ -137,6 +137,7 @@ export function HomePage() {
           cell.style.background = '#f8f8fd';
           cell.style.color = '#141414';
           cell.style.fontWeight = '800';
+          cell.style.outline = '1px solid #f8f8fd';
           cell.textContent = getRandomOX();
 
           if (patternCol <= 4) {
@@ -220,6 +221,7 @@ export function HomePage() {
         cells[idx].element.style.background = '#141414';
         cells[idx].element.style.color = 'rgba(255, 255, 255, 0.12)';
         cells[idx].element.style.fontWeight = '400';
+        cells[idx].element.style.outline = 'none';
         cells[idx].element.textContent = getRandomChar();
         cells[idx].isMasked = false;
         cells[idx].letter = null;
@@ -266,6 +268,7 @@ export function HomePage() {
             target.element.style.background = '#f8f8fd';
             target.element.style.color = '#141414';
             target.element.style.fontWeight = '800';
+            target.element.style.outline = '1px solid #f8f8fd';
             target.element.textContent = getRandomOX();
             target.isMasked = true;
             target.letter = letter;
