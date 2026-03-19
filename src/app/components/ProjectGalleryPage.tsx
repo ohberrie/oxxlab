@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router';
 import { NavBar } from './NavBar';
 import { PlayIcon, ShaperSVG, AIASVG, IntuitionEncoderSVG, MamaVCRSVG } from './ProjectSVGs';
 
-// Pixel square component for lab project icons
 function PixelSquare() {
   return (
     <div className="w-full h-full flex items-center justify-center">
@@ -22,31 +21,31 @@ interface Project {
 
 const labProjects: Project[] = [
   {
-    name: 'DESIGN\nSELECTION',
-    displayName: 'DESIGN SELECTION',
-    description: 'Algorithmic design selection and form generation',
-    link: '/lab/design-selection',
+    name: 'SELECTION\nLOGIC',
+    displayName: 'SELECTION LOGIC',
+    description: 'Constraint-based filtering and decision-making in form generation',
+    link: '/lab/selection-logic',
     SvgComponent: PixelSquare,
   },
   {
-    name: 'DENSITY\nSYSTEMS',
-    displayName: 'DENSITY SYSTEMS',
-    description: 'Spatial density distribution and control logic',
-    link: '/lab/density-systems',
+    name: 'DENSE\nFIELD',
+    displayName: 'DENSE FIELD',
+    description: 'Spatial concentration and distribution of visual intensity',
+    link: '/lab/dense-field',
     SvgComponent: PixelSquare,
   },
   {
-    name: 'PIXEL\nFILL',
-    displayName: 'PIXEL FILL',
-    description: 'Pixel-based modular fill pattern systems',
-    link: '/lab/modular-pixel-fill-logic',
+    name: 'MODULAR\nFILL',
+    displayName: 'MODULAR FILL',
+    description: 'Form generation through discrete and repeatable units',
+    link: '/lab/modular-fill',
     SvgComponent: PixelSquare,
   },
   {
-    name: 'DEPTH\nHIERARCHY',
-    displayName: 'DEPTH HIERARCHY',
-    description: 'Layered depth ordering and visual hierarchy',
-    link: '/lab/depth-hierarchy',
+    name: 'LAYER\nSTACK',
+    displayName: 'LAYER STACK',
+    description: 'Organization of depth, dominance, and spatial hierarchy',
+    link: '/lab/layer-stack',
     SvgComponent: PixelSquare,
   },
 ];
@@ -129,7 +128,7 @@ interface ProjectGalleryPageProps {
 
 export function ProjectGalleryPage({ type }: ProjectGalleryPageProps) {
   const projects = type === 'lab' ? labProjects : worksProjects;
-  const defaultTitle = type === 'lab' ? 'Archive' : 'Projects';
+  const defaultTitle = type === 'lab' ? 'Systems' : 'Projects';
   const navigate = useNavigate();
 
   const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
@@ -185,7 +184,7 @@ export function ProjectGalleryPage({ type }: ProjectGalleryPageProps) {
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 680;
 
   const title = hoveredProject ? hoveredProject.displayName : defaultTitle;
-  const description = hoveredProject ? hoveredProject.description : (type === 'lab' ? 'Form experiments and logics archived' : '');
+  const description = hoveredProject ? hoveredProject.description : (type === 'lab' ? 'Form experiments and research systems' : '');
   const showDescription = type === 'lab' ? true : !!hoveredProject;
 
   return (
@@ -194,7 +193,6 @@ export function ProjectGalleryPage({ type }: ProjectGalleryPageProps) {
         <NavBar />
       </header>
 
-      {/* Left sidebar */}
       <div className="absolute top-0 left-0 w-[34%] min-w-[300px] max-w-[500px] h-full flex items-center pl-[58px] max-lg:w-[260px] max-lg:min-w-[220px] max-lg:pl-8 max-md:relative max-md:w-full max-md:max-w-none max-md:min-w-0 max-md:h-auto max-md:px-5 max-md:pt-10 max-md:pb-5 max-md:pl-6 max-md:block">
         <div className="flex items-start gap-3 max-md:items-center max-md:gap-2.5">
           <div
@@ -218,7 +216,6 @@ export function ProjectGalleryPage({ type }: ProjectGalleryPageProps) {
         </div>
       </div>
 
-      {/* Right side - Project logos */}
       <div
         ref={containerRef}
         className="absolute top-[70px] right-0 left-[34%] bottom-0 max-lg:left-[260px] max-lg:top-[70px] max-md:relative max-md:top-0 max-md:left-0 max-md:right-0 max-md:bottom-auto max-md:w-full max-md:min-h-[60vh] max-md:p-5"
