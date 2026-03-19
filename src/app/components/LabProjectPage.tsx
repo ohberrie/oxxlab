@@ -31,12 +31,9 @@ function LabProjectContent({ projectName, subtitle, menuItems, activeItem, appli
         <h1 className="font-['JetBrains_Mono'] text-[#141414] font-bold text-[36px] leading-[1.05] tracking-[-0.02em] mb-2">
           {projectName}
         </h1>
-        <p className="font-['JetBrains_Mono'] text-[13px] text-[#141414] opacity-40 leading-[1.5] mb-5 max-w-[400px]">
+        <p className="font-['JetBrains_Mono'] text-[13px] text-[#141414] opacity-40 leading-[1.5] mb-6 max-w-[400px]">
           {subtitle}
         </p>
-
-        {/* Horizontal divider */}
-        <div className="h-px bg-[#D2D2D2] mb-6" />
 
         <nav className="flex flex-wrap gap-x-5 gap-y-2 mb-8">
           {menuItems.map((item) => {
@@ -71,7 +68,7 @@ function LabProjectContent({ projectName, subtitle, menuItems, activeItem, appli
     );
   }
 
-  const menuStartY = 310;
+  const menuStartY = 340;
   const menuGap = 52;
 
   return (
@@ -85,13 +82,10 @@ function LabProjectContent({ projectName, subtitle, menuItems, activeItem, appli
 
       <p
         className="absolute font-['JetBrains_Mono'] text-[#141414] opacity-25 leading-[1.5]"
-        style={{ left: 60, top: 180, fontSize: 12, maxWidth: 550, letterSpacing: '0em' }}
+        style={{ left: 60, top: 180, fontSize: 12, maxWidth: 220, letterSpacing: '0em' }}
       >
         {subtitle}
       </p>
-
-      {/* Horizontal divider between title section and content */}
-      <div className="absolute bg-[#D2D2D2]" style={{ left: 58, right: 58, top: 230, height: 1 }} />
 
       {menuItems.map((item, index) => {
         const isActive = item.label === activeItem;
@@ -130,7 +124,7 @@ function LabProjectContent({ projectName, subtitle, menuItems, activeItem, appli
 
       <div
         className="absolute overflow-hidden"
-        style={{ left: 380, top: 290, width: 850, height: 730 }}
+        style={{ left: 380, top: 180, width: 1480, height: 830 }}
       >
         {children || (
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#141414] text-[20px] font-normal opacity-20 tracking-[6px] font-['JetBrains_Mono'] uppercase">
@@ -239,7 +233,7 @@ export function SelectionLogicExperimentPage() {
 export function SelectionLogicObservationPage() {
   return (
     <LabProjectPage projectName="SELECTION LOGIC" subtitle={SL_SUBTITLE} menuItems={selectionLogicMenu} activeItem="observation" applications={selectionLogicApps}>
-      <div className="p-12 flex flex-col gap-5">
+      <div className="p-12 flex flex-col gap-6">
         {[
           { key: 'unconstrained', result: 'noise' },
           { key: 'constraints', result: 'clarity' },
@@ -347,7 +341,7 @@ export function DenseFieldExperimentPage() {
 export function DenseFieldObservationPage() {
   return (
     <LabProjectPage projectName="DENSE FIELD" subtitle={DF_SUBTITLE} menuItems={denseFieldMenu} activeItem="observation" applications={denseFieldApps}>
-      <div className="p-12 flex flex-col gap-5">
+      <div className="p-12 flex flex-col gap-6">
         {[
           { key: 'clustered density', result: 'focal point generation' },
           { key: 'gradient density', result: 'movement induction' },
@@ -461,7 +455,7 @@ export function ModularFillExperimentPage() {
 export function ModularFillObservationPage() {
   return (
     <LabProjectPage projectName="MODULAR FILL" subtitle={MF_SUBTITLE} menuItems={modularFillMenu} activeItem="observation" applications={modularFillApps}>
-      <div className="p-12 flex flex-col gap-5">
+      <div className="p-12 flex flex-col gap-6">
         {[
           { key: 'large modules', result: 'structure formation' },
           { key: 'small modules', result: 'detail filling' },
@@ -564,7 +558,7 @@ export function LayerStackExperimentPage() {
 export function LayerStackObservationPage() {
   return (
     <LabProjectPage projectName="LAYER STACK" subtitle={LS_SUBTITLE} menuItems={layerStackMenu} activeItem="observation" applications={layerStackApps}>
-      <div className="p-12 flex flex-col gap-5">
+      <div className="p-12 flex flex-col gap-6">
         {[
           { key: 'depth', result: 'increased spatiality' },
           { key: 'overlap', result: 'hierarchy generation' },
