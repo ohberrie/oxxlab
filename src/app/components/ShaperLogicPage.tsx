@@ -55,7 +55,7 @@ function ShaperLogicContent() {
     return (
       <div className="px-5 pt-6 pb-10">
         <h1 className="font-['JetBrains_Mono'] text-[#141414] font-bold text-[36px] leading-[1.05] tracking-[-0.02em] mb-3">
-          DESIGN SELECTION
+          SHAPER
         </h1>
 
         <nav className="flex gap-6 mb-8 border-b border-[#141414]/10 pb-3">
@@ -100,7 +100,7 @@ function ShaperLogicContent() {
         className="absolute font-['JetBrains_Mono'] text-[#141414] font-bold leading-[27px]"
         style={{ left: 48, top: 144, fontSize: 76 }}
       >
-        DESIGN SELECTION
+        SHAPER
       </h1>
 
       {/* Arrow */}
