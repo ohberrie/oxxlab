@@ -42,22 +42,6 @@ const shopItems: ShopItem[] = [
     status: 'coming soon',
     description: 'Grid-ruled notebook with algorithmic cover pattern. 148×210mm.',
   },
-  {
-    id: '005',
-    name: 'Selection Process — Poster Set',
-    category: 'Print',
-    price: '€45',
-    status: 'sold out',
-    description: 'Set of 3 risograph posters documenting design selection processes.',
-  },
-  {
-    id: '006',
-    name: 'OXX Cube Object — Limited',
-    category: 'Objet',
-    price: '€240',
-    status: 'coming soon',
-    description: 'CNC-milled aluminum cube with engraved algorithmic pattern. Edition of 10.',
-  },
 ];
 
 export function ShopPage() {
@@ -68,21 +52,18 @@ export function ShopPage() {
       </header>
 
       <div className="max-w-[1200px] mx-auto px-8 pt-16 pb-20 max-md:px-5 max-md:pt-10">
-        {/* Header */}
         <div className="mb-16 max-md:mb-10">
           <h1 className="font-['JetBrains_Mono'] text-[clamp(36px,3.75vw,72px)] font-bold leading-[1.07] tracking-[-0.02em] text-[#141414] mb-4">
-            Shop
+            Editions
           </h1>
           <p className="font-['JetBrains_Mono'] text-[clamp(14px,1vw,18px)] text-[#141414] opacity-60 max-w-[500px] leading-[1.5]">
             Objects, prints, and editions derived from algorithmic design research.
           </p>
         </div>
 
-        {/* Grid */}
         <div className="grid grid-cols-3 gap-x-8 gap-y-14 max-lg:grid-cols-2 max-md:grid-cols-1 max-md:gap-y-10">
           {shopItems.map((item) => (
             <div key={item.id} className="group cursor-pointer">
-              {/* Placeholder image area */}
               <div className="w-full aspect-square bg-[#e8e8ed] mb-4 flex items-center justify-center transition-colors duration-300 group-hover:bg-[#d8d8dd]">
                 <div className="w-[60%] h-[60%] border border-[#141414] opacity-10 flex items-center justify-center">
                   <span className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-40">
@@ -91,7 +72,6 @@ export function ShopPage() {
                 </div>
               </div>
 
-              {/* Info */}
               <div className="flex justify-between items-start gap-3 mb-1.5">
                 <h3 className="font-['JetBrains_Mono'] text-[14px] font-bold text-[#141414] leading-[1.3] transition-colors duration-300 group-hover:text-[#FF4D00]">
                   {item.name}

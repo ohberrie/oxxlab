@@ -1,6 +1,5 @@
 import { Link, useSearchParams } from 'react-router';
 import { NavBar } from './NavBar';
-import OxxLogo from '../../imports/Group8';
 
 export function AboutPage() {
   const [searchParams] = useSearchParams();
@@ -10,20 +9,12 @@ export function AboutPage() {
 
   return (
     <div className="bg-[#f8f8fd] min-h-screen flex flex-col">
-      {/* NavBar with context */}
       <header>
         <NavBar mode={navMode} />
       </header>
 
-      {/* Centered content */}
       <main className="flex-1 flex items-center justify-center px-6">
         <div className="flex flex-col items-center gap-12 max-w-[560px] text-center">
-          {/* OXX Pixel Logo */}
-          <div className="relative" style={{ width: 86, height: 36 }}>
-            <OxxLogo />
-          </div>
-
-          {/* Navigation buttons */}
           <div className="flex items-center gap-6 max-md:gap-4">
             <Link
               to="/lab"
@@ -42,7 +33,6 @@ export function AboutPage() {
             </Link>
           </div>
 
-          {/* Description */}
           <div className="flex flex-col gap-5">
             <p className="font-['JetBrains_Mono'] text-[clamp(13px,1vw,16px)] text-[#141414] opacity-60 leading-[1.7] tracking-[-0.01em]">
               OXX is an algorithmic design and research studio exploring the intersection of computational logic and visual form.

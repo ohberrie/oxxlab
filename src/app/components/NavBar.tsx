@@ -46,11 +46,11 @@ export function NavBar({ mode }: NavBarProps = {}) {
               </Link>
               <Link
                 to="/shop"
-                className="nav-header-link font-['JetBrains_Mono'] font-bold text-[14px] text-[#141414] no-underline leading-[27px] max-md:text-[12px] relative inline-block group"
+                className="nav-header-link font-['JetBrains_Mono'] font-bold text-[14px] text-[#141414] no-underline leading-[27px] max-md:text-[12px] relative inline-block group hover:text-[#FF4D00] transition-colors duration-300"
               >
-                Shop
+                Editions
                 <span
-                  className={`absolute bottom-[3px] left-1/2 -translate-x-1/2 h-px bg-[#141414] transition-transform duration-300 origin-center ${
+                  className={`absolute bottom-[3px] left-1/2 -translate-x-1/2 h-px bg-[#FF4D00] transition-transform duration-300 origin-center ${
                     isShopActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
                   }`}
                   style={{ width: '85%' }}
@@ -75,7 +75,7 @@ export function NavBar({ mode }: NavBarProps = {}) {
                 to="/lab"
                 className="nav-header-link font-['JetBrains_Mono'] font-bold text-[14px] text-[#141414] no-underline leading-[27px] max-md:text-[12px] relative inline-block group"
               >
-                Archive
+                Systems
                 <span
                   className={`absolute bottom-[3px] left-1/2 -translate-x-1/2 h-px bg-[#141414] transition-transform duration-300 origin-center ${
                     isLabActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'

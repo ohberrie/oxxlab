@@ -1,6 +1,9 @@
-import { useEffect, useRef, ReactNode } from 'react';
+import { useEffect, useRef, useState, createContext, useContext, ReactNode } from 'react';
 import { useLocation } from 'react-router';
 import { NavBar } from './NavBar';
+
+const MobileContext = createContext(false);
+export const useIsMobile = () => useContext(MobileContext);
 
 interface ScaledSlideProps {
   children: ReactNode;
@@ -11,8 +14,8 @@ export function ScaledSlide({ children, mode }: ScaledSlideProps) {
   const slideRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Auto-detect mode if not provided
   const resolvedMode = mode || (
     location.pathname.startsWith('/projects') || location.pathname.startsWith('/shop')
       ? 'studio'
@@ -20,11 +23,21 @@ export function ScaledSlide({ children, mode }: ScaledSlideProps) {
   );
 
   useEffect(() => {
-    function scaleSlide() {
-      const slide = slideRef.current;
-      const container = containerRef.current;
-      if (!slide || !container) return;
+    function handleResize() {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
 
+      if (mobile) {
+        const slide = slideRef.current;
+        if (slide) {
+          slide.style.transform = 'none';
+          slide.style.marginLeft = '0';
+        }
+        return;
+      }
+
+      const slide = slideRef.current;
+      if (!slide) return;
       const headerHeight = 61;
       const availableWidth = window.innerWidth;
       const availableHeight = window.innerHeight - headerHeight;
@@ -36,30 +49,29 @@ export function ScaledSlide({ children, mode }: ScaledSlideProps) {
       slide.style.marginLeft = ((availableWidth - scaledWidth) / 2) + 'px';
       slide.style.marginTop = '0px';
     }
-    scaleSlide();
-    window.addEventListener('resize', scaleSlide);
-    return () => window.removeEventListener('resize', scaleSlide);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
-    <div className="bg-[#F8F8FD] overflow-hidden m-0 p-0 min-h-screen font-['JetBrains_Mono']">
-      {/* Responsive header - outside the scaled container */}
-      <div className="w-full relative">
-        <NavBar mode={resolvedMode} />
-        {/* Grey line 60px from top */}
-        <div className="absolute left-0 right-0 top-[60px] h-px bg-[#D2D2D2]" />
-      </div>
+    <MobileContext.Provider value={isMobile}>
+      <div className="bg-[#F8F8FD] overflow-hidden m-0 p-0 min-h-screen font-['JetBrains_Mono']">
+        <div className="w-full relative">
+          <NavBar mode={resolvedMode} />
+          <div className="absolute left-0 right-0 top-[60px] h-px bg-[#D2D2D2]" />
+        </div>
 
-      {/* Scaled slide content */}
-      <div ref={containerRef} className="relative" style={{ top: 0 }}>
-        <div
-          ref={slideRef}
-          className="bg-[#F8F8FD] relative overflow-hidden"
-          style={{ width: 1920, height: 1080, transformOrigin: 'top left' }}
-        >
-          {children}
+        <div ref={containerRef} className="relative" style={{ top: 0 }}>
+          <div
+            ref={slideRef}
+            className={`bg-[#F8F8FD] relative ${isMobile ? 'overflow-y-auto' : 'overflow-hidden'}`}
+            style={isMobile ? { width: '100%', minHeight: '100vh' } : { width: 1920, height: 1080, transformOrigin: 'top left' }}
+          >
+            {children}
+          </div>
         </div>
       </div>
-    </div>
+    </MobileContext.Provider>
   );
 }

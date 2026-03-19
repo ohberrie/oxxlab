@@ -7,23 +7,27 @@ import { NotesPage } from './components/NotesPage';
 import { ShopPage } from './components/ShopPage';
 import { FrameworkPage } from './components/FrameworkPage';
 import {
-  DesignSelectionIntentPage,
-  DesignSelectionExperimentPage,
-  DesignSelectionObservationPage,
-  DensitySystemsIntentPage,
-  DensitySystemsFormStrategyPage,
-  DensitySystemsExperimentPage,
-  DensitySystemsObservationPage,
-  ModularPixelIntentPage,
-  ModularPixelFormStrategyPage,
-  ModularPixelExperimentPage,
-  ModularPixelObservationPage,
-  DepthHierarchyIntentPage,
-  DepthHierarchyFormStrategyPage,
-  DepthHierarchyExperimentPage,
-  DepthHierarchyObservationPage,
+  SelectionLogicOverviewPage,
+  SelectionLogicPrinciplePage,
+  SelectionLogicDiagramPage,
+  SelectionLogicExperimentPage,
+  SelectionLogicObservationPage,
+  DenseFieldOverviewPage,
+  DenseFieldPrinciplePage,
+  DenseFieldDiagramPage,
+  DenseFieldExperimentPage,
+  DenseFieldObservationPage,
+  ModularFillOverviewPage,
+  ModularFillPrinciplePage,
+  ModularFillDiagramPage,
+  ModularFillExperimentPage,
+  ModularFillObservationPage,
+  LayerStackOverviewPage,
+  LayerStackPrinciplePage,
+  LayerStackDiagramPage,
+  LayerStackExperimentPage,
+  LayerStackObservationPage,
 } from './components/LabProjectPage';
-import { ShaperFormStrategyPage } from './components/ShaperFormStrategyPage';
 import { ShaperConfigurePage } from './components/ShaperConfigurePage';
 import { ShaperLogicPage } from './components/ShaperLogicPage';
 
@@ -36,33 +40,37 @@ export const router = createBrowserRouter([
   { path: '/shop', Component: ShopPage },
   { path: '/framework', Component: FrameworkPage },
 
-  // Lab / Design Selection (formerly SHAPER)
-  { path: '/lab/design-selection', Component: DesignSelectionIntentPage },
-  { path: '/lab/design-selection/intent', Component: DesignSelectionIntentPage },
-  { path: '/lab/design-selection/form-strategy', Component: ShaperFormStrategyPage },
-  { path: '/lab/design-selection/experiment', Component: DesignSelectionExperimentPage },
-  { path: '/lab/design-selection/observation', Component: DesignSelectionObservationPage },
+  // Lab / Selection Logic
+  { path: '/lab/selection-logic', Component: SelectionLogicOverviewPage },
+  { path: '/lab/selection-logic/overview', Component: SelectionLogicOverviewPage },
+  { path: '/lab/selection-logic/principle', Component: SelectionLogicPrinciplePage },
+  { path: '/lab/selection-logic/diagram', Component: SelectionLogicDiagramPage },
+  { path: '/lab/selection-logic/experiment', Component: SelectionLogicExperimentPage },
+  { path: '/lab/selection-logic/observation', Component: SelectionLogicObservationPage },
 
-  // Lab / Density Systems
-  { path: '/lab/density-systems', Component: DensitySystemsIntentPage },
-  { path: '/lab/density-systems/intent', Component: DensitySystemsIntentPage },
-  { path: '/lab/density-systems/form-strategy', Component: DensitySystemsFormStrategyPage },
-  { path: '/lab/density-systems/experiment', Component: DensitySystemsExperimentPage },
-  { path: '/lab/density-systems/observation', Component: DensitySystemsObservationPage },
+  // Lab / Dense Field
+  { path: '/lab/dense-field', Component: DenseFieldOverviewPage },
+  { path: '/lab/dense-field/overview', Component: DenseFieldOverviewPage },
+  { path: '/lab/dense-field/principle', Component: DenseFieldPrinciplePage },
+  { path: '/lab/dense-field/diagram', Component: DenseFieldDiagramPage },
+  { path: '/lab/dense-field/experiment', Component: DenseFieldExperimentPage },
+  { path: '/lab/dense-field/observation', Component: DenseFieldObservationPage },
 
-  // Lab / Modular Pixel Fill Logic
-  { path: '/lab/modular-pixel-fill-logic', Component: ModularPixelIntentPage },
-  { path: '/lab/modular-pixel-fill-logic/intent', Component: ModularPixelIntentPage },
-  { path: '/lab/modular-pixel-fill-logic/form-strategy', Component: ModularPixelFormStrategyPage },
-  { path: '/lab/modular-pixel-fill-logic/experiment', Component: ModularPixelExperimentPage },
-  { path: '/lab/modular-pixel-fill-logic/observation', Component: ModularPixelObservationPage },
+  // Lab / Modular Fill
+  { path: '/lab/modular-fill', Component: ModularFillOverviewPage },
+  { path: '/lab/modular-fill/overview', Component: ModularFillOverviewPage },
+  { path: '/lab/modular-fill/principle', Component: ModularFillPrinciplePage },
+  { path: '/lab/modular-fill/diagram', Component: ModularFillDiagramPage },
+  { path: '/lab/modular-fill/experiment', Component: ModularFillExperimentPage },
+  { path: '/lab/modular-fill/observation', Component: ModularFillObservationPage },
 
-  // Lab / Depth Hierarchy
-  { path: '/lab/depth-hierarchy', Component: DepthHierarchyIntentPage },
-  { path: '/lab/depth-hierarchy/intent', Component: DepthHierarchyIntentPage },
-  { path: '/lab/depth-hierarchy/form-strategy', Component: DepthHierarchyFormStrategyPage },
-  { path: '/lab/depth-hierarchy/experiment', Component: DepthHierarchyExperimentPage },
-  { path: '/lab/depth-hierarchy/observation', Component: DepthHierarchyObservationPage },
+  // Lab / Layer Stack
+  { path: '/lab/layer-stack', Component: LayerStackOverviewPage },
+  { path: '/lab/layer-stack/overview', Component: LayerStackOverviewPage },
+  { path: '/lab/layer-stack/principle', Component: LayerStackPrinciplePage },
+  { path: '/lab/layer-stack/diagram', Component: LayerStackDiagramPage },
+  { path: '/lab/layer-stack/experiment', Component: LayerStackExperimentPage },
+  { path: '/lab/layer-stack/observation', Component: LayerStackObservationPage },
 
   // Projects / SHAPER (Design Selection)
   { path: '/projects/shaper', Component: ShaperConfigurePage },
