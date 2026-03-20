@@ -53,7 +53,7 @@ function ShaperConfigureContent() {
           SHAPER
         </h1>
 
-        <nav className="flex gap-6 mb-8">
+        <nav className="flex gap-6 mb-8 border-b border-[#141414]/10 pb-3">
           <Link to="/projects/shaper/configure" className="font-['JetBrains_Mono'] text-[14px] font-bold no-underline text-[#141414] flex items-center gap-2">
             <span className="w-[6px] h-[6px] rounded-full bg-[#FF4D00] shrink-0" />
             configure
