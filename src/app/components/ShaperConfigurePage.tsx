@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import { Link } from 'react-router';
 import { ScaledSlide, useIsMobile } from './ScaledSlide';
-import { PlayIcon } from './ProjectSVGs';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { CrossLinks } from './CrossLinks';
 
@@ -54,7 +53,7 @@ function ShaperConfigureContent() {
           SHAPER
         </h1>
 
-        <nav className="flex gap-6 mb-8 border-b border-[#141414]/10 pb-3">
+        <nav className="flex gap-6 mb-8">
           <Link to="/projects/shaper/configure" className="font-['JetBrains_Mono'] text-[14px] font-bold no-underline text-[#141414] flex items-center gap-2">
             <span className="w-[6px] h-[6px] rounded-full bg-[#FF4D00] shrink-0" />
             configure
@@ -94,36 +93,38 @@ function ShaperConfigureContent() {
 
   // Desktop layout
   const desktopSliders = [
-    { key: 'a', label: 'parameter A', value: sliderA, lineTop: 421.5, labelTop: 356, handleTop: 402, trackTop: 421.5 },
-    { key: 'b', label: 'parameter B', value: sliderB, lineTop: 580.5, labelTop: 515, handleTop: 561, trackTop: 580.5 },
-    { key: 'c', label: 'parameter C', value: sliderC, lineTop: 740.5, labelTop: 675, handleTop: 721, trackTop: 740.5 },
+    { key: 'a', label: 'parameter A', value: sliderA, labelTop: 360, trackTop: 395 },
+    { key: 'b', label: 'parameter B', value: sliderB, labelTop: 510, trackTop: 545 },
+    { key: 'c', label: 'parameter C', value: sliderC, labelTop: 660, trackTop: 695 },
   ];
 
   return (
     <>
       <h1
-        className="absolute font-['JetBrains_Mono'] text-[#141414] font-bold leading-[27px]"
-        style={{ left: 48, top: 144, fontSize: 76 }}
+        className="absolute font-['JetBrains_Mono'] text-[#141414] font-bold leading-[1]"
+        style={{ left: 58, top: 95, fontSize: 64, letterSpacing: '-0.02em' }}
       >
         SHAPER
       </h1>
 
-      {/* Arrow */}
-      <div className="absolute w-5 h-[18px]" style={{ left: 48, top: 277 }}>
-        <PlayIcon />
+      {/* Menu */}
+      <div className="absolute flex gap-10" style={{ left: 58, top: 190 }}>
+        <Link to="/projects/shaper/configure" className="font-['JetBrains_Mono'] text-[20px] font-bold no-underline text-[#141414] flex items-center gap-2 transition-opacity duration-300 hover:opacity-60">
+          <span className="w-[6px] h-[6px] rounded-full bg-[#FF4D00] shrink-0" />
+          configure
+        </Link>
+        <Link to="/projects/shaper/logic" className="font-['JetBrains_Mono'] text-[20px] font-bold no-underline text-[#141414] opacity-25 transition-opacity duration-300 hover:opacity-60">
+          logic
+        </Link>
       </div>
 
-      {/* Menu */}
-      <Link to="/projects/shaper/configure" className="absolute text-[#141414] text-[28px] font-bold leading-[27px] no-underline transition-opacity duration-300 hover:opacity-60 font-['JetBrains_Mono']" style={{ left: 85, top: 272 }}>configure</Link>
-      <Link to="/projects/shaper/logic" className="absolute text-[#141414] text-[28px] font-bold leading-[27px] no-underline transition-opacity duration-300 hover:opacity-60 font-['JetBrains_Mono']" style={{ left: 53, top: 329 }}>logic</Link>
-
       {/* Research Origins — bottom-left */}
-      <div className="absolute" style={{ left: 48, bottom: 55 }}>
+      <div className="absolute" style={{ left: 58, bottom: 55 }}>
         <CrossLinks label="Research Origins" links={researchOrigins} />
       </div>
 
       {/* Center image */}
-      <div className="absolute flex items-center justify-center overflow-hidden bg-[#F8F8FD]" style={{ width: 500, height: 500, left: 477, top: 347 }}>
+      <div className="absolute flex items-center justify-center overflow-hidden bg-[#F8F8FD]" style={{ width: 480, height: 480, left: 480, top: 320 }}>
         <ImageWithFallback
           src={imageUrls[imageIndex]}
           alt="Transform visualization"
@@ -133,29 +134,29 @@ function ShaperConfigureContent() {
 
       {/* Parameter sliders */}
       {desktopSliders.map(s => {
-        const handleLeft = 1204 + (s.value / 100) * 499;
+        const handleLeft = 1160 + (s.value / 100) * 468;
         return (
           <div key={s.key}>
-            <div className="absolute text-[#141414] text-[24px] font-bold leading-[27px] tracking-[4.8px] font-['JetBrains_Mono']" style={{ left: 1204, top: s.labelTop }}>
+            <div className="absolute text-[#141414] text-[13px] font-bold tracking-[3px] uppercase font-['JetBrains_Mono']" style={{ left: 1160, top: s.labelTop }}>
               {s.label}
             </div>
-            <div className="absolute bg-[#141414]" style={{ left: 1204, top: s.lineTop, width: 514, height: 7 }} />
+            <div className="absolute bg-[#141414]" style={{ left: 1160, top: s.trackTop, width: 480, height: 5 }} />
             <div
               className="absolute cursor-pointer"
-              style={{ left: 1204, top: s.trackTop - 10, width: 514, height: 27 }}
+              style={{ left: 1160, top: s.trackTop - 10, width: 480, height: 25 }}
               onClick={(e) => handleSliderClick(s.key, e)}
             />
             <div
               className="absolute bg-[#141414] cursor-ew-resize transition-colors duration-200 hover:bg-[#FF4D00]"
-              style={{ left: handleLeft, top: s.handleTop, width: 15, height: 42 }}
+              style={{ left: handleLeft, top: s.trackTop - 16, width: 12, height: 36 }}
             />
           </div>
         );
       })}
 
       {/* Code display */}
-      <div className="absolute flex items-center justify-center border-[1.5px] border-[#141414]" style={{ width: 287, height: 36, left: 1305, top: 857 }}>
-        <span className="text-center text-[#141414] text-[24px] font-extrabold leading-[27px] tracking-[4.8px] font-['JetBrains_Mono']">{code}</span>
+      <div className="absolute flex items-center justify-center border-[1.5px] border-[#141414]" style={{ width: 260, height: 34, left: 1270, top: 840 }}>
+        <span className="text-center text-[#141414] text-[18px] font-extrabold tracking-[4px] font-['JetBrains_Mono']">{code}</span>
       </div>
     </>
   );

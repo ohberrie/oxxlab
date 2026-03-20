@@ -123,25 +123,41 @@ export function ShaperFormStrategyPage() {
   return (
     <ScaledSlide>
       <h1
-        className="absolute font-['JetBrains_Mono'] text-[#141414] font-bold leading-[27px]"
-        style={{ left: 48, top: 144, fontSize: 76 }}
+        className="absolute font-['JetBrains_Mono'] text-[#141414] font-bold leading-[1]"
+        style={{ left: 58, top: 100, fontSize: 64, letterSpacing: '-0.02em' }}
       >
         DESIGN SELECTION
       </h1>
 
-      {/* Arrow */}
-      <div className="absolute w-5 h-[18px]" style={{ left: 48, top: 334 }}>
+      {/* Menu */}
+      {[
+        { label: 'intent', path: '/lab/design-selection/intent', active: false },
+        { label: 'form strategy', path: '/lab/design-selection/form-strategy', active: true },
+        { label: 'experiment', path: '/lab/design-selection/experiment', active: false },
+        { label: 'observation', path: '/lab/design-selection/observation', active: false },
+      ].map((item, index) => {
+        const top = 340 + index * 52;
+        const left = item.active ? 90 : 60;
+        return (
+          <Link
+            key={item.label}
+            to={item.path}
+            className={`absolute text-[20px] font-bold leading-[1] no-underline transition-all duration-300 hover:opacity-60 font-['JetBrains_Mono'] ${
+              item.active ? 'text-[#141414]' : 'text-[#141414] opacity-25'
+            }`}
+            style={{ left, top }}
+          >
+            {item.label}
+          </Link>
+        );
+      })}
+      {/* Play icon for active item */}
+      <div className="absolute w-[16px] h-[14px] text-[#141414]" style={{ left: 60, top: 341 }}>
         <PlayIcon />
       </div>
 
-      {/* Menu */}
-      <Link to="/lab/design-selection/intent" className="absolute text-[#141414] text-[28px] font-bold leading-[27px] no-underline transition-opacity duration-300 hover:opacity-60 font-['JetBrains_Mono']" style={{ left: 53, top: 272 }}>intent</Link>
-      <Link to="/lab/design-selection/form-strategy" className="absolute text-[#141414] text-[28px] font-bold leading-[27px] no-underline transition-opacity duration-300 hover:opacity-60 font-['JetBrains_Mono']" style={{ left: 85, top: 329 }}>form strategy</Link>
-      <Link to="/lab/design-selection/experiment" className="absolute text-[#141414] text-[28px] font-bold leading-[27px] no-underline transition-opacity duration-300 hover:opacity-60 font-['JetBrains_Mono']" style={{ left: 53, top: 385 }}>experiment</Link>
-      <Link to="/lab/design-selection/observation" className="absolute text-[#141414] text-[28px] font-bold leading-[27px] no-underline transition-opacity duration-300 hover:opacity-60 font-['JetBrains_Mono']" style={{ left: 53, top: 441 }}>observation</Link>
-
       {/* Scrollable area */}
-      <div className="absolute overflow-hidden" style={{ width: 1610, height: 750, top: 213, left: 310 }}>
+      <div className="absolute overflow-hidden" style={{ width: 1480, height: 830, top: 180, left: 380 }}>
         <div
           ref={scrollContentRef}
           className="relative h-full transition-transform duration-300"
@@ -228,7 +244,7 @@ export function ShaperFormStrategyPage() {
       )}
 
       {/* Description */}
-      <div className="absolute text-[#141414] text-[16px] font-bold leading-[21px] tracking-[3.2px] font-['JetBrains_Mono']" style={{ width: 243, left: 54, top: 857 }}>
+      <div className="absolute text-[#141414] text-[16px] font-bold leading-[21px] tracking-[3.2px] font-['JetBrains_Mono']" style={{ width: 243, left: 58, top: 857 }}>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed urna erat, fermentum vel arcu
       </div>
     </ScaledSlide>
