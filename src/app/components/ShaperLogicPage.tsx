@@ -57,7 +57,7 @@ function ShaperLogicContent() {
           SHAPER
         </h1>
 
-        <nav className="flex gap-6 mb-8">
+        <nav className="flex gap-6 mb-8 border-b border-[#141414]/10 pb-3">
           <Link to="/projects/shaper/configure" className="font-['JetBrains_Mono'] text-[14px] font-bold no-underline text-[#141414] opacity-35 hover:opacity-60 transition-opacity">
             configure
           </Link>

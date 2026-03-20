@@ -59,7 +59,6 @@ export function ScaledSlide({ children, mode }: ScaledSlideProps) {
       <div className="bg-[#F8F8FD] overflow-hidden m-0 p-0 min-h-screen font-['JetBrains_Mono']">
         <div className="w-full relative">
           <NavBar mode={resolvedMode} />
-          <div className="absolute left-0 right-0 top-[60px] h-px bg-[#D2D2D2]" />
         </div>
 
         <div ref={containerRef} className="relative" style={{ top: 0 }}>
