@@ -53,10 +53,10 @@ export function ShopPage() {
 
       <div className="max-w-[1200px] mx-auto px-8 pt-16 pb-20 max-md:px-5 max-md:pt-10">
         <div className="mb-16 max-md:mb-10">
-          <h1 className="font-['JetBrains_Mono'] text-[clamp(36px,3.75vw,72px)] font-bold leading-[1.07] tracking-[-0.02em] text-[#141414] mb-4">
+          <h1 className="font-['DM_Sans'] text-[34px] font-semibold leading-[1.1] tracking-[-0.03em] text-[#141414] mb-2 max-md:text-[28px]">
             Editions
           </h1>
-          <p className="font-['JetBrains_Mono'] text-[clamp(14px,1vw,18px)] text-[#141414] opacity-60 max-w-[500px] leading-[1.5]">
+          <p className="font-['DM_Sans'] text-[14px] text-[#141414] opacity-45 max-w-[500px] leading-[1.5]">
             Objects, prints, and editions derived from algorithmic design research.
           </p>
         </div>
@@ -73,7 +73,7 @@ export function ShopPage() {
               </div>
 
               <div className="flex justify-between items-start gap-3 mb-1.5">
-                <h3 className="font-['JetBrains_Mono'] text-[14px] font-bold text-[#141414] leading-[1.3] transition-colors duration-300 group-hover:text-[#FF4D00]">
+                <h3 className="font-['DM_Sans'] text-[14px] font-bold text-[#141414] leading-[1.3] transition-colors duration-300 group-hover:text-[#FF4D00]">
                   {item.name}
                 </h3>
                 <span className="font-['JetBrains_Mono'] text-[14px] font-bold text-[#141414] shrink-0">
@@ -81,7 +81,7 @@ export function ShopPage() {
                 </span>
               </div>
 
-              <p className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-50 leading-[1.5] mb-2">
+              <p className="font-['DM_Sans'] text-[12px] text-[#141414] opacity-50 leading-[1.5] mb-2">
                 {item.description}
               </p>
 

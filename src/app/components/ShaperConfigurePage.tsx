@@ -93,9 +93,9 @@ function ShaperConfigureContent() {
 
   // Desktop layout
   const desktopSliders = [
-    { key: 'a', label: 'parameter A', value: sliderA, labelTop: 360, trackTop: 395 },
-    { key: 'b', label: 'parameter B', value: sliderB, labelTop: 510, trackTop: 545 },
-    { key: 'c', label: 'parameter C', value: sliderC, labelTop: 660, trackTop: 695 },
+    { key: 'a', label: 'parameter A', value: sliderA, labelTop: 380, trackTop: 415 },
+    { key: 'b', label: 'parameter B', value: sliderB, labelTop: 530, trackTop: 565 },
+    { key: 'c', label: 'parameter C', value: sliderC, labelTop: 680, trackTop: 715 },
   ];
 
   return (
@@ -124,7 +124,7 @@ function ShaperConfigureContent() {
       </div>
 
       {/* Center image */}
-      <div className="absolute flex items-center justify-center overflow-hidden bg-[#F8F8FD]" style={{ width: 480, height: 480, left: 480, top: 320 }}>
+      <div className="absolute flex items-center justify-center overflow-hidden bg-[#F8F8FD]" style={{ width: 480, height: 480, left: 480, top: 290 }}>
         <ImageWithFallback
           src={imageUrls[imageIndex]}
           alt="Transform visualization"
