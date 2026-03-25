@@ -1,146 +1,95 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import clsx from 'clsx';
 
-/* ── Pixel sub-components (from Figma Group11) ── */
+/* ─── Pixel Logo (parameterized for light/dark) ──────────────── */
 
-function PixelDot({ additionalClassNames = '' }: { additionalClassNames?: string }) {
+function PixelDot({ left, top, color, borderColor }: { left: string; top: string; color: string; borderColor: string }) {
   return (
-    <div className={clsx('bg-black h-[2.892px] w-[3px]', additionalClassNames)}>
-      <div
-        aria-hidden="true"
-        className="absolute border-[0.1px] border-solid border-white inset-[-0.05px] pointer-events-none"
-      />
+    <div className="absolute" style={{ left, top, width: 3, height: 2.892, background: color }}>
+      <div className="absolute inset-[-0.05px] border-[0.1px] border-solid pointer-events-none" style={{ borderColor }} />
     </div>
   );
 }
 
-function PixelDotFlipped({ additionalClassNames = '' }: { additionalClassNames?: string }) {
+function PixelDotFlipped({ left, top, color, borderColor }: { left: string; top: string; color: string; borderColor: string }) {
   return (
-    <div
-      className={clsx('absolute flex h-[2.892px] items-center justify-center w-[3px]', additionalClassNames)}
-    >
+    <div className="absolute flex items-center justify-center" style={{ left, top, width: 3, height: 2.892 }}>
       <div className="flex-none rotate-180">
-        <PixelDot additionalClassNames="relative" />
+        <div className="relative" style={{ width: 3, height: 2.892, background: color }}>
+          <div className="absolute inset-[-0.05px] border-[0.1px] border-solid pointer-events-none" style={{ borderColor }} />
+        </div>
       </div>
     </div>
   );
 }
 
-function OxxPixelGraphic() {
+function OxxPixelGraphic({ dark }: { dark: boolean }) {
+  const c = dark ? '#fff' : '#000';
+  const bc = dark ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,1)';
+
+  // Dots
+  const dots: [string, string][] = [
+    ['3px','0'],['21px','5.78px'],['38.99px','5.78px'],['3px','17.35px'],['3px','2.89px'],
+    ['21px','0'],['38.99px','0'],['3px','5.78px'],['21px','2.89px'],['38.99px','2.89px'],
+    ['3px','8.68px'],['3px','11.57px'],['3px','14.46px'],['0','2.89px'],['18px','0'],
+    ['36px','0'],['0','5.78px'],['18px','2.89px'],['36px','2.89px'],['0','8.68px'],
+    ['0','11.57px'],['0','14.46px'],['6px','0'],['24px','5.78px'],['41.99px','5.78px'],
+    ['24px','8.68px'],['41.99px','8.68px'],['6px','17.35px'],['9px','2.89px'],['27px','0'],
+    ['44.99px','0'],['9px','5.78px'],['27px','2.89px'],['44.99px','2.89px'],['9px','8.68px'],
+    ['9px','11.57px'],['9px','14.46px'],['12px','2.89px'],['30px','0'],['47.99px','0'],
+    ['12px','5.78px'],['30px','2.89px'],['47.99px','2.89px'],['12px','8.68px'],['12px','11.57px'],
+    ['12px','14.46px'],['9px','0'],['27px','5.78px'],['44.99px','5.78px'],['9px','17.35px'],
+  ];
+  const flipped: [string, string][] = [
+    ['27px','11.57px'],['44.99px','11.57px'],['27px','17.35px'],['44.99px','17.35px'],
+    ['27px','14.46px'],['44.99px','14.46px'],['30px','17.35px'],['47.99px','17.35px'],
+    ['30px','14.46px'],['47.99px','14.46px'],['24px','11.57px'],['41.99px','11.57px'],
+    ['21px','17.35px'],['38.99px','17.35px'],['21px','14.46px'],['38.99px','14.46px'],
+    ['18px','17.35px'],['35.99px','17.35px'],['18px','14.46px'],['35.99px','14.46px'],
+    ['21px','11.57px'],['38.99px','11.57px'],['275.27px','165.17px'],['440.43px','165.17px'],
+    ['165.16px','165.17px'],['330.32px','165.17px'],['192.69px','110.12px'],['357.85px','110.12px'],
+  ];
+  // Use only the small-scale flipped dots (filter out the large Figma coordinates)
+  const smallFlipped = flipped.filter(([l]) => parseFloat(l) < 50);
+
   return (
     <div className="relative" style={{ width: 51, height: 21 }}>
-      <PixelDot additionalClassNames="absolute left-[3px] top-0" />
-      <PixelDot additionalClassNames="absolute left-[21px] top-[5.78px]" />
-      <PixelDot additionalClassNames="absolute left-[38.99px] top-[5.78px]" />
-      <PixelDotFlipped additionalClassNames="left-[27px] top-[11.57px]" />
-      <PixelDotFlipped additionalClassNames="left-[44.99px] top-[11.57px]" />
-      <PixelDot additionalClassNames="absolute left-[3px] top-[17.35px]" />
-      <PixelDot additionalClassNames="absolute left-[3px] top-[2.89px]" />
-      <PixelDot additionalClassNames="absolute left-[21px] top-0" />
-      <PixelDot additionalClassNames="absolute left-[38.99px] top-0" />
-      <PixelDotFlipped additionalClassNames="left-[27px] top-[17.35px]" />
-      <PixelDotFlipped additionalClassNames="left-[44.99px] top-[17.35px]" />
-      <PixelDot additionalClassNames="absolute left-[3px] top-[5.78px]" />
-      <PixelDot additionalClassNames="absolute left-[21px] top-[2.89px]" />
-      <PixelDot additionalClassNames="absolute left-[38.99px] top-[2.89px]" />
-      <PixelDotFlipped additionalClassNames="left-[27px] top-[14.46px]" />
-      <PixelDotFlipped additionalClassNames="left-[44.99px] top-[14.46px]" />
-      <PixelDot additionalClassNames="absolute left-[3px] top-[8.68px]" />
-      <PixelDot additionalClassNames="absolute left-[3px] top-[11.57px]" />
-      <PixelDot additionalClassNames="absolute left-[3px] top-[14.46px]" />
-      <PixelDot additionalClassNames="absolute left-0 top-[2.89px]" />
-      <PixelDot additionalClassNames="absolute left-[18px] top-0" />
-      <PixelDot additionalClassNames="absolute left-[36px] top-0" />
-      <PixelDotFlipped additionalClassNames="left-[30px] top-[17.35px]" />
-      <PixelDotFlipped additionalClassNames="left-[47.99px] top-[17.35px]" />
-      <PixelDot additionalClassNames="absolute left-0 top-[5.78px]" />
-      <PixelDot additionalClassNames="absolute left-[18px] top-[2.89px]" />
-      <PixelDot additionalClassNames="absolute left-[36px] top-[2.89px]" />
-      <PixelDotFlipped additionalClassNames="left-[30px] top-[14.46px]" />
-      <PixelDotFlipped additionalClassNames="left-[47.99px] top-[14.46px]" />
-      <PixelDot additionalClassNames="absolute left-0 top-[8.68px]" />
-      <PixelDot additionalClassNames="absolute left-0 top-[11.57px]" />
-      <PixelDot additionalClassNames="absolute left-0 top-[14.46px]" />
-      <PixelDot additionalClassNames="absolute left-[6px] top-0" />
-      <PixelDot additionalClassNames="absolute left-[24px] top-[5.78px]" />
-      <PixelDot additionalClassNames="absolute left-[41.99px] top-[5.78px]" />
-      <PixelDotFlipped additionalClassNames="left-[24px] top-[11.57px]" />
-      <PixelDotFlipped additionalClassNames="left-[41.99px] top-[11.57px]" />
-      <PixelDot additionalClassNames="absolute left-[24px] top-[8.68px]" />
-      <PixelDot additionalClassNames="absolute left-[41.99px] top-[8.68px]" />
-      <PixelDot additionalClassNames="absolute left-[6px] top-[17.35px]" />
-      <PixelDot additionalClassNames="absolute left-[9px] top-[2.89px]" />
-      <PixelDot additionalClassNames="absolute left-[27px] top-0" />
-      <PixelDot additionalClassNames="absolute left-[44.99px] top-0" />
-      <PixelDotFlipped additionalClassNames="left-[21px] top-[17.35px]" />
-      <PixelDotFlipped additionalClassNames="left-[38.99px] top-[17.35px]" />
-      <PixelDot additionalClassNames="absolute left-[9px] top-[5.78px]" />
-      <PixelDot additionalClassNames="absolute left-[27px] top-[2.89px]" />
-      <PixelDot additionalClassNames="absolute left-[44.99px] top-[2.89px]" />
-      <PixelDotFlipped additionalClassNames="left-[21px] top-[14.46px]" />
-      <PixelDotFlipped additionalClassNames="left-[38.99px] top-[14.46px]" />
-      <PixelDot additionalClassNames="absolute left-[9px] top-[8.68px]" />
-      <PixelDot additionalClassNames="absolute left-[9px] top-[11.57px]" />
-      <PixelDot additionalClassNames="absolute left-[9px] top-[14.46px]" />
-      <PixelDot additionalClassNames="absolute left-[12px] top-[2.89px]" />
-      <PixelDot additionalClassNames="absolute left-[30px] top-0" />
-      <PixelDot additionalClassNames="absolute left-[47.99px] top-0" />
-      <PixelDotFlipped additionalClassNames="left-[18px] top-[17.35px]" />
-      <PixelDotFlipped additionalClassNames="left-[35.99px] top-[17.35px]" />
-      <PixelDot additionalClassNames="absolute left-[12px] top-[5.78px]" />
-      <PixelDot additionalClassNames="absolute left-[30px] top-[2.89px]" />
-      <PixelDot additionalClassNames="absolute left-[47.99px] top-[2.89px]" />
-      <PixelDotFlipped additionalClassNames="left-[18px] top-[14.46px]" />
-      <PixelDotFlipped additionalClassNames="left-[35.99px] top-[14.46px]" />
-      <PixelDot additionalClassNames="absolute left-[12px] top-[8.68px]" />
-      <PixelDot additionalClassNames="absolute left-[12px] top-[11.57px]" />
-      <PixelDot additionalClassNames="absolute left-[12px] top-[14.46px]" />
-      <PixelDot additionalClassNames="absolute left-[9px] top-0" />
-      <PixelDot additionalClassNames="absolute left-[27px] top-[5.78px]" />
-      <PixelDot additionalClassNames="absolute left-[44.99px] top-[5.78px]" />
-      <PixelDotFlipped additionalClassNames="left-[21px] top-[11.57px]" />
-      <PixelDotFlipped additionalClassNames="left-[38.99px] top-[11.57px]" />
-      <PixelDot additionalClassNames="absolute left-[9px] top-[17.35px]" />
+      {dots.map(([l, t], i) => <PixelDot key={`d${i}`} left={l} top={t} color={c} borderColor={bc} />)}
+      {smallFlipped.map(([l, t], i) => <PixelDotFlipped key={`f${i}`} left={l} top={t} color={c} borderColor={bc} />)}
     </div>
   );
 }
 
-/* ── Unified Logo ── */
+/* ─── Unified Logo with lab | studio toggle ─────────────────── */
 
 interface OxxUnifiedLogoProps {
   isStudio: boolean;
+  dark?: boolean;
 }
 
-export function OxxUnifiedLogo({ isStudio }: OxxUnifiedLogoProps) {
+export function OxxUnifiedLogo({ isStudio, dark = false }: OxxUnifiedLogoProps) {
   const [hovered, setHovered] = useState<'lab' | 'studio' | null>(null);
 
-  // Bold logic: current section is bold by default; on hover, hovered one becomes bold
   const isLabBold = hovered === null ? !isStudio : hovered === 'lab';
   const isStudioBold = hovered === null ? isStudio : hovered === 'studio';
 
-  // Opacity logic: when hovering the opposite section, current section fades to 50%
-  const labOpacity =
-    hovered === 'studio' ? 0.5 : 1;
-  const studioOpacity =
-    hovered === 'lab' ? 0.5 : 1;
+  const labOpacity = hovered === 'studio' ? 0.5 : 1;
+  const studioOpacity = hovered === 'lab' ? 0.5 : 1;
+
+  const textColor = dark ? '#fff' : '#141414';
+  const dividerColor = dark ? 'rgba(255,255,255,0.3)' : 'black';
 
   return (
     <div className="flex items-center" style={{ height: 21 }}>
-      {/* OXX pixel graphic — links to landing */}
       <Link
         to="/"
         className="relative block transition-opacity duration-200 hover:opacity-70"
         style={{ width: 51, height: 21 }}
       >
-        <OxxPixelGraphic />
+        <OxxPixelGraphic dark={dark} />
       </Link>
 
-      {/* Text container — positioned like Figma's Container */}
-      <div
-        className="flex items-center"
-        style={{ marginLeft: 14 }}
-      >
+      <div className="flex items-center" style={{ marginLeft: 14 }}>
         <Link
           to="/lab"
           className="no-underline transition-all duration-200 cursor-pointer lowercase whitespace-nowrap"
@@ -149,7 +98,7 @@ export function OxxUnifiedLogo({ isStudio }: OxxUnifiedLogoProps) {
             fontSize: '12.153px',
             letterSpacing: '1.823px',
             lineHeight: '8.414px',
-            color: '#141414',
+            color: textColor,
             fontWeight: isLabBold ? 700 : 400,
             opacity: labOpacity,
           }}
@@ -159,13 +108,9 @@ export function OxxUnifiedLogo({ isStudio }: OxxUnifiedLogoProps) {
           lab
         </Link>
 
-        {/* Vertical divider line */}
-        <div
-          className="flex items-center justify-center"
-          style={{ width: 10, height: 11, marginLeft: 5, marginRight: 7 }}
-        >
+        <div className="flex items-center justify-center" style={{ width: 10, height: 11, marginLeft: 5, marginRight: 7 }}>
           <svg width="1" height="11" viewBox="0 0 1 11" fill="none">
-            <line x1="0.5" y1="0" x2="0.5" y2="11" stroke="black" />
+            <line x1="0.5" y1="0" x2="0.5" y2="11" stroke={dividerColor} />
           </svg>
         </div>
 
@@ -177,7 +122,7 @@ export function OxxUnifiedLogo({ isStudio }: OxxUnifiedLogoProps) {
             fontSize: '12.153px',
             letterSpacing: '1.823px',
             lineHeight: '8.414px',
-            color: '#141414',
+            color: textColor,
             fontWeight: isStudioBold ? 700 : 400,
             opacity: studioOpacity,
           }}
