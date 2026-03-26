@@ -43,7 +43,7 @@ export function NotesPage() {
   const selectedNote = notes.find(n => n.slug === activeNote);
 
   return (
-    <div className="bg-[#f8f8fd] w-full min-h-screen relative font-['JetBrains_Mono']">
+    <div className="bg-[#f8f8fd] w-full min-h-screen relative font-['DM_Sans']">
       <div className="w-full relative">
         <NavBar />
         <div className="absolute left-0 right-0 top-[60px] h-px bg-[#D2D2D2]" />
@@ -52,10 +52,10 @@ export function NotesPage() {
       <div className="pt-[80px] px-[58px] max-md:px-6 max-md:pt-[72px]">
         {!selectedNote ? (
           <div>
-            <h1 className="text-[#141414] text-[72px] font-bold leading-[1.07] tracking-[-0.02em] mb-3 max-md:text-[36px]">
+            <h1 className="text-[#141414] text-[34px] font-semibold leading-[1.1] tracking-[-0.03em] mb-2 max-md:text-[28px] font-['DM_Sans']">
               Notes
             </h1>
-            <p className="text-[#141414] text-[16px] font-bold leading-[1.47] tracking-[-0.02em] opacity-60 mb-16 max-w-[420px] max-md:text-[14px] max-md:mb-10">
+            <p className="text-[#141414] text-[14px] leading-[1.5] tracking-[-0.01em] opacity-45 mb-10 max-w-[420px] max-md:text-[13px] max-md:mb-8 font-['DM_Sans']">
               Thoughts, sketches, and process documentation on algorithmic design
             </p>
 
@@ -68,21 +68,21 @@ export function NotesPage() {
                     onClick={() => setActiveNote(note.slug)}
                   >
                     <div className="flex items-baseline justify-between mb-4 max-md:flex-col max-md:gap-1 max-md:mb-3">
-                      <h2 className="text-[#141414] text-[28px] font-bold leading-[1.2] tracking-[-0.02em] group-hover:text-[#FF4D00] transition-colors duration-300 max-md:text-[20px]">
+                      <h2 className="text-[#141414] text-[28px] font-bold leading-[1.2] tracking-[-0.02em] group-hover:text-[#FF4D00] transition-colors duration-300 max-md:text-[20px] font-['DM_Sans']">
                         {note.title}
                       </h2>
-                      <span className="text-[#141414] text-[13px] font-normal opacity-40 shrink-0 ml-8 max-md:ml-0">
+                      <span className="text-[#141414] text-[13px] font-normal opacity-40 shrink-0 ml-8 max-md:ml-0 font-['JetBrains_Mono']">
                         {note.date}
                       </span>
                     </div>
-                    <p className="text-[#141414] text-[15px] font-normal leading-[1.85] opacity-50 group-hover:opacity-70 transition-opacity duration-300 max-w-[720px] max-md:text-[13px] font-['Inter']">
+                    <p className="text-[#141414] text-[15px] font-normal leading-[1.85] opacity-50 group-hover:opacity-70 transition-opacity duration-300 max-w-[720px] max-md:text-[13px] font-['DM_Sans']">
                       {note.excerpt}
                     </p>
                     <div className="flex gap-2 mt-4 max-md:mt-3">
                       {note.tags.map(tag => (
                         <span
                           key={tag}
-                          className="text-[11px] font-normal text-[#141414] opacity-30 border border-[#141414]/20 px-2.5 py-0.5"
+                          className="text-[11px] font-normal text-[#141414] opacity-30 border border-[#141414]/20 px-2.5 py-0.5 font-['JetBrains_Mono']"
                         >
                           {tag}
                         </span>
@@ -104,10 +104,10 @@ export function NotesPage() {
 
             <div className="max-w-[720px]">
               <div className="flex items-baseline justify-between mb-2 max-md:flex-col max-md:gap-1">
-                <h1 className="text-[#141414] text-[48px] font-bold leading-[1.1] tracking-[-0.02em] max-md:text-[28px]">
+                <h1 className="text-[#141414] text-[48px] font-bold leading-[1.1] tracking-[-0.02em] max-md:text-[28px] font-['DM_Sans']">
                   {selectedNote.title}
                 </h1>
-                <span className="text-[#141414] text-[13px] font-normal opacity-40 shrink-0 ml-8 max-md:ml-0">
+                <span className="text-[#141414] text-[13px] font-normal opacity-40 shrink-0 ml-8 max-md:ml-0 font-['JetBrains_Mono']">
                   {selectedNote.date}
                 </span>
               </div>
@@ -127,7 +127,7 @@ export function NotesPage() {
                 {selectedNote.content.map((paragraph, i) => (
                   <p
                     key={i}
-                    className="text-[#141414] text-[16px] font-normal leading-[1.85] opacity-70 max-md:text-[14px] font-['Inter']"
+                    className="text-[#141414] text-[16px] font-normal leading-[1.85] opacity-70 max-md:text-[14px] font-['DM_Sans']"
                   >
                     {paragraph}
                   </p>

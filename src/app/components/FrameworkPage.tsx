@@ -81,6 +81,7 @@ const frameworkNodes: FrameworkNode[] = [
   },
 ];
 
+// Node positions (percentage-based for the graph canvas)
 const nodePositions: Record<string, { x: number; y: number }> = {
   'dense-field': { x: 25, y: 30 },
   'modular-fill': { x: 70, y: 25 },
@@ -133,6 +134,7 @@ export function FrameworkPage() {
     return 'dimmed';
   };
 
+  // Build unique connection lines
   const lines: { from: string; to: string }[] = [];
   const seen = new Set<string>();
   for (const node of frameworkNodes) {
@@ -157,19 +159,18 @@ export function FrameworkPage() {
       </header>
 
       <main className="flex-1 flex flex-col overflow-hidden">
+        {/* Intro + Toggle */}
         <div className="px-8 pt-6 pb-4 flex items-end justify-between max-md:flex-col max-md:items-start max-md:gap-4">
           <div>
-            <h1 className="font-['JetBrains_Mono'] text-[clamp(28px,3vw,48px)] font-bold text-[#141414] tracking-[-0.02em] leading-[1.1]">
+            <h1 className="font-['DM_Sans'] text-[34px] font-semibold text-[#141414] tracking-[-0.03em] leading-[1.1] max-md:text-[28px]">
               Framework
             </h1>
-            <p className="font-['JetBrains_Mono'] text-[13px] text-[#141414] opacity-50 mt-2 leading-[1.6] max-w-[520px]">
+            <p className="font-['DM_Sans'] text-[14px] text-[#141414] opacity-45 mt-2 leading-[1.5] max-w-[520px]">
               Explore how research systems, form strategies, and studio works connect inside OXX Lab.
-            </p>
-            <p className="font-['JetBrains_Mono'] text-[11px] text-[#141414] opacity-30 mt-1 leading-[1.6]">
-              Lab develops systems. Studio applies them. Framework shows how they connect.
             </p>
           </div>
 
+          {/* Mode Toggle */}
           <div className="flex items-center gap-0 border border-[#141414] border-opacity-15 rounded-sm overflow-hidden shrink-0">
             <button
               onClick={() => setViewMode('lab')}
@@ -194,7 +195,9 @@ export function FrameworkPage() {
           </div>
         </div>
 
+        {/* Graph + Panel */}
         <div className="flex-1 flex min-h-0 px-8 pb-8 gap-6 max-md:flex-col">
+          {/* Strategy Graph Canvas */}
           <div
             ref={canvasRef}
             className="flex-1 relative min-h-[400px] rounded-sm border border-[#141414] border-opacity-[0.06] bg-white/40"
@@ -202,6 +205,7 @@ export function FrameworkPage() {
               if (e.target === e.currentTarget) setSelectedNode(null);
             }}
           >
+            {/* SVG Connection Lines */}
             <svg
               className="absolute inset-0 w-full h-full pointer-events-none"
               style={{ zIndex: 0 }}
@@ -226,6 +230,7 @@ export function FrameworkPage() {
               })}
             </svg>
 
+            {/* Nodes */}
             {frameworkNodes.map((node) => {
               const pos = nodePositions[node.id];
               const state = getNodeState(node.id);
@@ -251,6 +256,7 @@ export function FrameworkPage() {
                   onMouseEnter={() => setHoveredNode(node.id)}
                   onMouseLeave={() => setHoveredNode(null)}
                 >
+                  {/* Node dot */}
                   <div
                     className="rounded-full transition-all duration-300"
                     style={{
@@ -258,11 +264,14 @@ export function FrameworkPage() {
                       height: isSelected ? 14 : isHover ? 12 : 10,
                       backgroundColor: isSelected || isConnected
                         ? '#FF4D00'
+                        : isDimmed
+                        ? '#141414'
                         : '#141414',
                       opacity: isDimmed ? 0.15 : 1,
                       boxShadow: isSelected ? '0 0 0 4px rgba(255,77,0,0.15)' : 'none',
                     }}
                   />
+                  {/* Label */}
                   <span
                     className="font-['JetBrains_Mono'] font-bold text-[12px] tracking-[-0.01em] mt-2 whitespace-nowrap transition-all duration-300"
                     style={{
@@ -272,6 +281,7 @@ export function FrameworkPage() {
                   >
                     {node.label}
                   </span>
+                  {/* Tag */}
                   <span
                     className="font-['JetBrains_Mono'] text-[9px] tracking-[0.06em] uppercase mt-0.5 whitespace-nowrap transition-all duration-300"
                     style={{
@@ -285,6 +295,7 @@ export function FrameworkPage() {
               );
             })}
 
+            {/* Empty state hint */}
             {!selectedNode && !hovered && (
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 font-['JetBrains_Mono'] text-[11px] text-[#141414] opacity-20 tracking-[0.04em]">
                 Select a strategy node to explore related research, projects, and objects.
@@ -292,6 +303,7 @@ export function FrameworkPage() {
             )}
           </div>
 
+          {/* Detail Panel */}
           <div
             className={`transition-all duration-300 overflow-y-auto rounded-sm border border-[#141414] bg-white/60 ${
               selected
@@ -302,8 +314,9 @@ export function FrameworkPage() {
           >
             {selected && (
               <div className="flex flex-col gap-6 min-w-[290px]">
+                {/* Header */}
                 <div>
-                  <h2 className="font-['JetBrains_Mono'] text-[20px] font-bold text-[#141414] tracking-[-0.02em] leading-[1.2]">
+                  <h2 className="font-['DM_Sans'] text-[20px] font-bold text-[#141414] tracking-[-0.02em] leading-[1.2]">
                     {selected.label}
                   </h2>
                   <span className="font-['JetBrains_Mono'] text-[10px] tracking-[0.08em] uppercase text-[#FF4D00] mt-1 inline-block">
@@ -311,12 +324,14 @@ export function FrameworkPage() {
                   </span>
                 </div>
 
+                {/* Description */}
                 <div>
-                  <p className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-60 leading-[1.7]">
+                  <p className="font-['DM_Sans'] text-[12px] text-[#141414] opacity-60 leading-[1.7]">
                     {selected.description}
                   </p>
                 </div>
 
+                {/* Inside OXX */}
                 <div>
                   <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase text-[#141414] opacity-35 mb-2">
                     Inside OXX
@@ -326,8 +341,10 @@ export function FrameworkPage() {
                   </p>
                 </div>
 
+                {/* Context-shifted content */}
                 {viewMode === 'lab' ? (
                   <>
+                    {/* Lab Links first */}
                     <div>
                       <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase text-[#141414] opacity-35 mb-2">
                         Related Research
@@ -345,6 +362,7 @@ export function FrameworkPage() {
                       </div>
                     </div>
 
+                    {/* Studio Links below */}
                     <div>
                       <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase text-[#141414] opacity-35 mb-2">
                         Studio Applications
@@ -368,6 +386,7 @@ export function FrameworkPage() {
                   </>
                 ) : (
                   <>
+                    {/* Studio first */}
                     <div>
                       <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase text-[#141414] opacity-35 mb-2">
                         Studio Work
@@ -389,6 +408,7 @@ export function FrameworkPage() {
                       </div>
                     </div>
 
+                    {/* Objects */}
                     <div>
                       <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase text-[#141414] opacity-35 mb-2">
                         Objects
@@ -405,6 +425,7 @@ export function FrameworkPage() {
                       </div>
                     </div>
 
+                    {/* Research Origins below */}
                     <div>
                       <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase text-[#141414] opacity-35 mb-2">
                         Research Origins
@@ -424,6 +445,7 @@ export function FrameworkPage() {
                   </>
                 )}
 
+                {/* Objects (lab mode only) */}
                 {viewMode === 'lab' && (
                   <div>
                     <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase text-[#141414] opacity-35 mb-2">
@@ -442,6 +464,7 @@ export function FrameworkPage() {
                   </div>
                 )}
 
+                {/* Connected nodes */}
                 <div>
                   <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase text-[#141414] opacity-35 mb-2">
                     Connected Systems

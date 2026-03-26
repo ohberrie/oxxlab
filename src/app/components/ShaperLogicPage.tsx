@@ -119,7 +119,7 @@ function ShaperLogicContent() {
       </div>
 
       {/* Scrollable area */}
-      <div className="absolute overflow-hidden" style={{ width: 1560, height: 780, top: 260, left: 320 }}>
+      <div className="absolute overflow-hidden" style={{ width: 1560, height: 730, top: 290, left: 320 }}>
         <div
           className="relative transition-transform duration-300"
           style={{ width: 1560, height: 3920, transform: `translateY(${scrollY}px)` }}

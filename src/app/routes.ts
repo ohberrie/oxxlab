@@ -2,6 +2,8 @@ import { createBrowserRouter } from 'react-router';
 import { HomePage } from './components/HomePage';
 import { AboutPage } from './components/AboutPage';
 import { LabPage } from './components/LabPage';
+import { LabSystemPage } from './components/LabSystemPage';
+import { LabCasesPage } from './components/LabCasesPage';
 import { ProjectsPage } from './components/ProjectsPage';
 import { NotesPage } from './components/NotesPage';
 import { ShopPage } from './components/ShopPage';
@@ -35,6 +37,9 @@ export const router = createBrowserRouter([
   { path: '/', Component: HomePage },
   { path: '/about', Component: AboutPage },
   { path: '/lab', Component: LabPage },
+  { path: '/lab/systems', Component: LabSystemPage },
+  { path: '/lab/cases', Component: LabCasesPage },
+  { path: '/lab/cases/:id', Component: LabCasesPage },
   { path: '/projects', Component: ProjectsPage },
   { path: '/notes', Component: NotesPage },
   { path: '/shop', Component: ShopPage },
