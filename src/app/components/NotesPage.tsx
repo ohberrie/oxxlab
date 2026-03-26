@@ -43,46 +43,50 @@ export function NotesPage() {
   const selectedNote = notes.find(n => n.slug === activeNote);
 
   return (
-    <div className="bg-[#f8f8fd] w-full min-h-screen relative font-['DM_Sans']">
+    <div className="w-full min-h-screen relative font-['DM_Sans']" style={{ background: '#0a0a0a', color: '#fff' }}>
       <div className="w-full relative">
-        <NavBar />
-        <div className="absolute left-0 right-0 top-[60px] h-px bg-[#D2D2D2]" />
+        <NavBar mode="lab" dark />
+        <div className="absolute left-0 right-0 top-[60px] h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
       </div>
 
       <div className="pt-[80px] px-[58px] max-md:px-6 max-md:pt-[72px]">
         {!selectedNote ? (
           <div>
-            <h1 className="text-[#141414] text-[34px] font-semibold leading-[1.1] tracking-[-0.03em] mb-2 max-md:text-[28px] font-['DM_Sans']">
+            <h1 className="text-[34px] font-semibold leading-[1.1] tracking-[-0.03em] mb-2 max-md:text-[28px] font-['DM_Sans']" style={{ color: 'rgba(255,255,255,0.9)' }}>
               Notes
             </h1>
-            <p className="text-[#141414] text-[14px] leading-[1.5] tracking-[-0.01em] opacity-45 mb-10 max-w-[420px] max-md:text-[13px] max-md:mb-8 font-['DM_Sans']">
+            <p className="text-[14px] leading-[1.5] tracking-[-0.01em] mb-10 max-w-[420px] max-md:text-[13px] max-md:mb-8 font-['DM_Sans']" style={{ color: 'rgba(255,255,255,0.4)' }}>
               Thoughts, sketches, and process documentation on algorithmic design
             </p>
 
             <div className="max-w-[960px]">
               {notes.map((note, index) => (
                 <div key={note.slug}>
-                  {index > 0 && <div className="h-px bg-[#D2D2D2] my-0" />}
+                  {index > 0 && <div className="h-px my-0" style={{ background: 'rgba(255,255,255,0.06)' }} />}
                   <div
                     className="group py-10 cursor-pointer max-md:py-6"
                     onClick={() => setActiveNote(note.slug)}
                   >
                     <div className="flex items-baseline justify-between mb-4 max-md:flex-col max-md:gap-1 max-md:mb-3">
-                      <h2 className="text-[#141414] text-[28px] font-bold leading-[1.2] tracking-[-0.02em] group-hover:text-[#FF4D00] transition-colors duration-300 max-md:text-[20px] font-['DM_Sans']">
+                      <h2 className="text-[28px] font-bold leading-[1.2] tracking-[-0.02em] transition-colors duration-300 max-md:text-[20px] font-['DM_Sans']" style={{ color: 'rgba(255,255,255,0.85)' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.color = '#FF1E00'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.85)'; }}
+                      >
                         {note.title}
                       </h2>
-                      <span className="text-[#141414] text-[13px] font-normal opacity-40 shrink-0 ml-8 max-md:ml-0 font-['JetBrains_Mono']">
+                      <span className="text-[13px] font-normal shrink-0 ml-8 max-md:ml-0 font-['JetBrains_Mono']" style={{ color: 'rgba(255,255,255,0.3)' }}>
                         {note.date}
                       </span>
                     </div>
-                    <p className="text-[#141414] text-[15px] font-normal leading-[1.85] opacity-50 group-hover:opacity-70 transition-opacity duration-300 max-w-[720px] max-md:text-[13px] font-['DM_Sans']">
+                    <p className="text-[15px] font-normal leading-[1.85] group-hover:opacity-70 transition-opacity duration-300 max-w-[720px] max-md:text-[13px] font-['DM_Sans']" style={{ color: 'rgba(255,255,255,0.4)' }}>
                       {note.excerpt}
                     </p>
                     <div className="flex gap-2 mt-4 max-md:mt-3">
                       {note.tags.map(tag => (
                         <span
                           key={tag}
-                          className="text-[11px] font-normal text-[#141414] opacity-30 border border-[#141414]/20 px-2.5 py-0.5 font-['JetBrains_Mono']"
+                          className="text-[11px] font-normal px-2.5 py-0.5 font-['JetBrains_Mono']"
+                          style={{ color: 'rgba(255,255,255,0.25)', border: '1px solid rgba(255,255,255,0.1)' }}
                         >
                           {tag}
                         </span>
@@ -97,17 +101,18 @@ export function NotesPage() {
           <div>
             <button
               onClick={() => setActiveNote(null)}
-              className="text-[#141414] text-[13px] font-bold opacity-40 hover:opacity-100 transition-opacity duration-300 mb-10 cursor-pointer bg-transparent border-none font-['JetBrains_Mono'] max-md:mb-6"
+              className="text-[13px] font-bold hover:opacity-100 transition-opacity duration-300 mb-10 cursor-pointer bg-transparent border-none font-['JetBrains_Mono'] max-md:mb-6"
+              style={{ color: 'rgba(255,255,255,0.35)' }}
             >
               &larr; back to notes
             </button>
 
             <div className="max-w-[720px]">
               <div className="flex items-baseline justify-between mb-2 max-md:flex-col max-md:gap-1">
-                <h1 className="text-[#141414] text-[48px] font-bold leading-[1.1] tracking-[-0.02em] max-md:text-[28px] font-['DM_Sans']">
+                <h1 className="text-[48px] font-bold leading-[1.1] tracking-[-0.02em] max-md:text-[28px] font-['DM_Sans']" style={{ color: 'rgba(255,255,255,0.9)' }}>
                   {selectedNote.title}
                 </h1>
-                <span className="text-[#141414] text-[13px] font-normal opacity-40 shrink-0 ml-8 max-md:ml-0 font-['JetBrains_Mono']">
+                <span className="text-[13px] font-normal shrink-0 ml-8 max-md:ml-0 font-['JetBrains_Mono']" style={{ color: 'rgba(255,255,255,0.3)' }}>
                   {selectedNote.date}
                 </span>
               </div>
@@ -116,7 +121,8 @@ export function NotesPage() {
                 {selectedNote.tags.map(tag => (
                   <span
                     key={tag}
-                    className="text-[11px] font-normal text-[#141414] opacity-30 border border-[#141414]/20 px-2.5 py-0.5"
+                    className="text-[11px] font-normal px-2.5 py-0.5"
+                    style={{ color: 'rgba(255,255,255,0.25)', border: '1px solid rgba(255,255,255,0.1)' }}
                   >
                     {tag}
                   </span>
@@ -127,7 +133,8 @@ export function NotesPage() {
                 {selectedNote.content.map((paragraph, i) => (
                   <p
                     key={i}
-                    className="text-[#141414] text-[16px] font-normal leading-[1.85] opacity-70 max-md:text-[14px] font-['DM_Sans']"
+                    className="text-[16px] font-normal leading-[1.85] max-md:text-[14px] font-['DM_Sans']"
+                    style={{ color: 'rgba(255,255,255,0.6)' }}
                   >
                     {paragraph}
                   </p>

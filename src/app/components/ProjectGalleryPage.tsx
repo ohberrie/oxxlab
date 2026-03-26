@@ -130,6 +130,7 @@ export function ProjectGalleryPage({ type }: ProjectGalleryPageProps) {
   const projects = type === 'lab' ? labProjects : worksProjects;
   const defaultTitle = type === 'lab' ? 'Systems' : 'Projects';
   const navigate = useNavigate();
+  const isDark = type === 'lab';
 
   const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
   const [positions, setPositions] = useState<Position[]>([]);
@@ -187,29 +188,46 @@ export function ProjectGalleryPage({ type }: ProjectGalleryPageProps) {
   const description = hoveredProject ? hoveredProject.description : (type === 'lab' ? 'Form experiments and research systems' : '');
   const showDescription = type === 'lab' ? true : !!hoveredProject;
 
+  // Color scheme
+  const bg = isDark ? '#0a0a0a' : '#f8f8fd';
+  const textColor = isDark ? 'rgba(255,255,255,0.9)' : '#141414';
+  const descColor = isDark ? 'rgba(255,255,255,0.45)' : '#141414';
+  const itemColor = isDark ? 'rgba(255,255,255,0.7)' : '#141414';
+  const accent = isDark ? '#FF1E00' : '#FF4D00';
+  const labelColor = isDark ? 'rgba(255,255,255,0.25)' : '#141414';
+  const serviceColor = isDark ? 'rgba(255,255,255,0.4)' : '#141414';
+  const borderColor = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(20,20,20,0.04)';
+
   return (
-    <div className="bg-[#f8f8fd] w-full h-screen relative overflow-hidden max-md:overflow-auto max-md:h-auto max-md:min-h-screen max-md:flex max-md:flex-col">
+    <div
+      className="w-full h-screen relative overflow-hidden max-md:overflow-auto max-md:h-auto max-md:min-h-screen max-md:flex max-md:flex-col"
+      style={{ background: bg }}
+    >
       <header className="max-md:relative absolute top-0 left-0 right-0 z-20">
-        <NavBar />
+        <NavBar dark={isDark} />
       </header>
 
       <div className="absolute top-0 left-0 w-[34%] min-w-[300px] max-w-[500px] h-full flex items-center pl-[58px] max-lg:w-[260px] max-lg:min-w-[220px] max-lg:pl-8 max-md:relative max-md:w-full max-md:max-w-none max-md:min-w-0 max-md:h-auto max-md:px-5 max-md:pt-10 max-md:pb-5 max-md:pl-6 max-md:block">
         <div className="flex flex-col gap-8 max-md:gap-4">
           <div className="flex items-start gap-3 max-md:items-center max-md:gap-2.5">
             <div
-              className="w-5 h-[18px] text-[#141414] shrink-0 transition-colors duration-300"
-              style={{ marginTop: 'calc((clamp(36px, 3.75vw, 72px) * 1.07 - 18px) / 2)' }}
+              className="w-5 h-[18px] shrink-0 transition-colors duration-300"
+              style={{ marginTop: 'calc((clamp(36px, 3.75vw, 72px) * 1.07 - 18px) / 2)', color: isDark ? 'rgba(255,255,255,0.7)' : '#141414' }}
             >
               <PlayIcon />
             </div>
             <div className="transition-transform duration-300">
-              <h1 className="font-['DM_Sans'] text-[clamp(36px,3.75vw,72px)] font-bold leading-[1.07] tracking-[-0.02em] text-[#141414] mb-5 transition-opacity duration-300 max-md:text-[32px] max-md:mb-2">
+              <h1
+                className="font-['DM_Sans'] text-[clamp(36px,3.75vw,72px)] font-bold leading-[1.07] tracking-[-0.02em] mb-5 transition-opacity duration-300 max-md:text-[32px] max-md:mb-2"
+                style={{ color: textColor }}
+              >
                 {title}
               </h1>
               <p
-                className={`font-['DM_Sans'] text-[clamp(14px,1vw,19px)] font-bold leading-[1.47] tracking-[-0.02em] text-[#141414] max-w-[310px] transition-opacity duration-300 max-md:text-[14px] ${
+                className={`font-['DM_Sans'] text-[clamp(14px,1vw,19px)] font-bold leading-[1.47] tracking-[-0.02em] max-w-[310px] transition-opacity duration-300 max-md:text-[14px] ${
                   showDescription ? 'opacity-100' : 'opacity-0'
                 }`}
+                style={{ color: descColor }}
               >
                 {description}
               </p>
@@ -220,16 +238,16 @@ export function ProjectGalleryPage({ type }: ProjectGalleryPageProps) {
           {type === 'works' && !hoveredProject && (
             <div className="flex flex-col gap-6 mt-4 max-md:mt-2">
               <div>
-                <div className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.1em] uppercase text-[#141414] opacity-30 mb-3">Services</div>
+                <div className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.1em] uppercase opacity-30 mb-3" style={{ color: labelColor }}>Services</div>
                 {['Stage & Set Design', 'Exhibition Spatial Design', 'Computational Object Design', 'Design Strategy Consultation', 'Perception Evaluation Research'].map(s => (
-                  <div key={s} className="py-1.5 border-b border-[#141414]/[0.04] font-['DM_Sans'] text-[12px] text-[#141414] opacity-50 last:border-b-0">
+                  <div key={s} className="py-1.5 font-['DM_Sans'] text-[12px] opacity-50 last:border-b-0" style={{ color: serviceColor, borderBottom: `1px solid ${borderColor}` }}>
                     {s}
                   </div>
                 ))}
               </div>
               <div>
-                <div className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.1em] uppercase text-[#141414] opacity-30 mb-2">Contact</div>
-                <p className="font-['DM_Sans'] text-[12px] text-[#141414] opacity-40 leading-[1.6]">
+                <div className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.1em] uppercase opacity-30 mb-2" style={{ color: labelColor }}>Contact</div>
+                <p className="font-['DM_Sans'] text-[12px] opacity-40 leading-[1.6]" style={{ color: serviceColor }}>
                   For collaboration, research inquiries, or studio projects — reach out directly.
                 </p>
               </div>
@@ -260,12 +278,19 @@ export function ProjectGalleryPage({ type }: ProjectGalleryPageProps) {
               onMouseLeave={() => handleMouseLeave(project)}
             >
               <div
-                className="flex items-center justify-center text-[#141414] transition-colors duration-300 group-hover:text-[#FF4D00] shrink-0"
-                style={{ width: logoSize, height: logoSize }}
+                className="flex items-center justify-center transition-colors duration-300 shrink-0"
+                style={{ width: logoSize, height: logoSize, color: itemColor }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = accent; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = itemColor; }}
               >
                 <project.SvgComponent />
               </div>
-              <div className="font-['JetBrains_Mono'] text-[clamp(16px,1.35vw,26px)] font-bold leading-[1.04] tracking-[-0.025em] text-[#141414] text-center mt-1 transition-colors duration-300 group-hover:text-[#FF4D00] whitespace-pre-line max-md:text-[16px] max-md:mt-0.5">
+              <div
+                className="font-['JetBrains_Mono'] text-[clamp(16px,1.35vw,26px)] font-bold leading-[1.04] tracking-[-0.025em] text-center mt-1 transition-colors duration-300 whitespace-pre-line max-md:text-[16px] max-md:mt-0.5"
+                style={{ color: itemColor }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = accent; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = itemColor; }}
+              >
                 {project.name}
               </div>
             </div>
