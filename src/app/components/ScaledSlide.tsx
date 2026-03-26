@@ -8,9 +8,10 @@ export const useIsMobile = () => useContext(MobileContext);
 interface ScaledSlideProps {
   children: ReactNode;
   mode?: 'lab' | 'studio';
+  dark?: boolean;
 }
 
-export function ScaledSlide({ children, mode }: ScaledSlideProps) {
+export function ScaledSlide({ children, mode, dark = false }: ScaledSlideProps) {
   const slideRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
@@ -54,19 +55,25 @@ export function ScaledSlide({ children, mode }: ScaledSlideProps) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const bg = dark ? '#0a0a0a' : '#F8F8FD';
+  const dividerColor = dark ? 'rgba(255,255,255,0.06)' : '#D2D2D2';
+
   return (
     <MobileContext.Provider value={isMobile}>
-      <div className="bg-[#F8F8FD] overflow-hidden m-0 p-0 min-h-screen font-['JetBrains_Mono']">
+      <div className="overflow-hidden m-0 p-0 min-h-screen font-['JetBrains_Mono']" style={{ background: bg }}>
         <div className="w-full relative">
-          <NavBar mode={resolvedMode} />
-          <div className="absolute left-0 right-0 top-[60px] h-px bg-[#D2D2D2]" />
+          <NavBar mode={resolvedMode} dark={dark} />
+          <div className="absolute left-0 right-0 top-[60px] h-px" style={{ background: dividerColor }} />
         </div>
 
         <div ref={containerRef} className="relative" style={{ top: 0 }}>
           <div
             ref={slideRef}
-            className={`bg-[#F8F8FD] relative ${isMobile ? 'overflow-y-auto' : 'overflow-hidden'}`}
-            style={isMobile ? { width: '100%', minHeight: '100vh' } : { width: 1920, height: 1080, transformOrigin: 'top left' }}
+            className={`relative ${isMobile ? 'overflow-y-auto' : 'overflow-hidden'}`}
+            style={{
+              background: bg,
+              ...(isMobile ? { width: '100%', minHeight: '100vh' } : { width: 1920, height: 1080, transformOrigin: 'top left' }),
+            }}
           >
             {children}
           </div>

@@ -28,10 +28,10 @@ function LabProjectContent({ projectName, subtitle, menuItems, activeItem, appli
   if (isMobile) {
     return (
       <div className="px-5 pt-6 pb-10">
-        <h1 className="font-['JetBrains_Mono'] text-[#141414] font-bold text-[36px] leading-[1.05] tracking-[-0.02em] mb-2">
+        <h1 className="font-['JetBrains_Mono'] font-bold text-[36px] leading-[1.05] tracking-[-0.02em] mb-2" style={{ color: 'rgba(255,255,255,0.9)' }}>
           {projectName}
         </h1>
-        <p className="font-['JetBrains_Mono'] text-[13px] text-[#141414] opacity-40 leading-[1.5] mb-6 max-w-[400px]">
+        <p className="font-['JetBrains_Mono'] text-[13px] leading-[1.5] mb-6 max-w-[400px]" style={{ color: 'rgba(255,255,255,0.35)' }}>
           {subtitle}
         </p>
 
@@ -42,12 +42,11 @@ function LabProjectContent({ projectName, subtitle, menuItems, activeItem, appli
               <Link
                 key={item.label}
                 to={item.path}
-                className={`font-['JetBrains_Mono'] text-[16px] font-bold no-underline transition-opacity duration-300 hover:opacity-60 flex items-center gap-2 ${
-                  isActive ? 'text-[#141414]' : 'text-[#141414] opacity-40'
-                }`}
+                className="font-['JetBrains_Mono'] text-[16px] font-bold no-underline transition-opacity duration-300 hover:opacity-60 flex items-center gap-2"
+                style={{ color: isActive ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)' }}
               >
                 {isActive && (
-                  <span className="w-4 h-3.5 shrink-0 text-[#141414]"><PlayIcon /></span>
+                  <span className="w-4 h-3.5 shrink-0" style={{ color: '#FF1E00' }}><PlayIcon /></span>
                 )}
                 {item.label}
               </Link>
@@ -57,13 +56,13 @@ function LabProjectContent({ projectName, subtitle, menuItems, activeItem, appli
 
         <div className="w-full min-h-[50vh] mb-8">
           {children || (
-            <span className="text-[#141414] text-[16px] opacity-20 tracking-[4px] font-['JetBrains_Mono'] uppercase">
+            <span className="text-[16px] tracking-[4px] font-['JetBrains_Mono'] uppercase" style={{ color: 'rgba(255,255,255,0.15)' }}>
               {activeItem}
             </span>
           )}
         </div>
 
-        {applications && <CrossLinks label="Applications" links={applications} />}
+        {applications && <CrossLinks label="Applications" links={applications} dark />}
       </div>
     );
   }
@@ -74,15 +73,15 @@ function LabProjectContent({ projectName, subtitle, menuItems, activeItem, appli
   return (
     <>
       <h1
-        className="absolute font-['JetBrains_Mono'] text-[#141414] font-bold leading-[1]"
-        style={{ left: 58, top: 100, fontSize: 64, letterSpacing: '-0.02em' }}
+        className="absolute font-['JetBrains_Mono'] font-bold leading-[1]"
+        style={{ left: 58, top: 100, fontSize: 64, letterSpacing: '-0.02em', color: 'rgba(255,255,255,0.9)' }}
       >
         {projectName}
       </h1>
 
       <p
-        className="absolute font-['JetBrains_Mono'] text-[#141414] opacity-25 leading-[1.5] whitespace-nowrap"
-        style={{ left: 60, top: 180, fontSize: 16, letterSpacing: '0.02em' }}
+        className="absolute font-['JetBrains_Mono'] leading-[1.5] whitespace-nowrap"
+        style={{ left: 60, top: 180, fontSize: 16, letterSpacing: '0.02em', color: 'rgba(255,255,255,0.2)' }}
       >
         {subtitle}
       </p>
@@ -96,10 +95,8 @@ function LabProjectContent({ projectName, subtitle, menuItems, activeItem, appli
           <Link
             key={item.label}
             to={item.path}
-            className={`absolute text-[20px] font-bold leading-[1] no-underline transition-all duration-300 hover:opacity-60 font-['JetBrains_Mono'] ${
-              isActive ? 'text-[#141414]' : 'text-[#141414] opacity-25'
-            }`}
-            style={{ left, top }}
+            className="absolute text-[20px] font-bold leading-[1] no-underline transition-all duration-300 hover:opacity-60 font-['JetBrains_Mono']"
+            style={{ left, top, color: isActive ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.2)' }}
           >
             {item.label}
           </Link>
@@ -110,7 +107,7 @@ function LabProjectContent({ projectName, subtitle, menuItems, activeItem, appli
         if (item.label !== activeItem) return null;
         const top = menuStartY + index * menuGap + 1;
         return (
-          <div key="arrow" className="absolute w-[16px] h-[14px] text-[#141414]" style={{ left: 60, top }}>
+          <div key="arrow" className="absolute w-[16px] h-[14px]" style={{ left: 60, top, color: '#FF1E00' }}>
             <PlayIcon />
           </div>
         );
@@ -118,7 +115,7 @@ function LabProjectContent({ projectName, subtitle, menuItems, activeItem, appli
 
       {applications && applications.length > 0 && (
         <div className="absolute" style={{ left: 58, bottom: 55 }}>
-          <CrossLinks label="Applications" links={applications} />
+          <CrossLinks label="Applications" links={applications} dark />
         </div>
       )}
 
@@ -127,7 +124,7 @@ function LabProjectContent({ projectName, subtitle, menuItems, activeItem, appli
         style={{ left: 380, top: 340, width: 1480, height: 670 }}
       >
         {children || (
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#141414] text-[20px] font-normal opacity-20 tracking-[6px] font-['JetBrains_Mono'] uppercase">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20px] font-normal tracking-[6px] font-['JetBrains_Mono'] uppercase" style={{ color: 'rgba(255,255,255,0.15)' }}>
             {activeItem}
           </div>
         )}
@@ -138,7 +135,7 @@ function LabProjectContent({ projectName, subtitle, menuItems, activeItem, appli
 
 export function LabProjectPage(props: LabProjectPageProps) {
   return (
-    <ScaledSlide>
+    <ScaledSlide dark>
       <LabProjectContent {...props} />
     </ScaledSlide>
   );
@@ -165,10 +162,10 @@ export function SelectionLogicOverviewPage() {
   return (
     <LabProjectPage projectName="SELECTION LOGIC" subtitle={SL_SUBTITLE} menuItems={selectionLogicMenu} activeItem="overview" applications={selectionLogicApps}>
       <div className="pt-0 px-12 pb-12 max-w-[900px]">
-        <p className="font-['JetBrains_Mono'] text-[18px] text-[#141414] opacity-70 leading-[1.8] mb-8">
+        <p className="font-['JetBrains_Mono'] text-[18px] leading-[1.8] mb-8" style={{ color: 'rgba(255,255,255,0.65)' }}>
           Selection Logic determines how a system chooses one outcome among many possible configurations.
         </p>
-        <p className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-40 leading-[1.8]">
+        <p className="font-['JetBrains_Mono'] text-[14px] leading-[1.8]" style={{ color: 'rgba(255,255,255,0.35)' }}>
           It is the engine behind algorithmic decision-making in form generation — filtering possibilities through constraints, weights, and intent until a single result emerges.
         </p>
       </div>
@@ -183,8 +180,8 @@ export function SelectionLogicPrinciplePage() {
       <div className="pt-0 px-12 pb-12 flex flex-col gap-6">
         {principles.map((p, i) => (
           <div key={p} className="flex items-center gap-6">
-            <span className="font-['JetBrains_Mono'] text-[48px] font-bold text-[#141414] opacity-10 w-[60px] text-right">{String(i + 1).padStart(2, '0')}</span>
-            <span className="font-['JetBrains_Mono'] text-[24px] font-bold text-[#141414] opacity-70 tracking-[2px]">{p}</span>
+            <span className="font-['JetBrains_Mono'] text-[48px] font-bold w-[60px] text-right" style={{ color: 'rgba(255,255,255,0.08)' }}>{String(i + 1).padStart(2, '0')}</span>
+            <span className="font-['JetBrains_Mono'] text-[24px] font-bold tracking-[2px]" style={{ color: 'rgba(255,255,255,0.65)' }}>{p}</span>
           </div>
         ))}
       </div>
@@ -196,20 +193,20 @@ export function SelectionLogicDiagramPage() {
   return (
     <LabProjectPage projectName="SELECTION LOGIC" subtitle={SL_SUBTITLE} menuItems={selectionLogicMenu} activeItem="diagram" applications={selectionLogicApps}>
       <div className="pt-0 px-12 pb-12 flex flex-col items-center justify-center h-full gap-10">
-        <div className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-30 tracking-[3px] uppercase">All Possibilities</div>
+        <div className="font-['JetBrains_Mono'] text-[14px] tracking-[3px] uppercase" style={{ color: 'rgba(255,255,255,0.25)' }}>All Possibilities</div>
         <div className="flex gap-4">
           {['A','B','C','D','E','F','G'].map(l => (
-            <div key={l} className="w-[50px] h-[50px] border border-[#141414] border-opacity-20 flex items-center justify-center font-['JetBrains_Mono'] text-[18px] font-bold text-[#141414] opacity-50">{l}</div>
+            <div key={l} className="w-[50px] h-[50px] flex items-center justify-center font-['JetBrains_Mono'] text-[18px] font-bold" style={{ border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.45)' }}>{l}</div>
           ))}
         </div>
-        <div className="font-['JetBrains_Mono'] text-[20px] text-[#141414] opacity-20">↓ filter</div>
+        <div className="font-['JetBrains_Mono'] text-[20px]" style={{ color: 'rgba(255,255,255,0.15)' }}>↓ filter</div>
         <div className="flex gap-4">
           {['B','D','F'].map(l => (
-            <div key={l} className="w-[50px] h-[50px] border-2 border-[#141414] border-opacity-40 flex items-center justify-center font-['JetBrains_Mono'] text-[18px] font-bold text-[#141414] opacity-70">{l}</div>
+            <div key={l} className="w-[50px] h-[50px] flex items-center justify-center font-['JetBrains_Mono'] text-[18px] font-bold" style={{ border: '2px solid rgba(255,255,255,0.3)', color: 'rgba(255,255,255,0.65)' }}>{l}</div>
           ))}
         </div>
-        <div className="font-['JetBrains_Mono'] text-[20px] text-[#141414] opacity-20">↓ selection</div>
-        <div className="w-[60px] h-[60px] bg-[#141414] flex items-center justify-center font-['JetBrains_Mono'] text-[22px] font-bold text-[#F8F8FD]">D</div>
+        <div className="font-['JetBrains_Mono'] text-[20px]" style={{ color: 'rgba(255,255,255,0.15)' }}>↓ selection</div>
+        <div className="w-[60px] h-[60px] flex items-center justify-center font-['JetBrains_Mono'] text-[22px] font-bold" style={{ background: '#FF1E00', color: '#0a0a0a' }}>D</div>
       </div>
     </LabProjectPage>
   );
@@ -221,8 +218,8 @@ export function SelectionLogicExperimentPage() {
       <div className="pt-0 px-12 pb-12 flex flex-col gap-5">
         {['random vs constrained selection', 'parameter sweeps', 'preset generation'].map(e => (
           <div key={e} className="flex items-center gap-4">
-            <span className="w-2 h-2 bg-[#FF4D00] rounded-full shrink-0" />
-            <span className="font-['JetBrains_Mono'] text-[18px] text-[#141414] opacity-60">{e}</span>
+            <span className="w-2 h-2 bg-[#FF1E00] rounded-full shrink-0" />
+            <span className="font-['JetBrains_Mono'] text-[18px]" style={{ color: 'rgba(255,255,255,0.55)' }}>{e}</span>
           </div>
         ))}
       </div>
@@ -240,9 +237,9 @@ export function SelectionLogicObservationPage() {
           { key: 'good selection', result: 'identity' },
         ].map(o => (
           <div key={o.key} className="flex items-baseline gap-4">
-            <span className="font-['JetBrains_Mono'] text-[16px] text-[#141414] opacity-40">{o.key}</span>
-            <span className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-20">→</span>
-            <span className="font-['JetBrains_Mono'] text-[20px] font-bold text-[#141414] opacity-80">{o.result}</span>
+            <span className="font-['JetBrains_Mono'] text-[16px]" style={{ color: 'rgba(255,255,255,0.35)' }}>{o.key}</span>
+            <span className="font-['JetBrains_Mono'] text-[14px]" style={{ color: 'rgba(255,255,255,0.15)' }}>→</span>
+            <span className="font-['JetBrains_Mono'] text-[20px] font-bold" style={{ color: 'rgba(255,255,255,0.75)' }}>{o.result}</span>
           </div>
         ))}
       </div>
@@ -270,10 +267,10 @@ export function DenseFieldOverviewPage() {
   return (
     <LabProjectPage projectName="DENSE FIELD" subtitle={DF_SUBTITLE} menuItems={denseFieldMenu} activeItem="overview" applications={denseFieldApps}>
       <div className="pt-0 px-12 pb-12 max-w-[900px]">
-        <p className="font-['JetBrains_Mono'] text-[18px] text-[#141414] opacity-70 leading-[1.8] mb-8">
+        <p className="font-['JetBrains_Mono'] text-[18px] leading-[1.8] mb-8" style={{ color: 'rgba(255,255,255,0.65)' }}>
           Dense Field defines how visual intensity is distributed across space.
         </p>
-        <p className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-40 leading-[1.8]">
+        <p className="font-['JetBrains_Mono'] text-[14px] leading-[1.8]" style={{ color: 'rgba(255,255,255,0.35)' }}>
           It determines where attention accumulates and how spatial tension is perceived. Used when shaping visual intensity, focus, and spatial rhythm.
         </p>
       </div>
@@ -288,8 +285,8 @@ export function DenseFieldPrinciplePage() {
       <div className="pt-0 px-12 pb-12 flex flex-col gap-6">
         {principles.map((p, i) => (
           <div key={p} className="flex items-center gap-6">
-            <span className="font-['JetBrains_Mono'] text-[48px] font-bold text-[#141414] opacity-10 w-[60px] text-right">{String(i + 1).padStart(2, '0')}</span>
-            <span className="font-['JetBrains_Mono'] text-[24px] font-bold text-[#141414] opacity-70 tracking-[2px]">{p}</span>
+            <span className="font-['JetBrains_Mono'] text-[48px] font-bold w-[60px] text-right" style={{ color: 'rgba(255,255,255,0.08)' }}>{String(i + 1).padStart(2, '0')}</span>
+            <span className="font-['JetBrains_Mono'] text-[24px] font-bold tracking-[2px]" style={{ color: 'rgba(255,255,255,0.65)' }}>{p}</span>
           </div>
         ))}
       </div>
@@ -302,19 +299,19 @@ export function DenseFieldDiagramPage() {
     <LabProjectPage projectName="DENSE FIELD" subtitle={DF_SUBTITLE} menuItems={denseFieldMenu} activeItem="diagram" applications={denseFieldApps}>
       <div className="pt-0 px-12 pb-12 flex items-center justify-center h-full gap-20">
         <div className="flex flex-col items-center gap-4">
-          <div className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-30 tracking-[2px] uppercase">Low Density</div>
+          <div className="font-['JetBrains_Mono'] text-[12px] tracking-[2px] uppercase" style={{ color: 'rgba(255,255,255,0.25)' }}>Low Density</div>
           <div className="grid grid-cols-3 gap-6">
             {Array(9).fill(0).map((_, i) => (
-              <div key={i} className="w-3 h-3 rounded-full bg-[#141414] opacity-30" />
+              <div key={i} className="w-3 h-3 rounded-full" style={{ background: 'rgba(255,255,255,0.25)' }} />
             ))}
           </div>
         </div>
-        <div className="font-['JetBrains_Mono'] text-[28px] text-[#141414] opacity-15">→</div>
+        <div className="font-['JetBrains_Mono'] text-[28px]" style={{ color: 'rgba(255,255,255,0.12)' }}>→</div>
         <div className="flex flex-col items-center gap-4">
-          <div className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-30 tracking-[2px] uppercase">High Density</div>
+          <div className="font-['JetBrains_Mono'] text-[12px] tracking-[2px] uppercase" style={{ color: 'rgba(255,255,255,0.25)' }}>High Density</div>
           <div className="grid grid-cols-6 gap-1">
             {Array(36).fill(0).map((_, i) => (
-              <div key={i} className="w-3 h-3 rounded-full bg-[#141414] opacity-80" />
+              <div key={i} className="w-3 h-3 rounded-full" style={{ background: 'rgba(255,255,255,0.7)' }} />
             ))}
           </div>
         </div>
@@ -329,8 +326,8 @@ export function DenseFieldExperimentPage() {
       <div className="pt-0 px-12 pb-12 flex flex-col gap-5">
         {['voxel density variations', 'lighting concentration tests', 'stage attention mapping'].map(e => (
           <div key={e} className="flex items-center gap-4">
-            <span className="w-2 h-2 bg-[#FF4D00] rounded-full shrink-0" />
-            <span className="font-['JetBrains_Mono'] text-[18px] text-[#141414] opacity-60">{e}</span>
+            <span className="w-2 h-2 bg-[#FF1E00] rounded-full shrink-0" />
+            <span className="font-['JetBrains_Mono'] text-[18px]" style={{ color: 'rgba(255,255,255,0.55)' }}>{e}</span>
           </div>
         ))}
       </div>
@@ -348,9 +345,9 @@ export function DenseFieldObservationPage() {
           { key: 'uniform density', result: 'stability' },
         ].map(o => (
           <div key={o.key} className="flex items-baseline gap-4">
-            <span className="font-['JetBrains_Mono'] text-[16px] text-[#141414] opacity-40">{o.key}</span>
-            <span className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-20">→</span>
-            <span className="font-['JetBrains_Mono'] text-[20px] font-bold text-[#141414] opacity-80">{o.result}</span>
+            <span className="font-['JetBrains_Mono'] text-[16px]" style={{ color: 'rgba(255,255,255,0.35)' }}>{o.key}</span>
+            <span className="font-['JetBrains_Mono'] text-[14px]" style={{ color: 'rgba(255,255,255,0.15)' }}>→</span>
+            <span className="font-['JetBrains_Mono'] text-[20px] font-bold" style={{ color: 'rgba(255,255,255,0.75)' }}>{o.result}</span>
           </div>
         ))}
       </div>
@@ -379,10 +376,10 @@ export function ModularFillOverviewPage() {
   return (
     <LabProjectPage projectName="MODULAR FILL" subtitle={MF_SUBTITLE} menuItems={modularFillMenu} activeItem="overview" applications={modularFillApps}>
       <div className="pt-0 px-12 pb-12 max-w-[900px]">
-        <p className="font-['JetBrains_Mono'] text-[18px] text-[#141414] opacity-70 leading-[1.8] mb-8">
+        <p className="font-['JetBrains_Mono'] text-[18px] leading-[1.8] mb-8" style={{ color: 'rgba(255,255,255,0.65)' }}>
           Modular Fill generates complex forms by aggregating simple repeated units.
         </p>
-        <p className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-40 leading-[1.8]">
+        <p className="font-['JetBrains_Mono'] text-[14px] leading-[1.8]" style={{ color: 'rgba(255,255,255,0.35)' }}>
           It drives pattern generation and structural fill across compositions — building larger form fields through discrete, repeatable modules at multiple scales.
         </p>
       </div>
@@ -397,8 +394,8 @@ export function ModularFillPrinciplePage() {
       <div className="pt-0 px-12 pb-12 flex flex-col gap-6">
         {principles.map((p, i) => (
           <div key={p} className="flex items-center gap-6">
-            <span className="font-['JetBrains_Mono'] text-[48px] font-bold text-[#141414] opacity-10 w-[60px] text-right">{String(i + 1).padStart(2, '0')}</span>
-            <span className="font-['JetBrains_Mono'] text-[24px] font-bold text-[#141414] opacity-70 tracking-[2px]">{p}</span>
+            <span className="font-['JetBrains_Mono'] text-[48px] font-bold w-[60px] text-right" style={{ color: 'rgba(255,255,255,0.08)' }}>{String(i + 1).padStart(2, '0')}</span>
+            <span className="font-['JetBrains_Mono'] text-[24px] font-bold tracking-[2px]" style={{ color: 'rgba(255,255,255,0.65)' }}>{p}</span>
           </div>
         ))}
       </div>
@@ -411,24 +408,24 @@ export function ModularFillDiagramPage() {
     <LabProjectPage projectName="MODULAR FILL" subtitle={MF_SUBTITLE} menuItems={modularFillMenu} activeItem="diagram" applications={modularFillApps}>
       <div className="pt-0 px-12 pb-12 flex flex-col items-center justify-center h-full gap-8">
         <div className="flex flex-col items-center gap-3">
-          <div className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-30 tracking-[2px] uppercase">Step 1 — Boundary</div>
-          <div className="w-[300px] h-[60px] border-2 border-dashed border-[#141414] border-opacity-20 rounded-lg" />
+          <div className="font-['JetBrains_Mono'] text-[12px] tracking-[2px] uppercase" style={{ color: 'rgba(255,255,255,0.25)' }}>Step 1 — Boundary</div>
+          <div className="w-[300px] h-[60px] rounded-lg" style={{ border: '2px dashed rgba(255,255,255,0.15)' }} />
         </div>
-        <div className="font-['JetBrains_Mono'] text-[20px] text-[#141414] opacity-15">↓</div>
+        <div className="font-['JetBrains_Mono'] text-[20px]" style={{ color: 'rgba(255,255,255,0.12)' }}>↓</div>
         <div className="flex flex-col items-center gap-3">
-          <div className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-30 tracking-[2px] uppercase">Step 2 — Large modules</div>
+          <div className="font-['JetBrains_Mono'] text-[12px] tracking-[2px] uppercase" style={{ color: 'rgba(255,255,255,0.25)' }}>Step 2 — Large modules</div>
           <div className="flex gap-2">
             {Array(6).fill(0).map((_, i) => (
-              <div key={i} className="w-[44px] h-[44px] bg-[#141414] opacity-60" />
+              <div key={i} className="w-[44px] h-[44px]" style={{ background: 'rgba(255,255,255,0.55)' }} />
             ))}
           </div>
         </div>
-        <div className="font-['JetBrains_Mono'] text-[20px] text-[#141414] opacity-15">↓</div>
+        <div className="font-['JetBrains_Mono'] text-[20px]" style={{ color: 'rgba(255,255,255,0.12)' }}>↓</div>
         <div className="flex flex-col items-center gap-3">
-          <div className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-30 tracking-[2px] uppercase">Step 3 — Fill gaps</div>
+          <div className="font-['JetBrains_Mono'] text-[12px] tracking-[2px] uppercase" style={{ color: 'rgba(255,255,255,0.25)' }}>Step 3 — Fill gaps</div>
           <div className="flex gap-0.5">
             {Array(24).fill(0).map((_, i) => (
-              <div key={i} className="w-[12px] h-[44px] bg-[#141414]" style={{ opacity: 0.3 + Math.random() * 0.6 }} />
+              <div key={i} className="w-[12px] h-[44px]" style={{ background: `rgba(255,255,255,${0.2 + Math.random() * 0.5})` }} />
             ))}
           </div>
         </div>
@@ -443,8 +440,8 @@ export function ModularFillExperimentPage() {
       <div className="pt-0 px-12 pb-12 flex flex-col gap-5">
         {['grid fill vs adaptive fill', 'voxel vs custom module', 'density-aware filling'].map(e => (
           <div key={e} className="flex items-center gap-4">
-            <span className="w-2 h-2 bg-[#FF4D00] rounded-full shrink-0" />
-            <span className="font-['JetBrains_Mono'] text-[18px] text-[#141414] opacity-60">{e}</span>
+            <span className="w-2 h-2 bg-[#FF1E00] rounded-full shrink-0" />
+            <span className="font-['JetBrains_Mono'] text-[18px]" style={{ color: 'rgba(255,255,255,0.55)' }}>{e}</span>
           </div>
         ))}
       </div>
@@ -462,9 +459,9 @@ export function ModularFillObservationPage() {
           { key: 'fill order', result: 'determines character' },
         ].map(o => (
           <div key={o.key} className="flex items-baseline gap-4">
-            <span className="font-['JetBrains_Mono'] text-[16px] text-[#141414] opacity-40">{o.key}</span>
-            <span className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-20">→</span>
-            <span className="font-['JetBrains_Mono'] text-[20px] font-bold text-[#141414] opacity-80">{o.result}</span>
+            <span className="font-['JetBrains_Mono'] text-[16px]" style={{ color: 'rgba(255,255,255,0.35)' }}>{o.key}</span>
+            <span className="font-['JetBrains_Mono'] text-[14px]" style={{ color: 'rgba(255,255,255,0.15)' }}>→</span>
+            <span className="font-['JetBrains_Mono'] text-[20px] font-bold" style={{ color: 'rgba(255,255,255,0.75)' }}>{o.result}</span>
           </div>
         ))}
       </div>
@@ -493,10 +490,10 @@ export function LayerStackOverviewPage() {
   return (
     <LabProjectPage projectName="LAYER STACK" subtitle={LS_SUBTITLE} menuItems={layerStackMenu} activeItem="overview" applications={layerStackApps}>
       <div className="pt-0 px-12 pb-12 max-w-[900px]">
-        <p className="font-['JetBrains_Mono'] text-[18px] text-[#141414] opacity-70 leading-[1.8] mb-8">
+        <p className="font-['JetBrains_Mono'] text-[18px] leading-[1.8] mb-8" style={{ color: 'rgba(255,255,255,0.65)' }}>
           Layer Stack organizes spatial depth and establishes visual hierarchy.
         </p>
-        <p className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-40 leading-[1.8]">
+        <p className="font-['JetBrains_Mono'] text-[14px] leading-[1.8]" style={{ color: 'rgba(255,255,255,0.35)' }}>
           It defines how foreground and background relate in any composition — managing overlap, occlusion, and depth contrast to create structured spatial experiences.
         </p>
       </div>
@@ -511,8 +508,8 @@ export function LayerStackPrinciplePage() {
       <div className="pt-0 px-12 pb-12 flex flex-col gap-6">
         {principles.map((p, i) => (
           <div key={p} className="flex items-center gap-6">
-            <span className="font-['JetBrains_Mono'] text-[48px] font-bold text-[#141414] opacity-10 w-[60px] text-right">{String(i + 1).padStart(2, '0')}</span>
-            <span className="font-['JetBrains_Mono'] text-[24px] font-bold text-[#141414] opacity-70 tracking-[2px]">{p}</span>
+            <span className="font-['JetBrains_Mono'] text-[48px] font-bold w-[60px] text-right" style={{ color: 'rgba(255,255,255,0.08)' }}>{String(i + 1).padStart(2, '0')}</span>
+            <span className="font-['JetBrains_Mono'] text-[24px] font-bold tracking-[2px]" style={{ color: 'rgba(255,255,255,0.65)' }}>{p}</span>
           </div>
         ))}
       </div>
@@ -525,14 +522,14 @@ export function LayerStackDiagramPage() {
     <LabProjectPage projectName="LAYER STACK" subtitle={LS_SUBTITLE} menuItems={layerStackMenu} activeItem="diagram" applications={layerStackApps}>
       <div className="pt-0 px-12 pb-12 flex items-center justify-center h-full">
         <div className="relative" style={{ width: 400, height: 300 }}>
-          <div className="absolute bg-[#141414] opacity-15 rounded" style={{ width: 280, height: 180, left: 0, top: 120 }}>
-            <span className="absolute bottom-2 left-3 font-['JetBrains_Mono'] text-[11px] text-[#141414] opacity-40">Layer 3 — Back</span>
+          <div className="absolute rounded" style={{ width: 280, height: 180, left: 0, top: 120, background: 'rgba(255,255,255,0.08)' }}>
+            <span className="absolute bottom-2 left-3 font-['JetBrains_Mono'] text-[11px]" style={{ color: 'rgba(255,255,255,0.35)' }}>Layer 3 — Back</span>
           </div>
-          <div className="absolute bg-[#141414] opacity-30 rounded" style={{ width: 280, height: 180, left: 60, top: 60 }}>
-            <span className="absolute bottom-2 left-3 font-['JetBrains_Mono'] text-[11px] text-white opacity-60">Layer 2 — Mid</span>
+          <div className="absolute rounded" style={{ width: 280, height: 180, left: 60, top: 60, background: 'rgba(255,255,255,0.2)' }}>
+            <span className="absolute bottom-2 left-3 font-['JetBrains_Mono'] text-[11px]" style={{ color: 'rgba(255,255,255,0.55)' }}>Layer 2 — Mid</span>
           </div>
-          <div className="absolute bg-[#141414] opacity-70 rounded" style={{ width: 280, height: 180, left: 120, top: 0 }}>
-            <span className="absolute bottom-2 left-3 font-['JetBrains_Mono'] text-[11px] text-white opacity-80">Layer 1 — Front</span>
+          <div className="absolute rounded" style={{ width: 280, height: 180, left: 120, top: 0, background: 'rgba(255,255,255,0.5)' }}>
+            <span className="absolute bottom-2 left-3 font-['JetBrains_Mono'] text-[11px]" style={{ color: 'rgba(255,255,255,0.8)' }}>Layer 1 — Front</span>
           </div>
         </div>
       </div>
@@ -546,8 +543,8 @@ export function LayerStackExperimentPage() {
       <div className="pt-0 px-12 pb-12 flex flex-col gap-5">
         {['flat vs layered composition', 'stage depth illusion', 'transparency layering'].map(e => (
           <div key={e} className="flex items-center gap-4">
-            <span className="w-2 h-2 bg-[#FF4D00] rounded-full shrink-0" />
-            <span className="font-['JetBrains_Mono'] text-[18px] text-[#141414] opacity-60">{e}</span>
+            <span className="w-2 h-2 bg-[#FF1E00] rounded-full shrink-0" />
+            <span className="font-['JetBrains_Mono'] text-[18px]" style={{ color: 'rgba(255,255,255,0.55)' }}>{e}</span>
           </div>
         ))}
       </div>
@@ -565,9 +562,9 @@ export function LayerStackObservationPage() {
           { key: 'layer contrast', result: 'gaze direction' },
         ].map(o => (
           <div key={o.key} className="flex items-baseline gap-4">
-            <span className="font-['JetBrains_Mono'] text-[16px] text-[#141414] opacity-40">{o.key}</span>
-            <span className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-20">→</span>
-            <span className="font-['JetBrains_Mono'] text-[20px] font-bold text-[#141414] opacity-80">{o.result}</span>
+            <span className="font-['JetBrains_Mono'] text-[16px]" style={{ color: 'rgba(255,255,255,0.35)' }}>{o.key}</span>
+            <span className="font-['JetBrains_Mono'] text-[14px]" style={{ color: 'rgba(255,255,255,0.15)' }}>→</span>
+            <span className="font-['JetBrains_Mono'] text-[20px] font-bold" style={{ color: 'rgba(255,255,255,0.75)' }}>{o.result}</span>
           </div>
         ))}
       </div>
