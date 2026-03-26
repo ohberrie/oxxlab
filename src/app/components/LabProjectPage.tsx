@@ -155,8 +155,8 @@ const selectionLogicMenu: MenuItem[] = [
 ];
 
 const selectionLogicApps: ApplicationLink[] = [
-  { label: 'Shaper \u2014 Configure', path: '/projects/shaper/configure' },
-  { label: 'Shaper \u2014 Presets', path: '/projects/shaper/logic' },
+  { label: 'Shaper — Configure', path: '/projects/shaper/configure' },
+  { label: 'Shaper — Presets', path: '/projects/shaper/logic' },
 ];
 
 const SL_SUBTITLE = 'Constraint-based filtering and decision-making in form generation';
@@ -169,7 +169,7 @@ export function SelectionLogicOverviewPage() {
           Selection Logic determines how a system chooses one outcome among many possible configurations.
         </p>
         <p className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-40 leading-[1.8]">
-          It is the engine behind algorithmic decision-making in form generation \u2014 filtering possibilities through constraints, weights, and intent until a single result emerges.
+          It is the engine behind algorithmic decision-making in form generation — filtering possibilities through constraints, weights, and intent until a single result emerges.
         </p>
       </div>
     </LabProjectPage>
@@ -202,13 +202,13 @@ export function SelectionLogicDiagramPage() {
             <div key={l} className="w-[50px] h-[50px] border border-[#141414] border-opacity-20 flex items-center justify-center font-['JetBrains_Mono'] text-[18px] font-bold text-[#141414] opacity-50">{l}</div>
           ))}
         </div>
-        <div className="font-['JetBrains_Mono'] text-[20px] text-[#141414] opacity-20">\u2193 filter</div>
+        <div className="font-['JetBrains_Mono'] text-[20px] text-[#141414] opacity-20">↓ filter</div>
         <div className="flex gap-4">
           {['B','D','F'].map(l => (
             <div key={l} className="w-[50px] h-[50px] border-2 border-[#141414] border-opacity-40 flex items-center justify-center font-['JetBrains_Mono'] text-[18px] font-bold text-[#141414] opacity-70">{l}</div>
           ))}
         </div>
-        <div className="font-['JetBrains_Mono'] text-[20px] text-[#141414] opacity-20">\u2193 selection</div>
+        <div className="font-['JetBrains_Mono'] text-[20px] text-[#141414] opacity-20">↓ selection</div>
         <div className="w-[60px] h-[60px] bg-[#141414] flex items-center justify-center font-['JetBrains_Mono'] text-[22px] font-bold text-[#F8F8FD]">D</div>
       </div>
     </LabProjectPage>
@@ -241,7 +241,7 @@ export function SelectionLogicObservationPage() {
         ].map(o => (
           <div key={o.key} className="flex items-baseline gap-4">
             <span className="font-['JetBrains_Mono'] text-[16px] text-[#141414] opacity-40">{o.key}</span>
-            <span className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-20">\u2192</span>
+            <span className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-20">→</span>
             <span className="font-['JetBrains_Mono'] text-[20px] font-bold text-[#141414] opacity-80">{o.result}</span>
           </div>
         ))}
@@ -309,7 +309,7 @@ export function DenseFieldDiagramPage() {
             ))}
           </div>
         </div>
-        <div className="font-['JetBrains_Mono'] text-[28px] text-[#141414] opacity-15">\u2192</div>
+        <div className="font-['JetBrains_Mono'] text-[28px] text-[#141414] opacity-15">→</div>
         <div className="flex flex-col items-center gap-4">
           <div className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-30 tracking-[2px] uppercase">High Density</div>
           <div className="grid grid-cols-6 gap-1">
@@ -349,7 +349,7 @@ export function DenseFieldObservationPage() {
         ].map(o => (
           <div key={o.key} className="flex items-baseline gap-4">
             <span className="font-['JetBrains_Mono'] text-[16px] text-[#141414] opacity-40">{o.key}</span>
-            <span className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-20">\u2192</span>
+            <span className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-20">→</span>
             <span className="font-['JetBrains_Mono'] text-[20px] font-bold text-[#141414] opacity-80">{o.result}</span>
           </div>
         ))}
@@ -383,7 +383,7 @@ export function ModularFillOverviewPage() {
           Modular Fill generates complex forms by aggregating simple repeated units.
         </p>
         <p className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-40 leading-[1.8]">
-          It drives pattern generation and structural fill across compositions \u2014 building larger form fields through discrete, repeatable modules at multiple scales.
+          It drives pattern generation and structural fill across compositions — building larger form fields through discrete, repeatable modules at multiple scales.
         </p>
       </div>
     </LabProjectPage>
@@ -411,21 +411,21 @@ export function ModularFillDiagramPage() {
     <LabProjectPage projectName="MODULAR FILL" subtitle={MF_SUBTITLE} menuItems={modularFillMenu} activeItem="diagram" applications={modularFillApps}>
       <div className="pt-0 px-12 pb-12 flex flex-col items-center justify-center h-full gap-8">
         <div className="flex flex-col items-center gap-3">
-          <div className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-30 tracking-[2px] uppercase">Step 1 \u2014 Boundary</div>
+          <div className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-30 tracking-[2px] uppercase">Step 1 — Boundary</div>
           <div className="w-[300px] h-[60px] border-2 border-dashed border-[#141414] border-opacity-20 rounded-lg" />
         </div>
-        <div className="font-['JetBrains_Mono'] text-[20px] text-[#141414] opacity-15">\u2193</div>
+        <div className="font-['JetBrains_Mono'] text-[20px] text-[#141414] opacity-15">↓</div>
         <div className="flex flex-col items-center gap-3">
-          <div className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-30 tracking-[2px] uppercase">Step 2 \u2014 Large modules</div>
+          <div className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-30 tracking-[2px] uppercase">Step 2 — Large modules</div>
           <div className="flex gap-2">
             {Array(6).fill(0).map((_, i) => (
               <div key={i} className="w-[44px] h-[44px] bg-[#141414] opacity-60" />
             ))}
           </div>
         </div>
-        <div className="font-['JetBrains_Mono'] text-[20px] text-[#141414] opacity-15">\u2193</div>
+        <div className="font-['JetBrains_Mono'] text-[20px] text-[#141414] opacity-15">↓</div>
         <div className="flex flex-col items-center gap-3">
-          <div className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-30 tracking-[2px] uppercase">Step 3 \u2014 Fill gaps</div>
+          <div className="font-['JetBrains_Mono'] text-[12px] text-[#141414] opacity-30 tracking-[2px] uppercase">Step 3 — Fill gaps</div>
           <div className="flex gap-0.5">
             {Array(24).fill(0).map((_, i) => (
               <div key={i} className="w-[12px] h-[44px] bg-[#141414]" style={{ opacity: 0.3 + Math.random() * 0.6 }} />
@@ -463,7 +463,7 @@ export function ModularFillObservationPage() {
         ].map(o => (
           <div key={o.key} className="flex items-baseline gap-4">
             <span className="font-['JetBrains_Mono'] text-[16px] text-[#141414] opacity-40">{o.key}</span>
-            <span className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-20">\u2192</span>
+            <span className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-20">→</span>
             <span className="font-['JetBrains_Mono'] text-[20px] font-bold text-[#141414] opacity-80">{o.result}</span>
           </div>
         ))}
@@ -497,7 +497,7 @@ export function LayerStackOverviewPage() {
           Layer Stack organizes spatial depth and establishes visual hierarchy.
         </p>
         <p className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-40 leading-[1.8]">
-          It defines how foreground and background relate in any composition \u2014 managing overlap, occlusion, and depth contrast to create structured spatial experiences.
+          It defines how foreground and background relate in any composition — managing overlap, occlusion, and depth contrast to create structured spatial experiences.
         </p>
       </div>
     </LabProjectPage>
@@ -526,13 +526,13 @@ export function LayerStackDiagramPage() {
       <div className="pt-0 px-12 pb-12 flex items-center justify-center h-full">
         <div className="relative" style={{ width: 400, height: 300 }}>
           <div className="absolute bg-[#141414] opacity-15 rounded" style={{ width: 280, height: 180, left: 0, top: 120 }}>
-            <span className="absolute bottom-2 left-3 font-['JetBrains_Mono'] text-[11px] text-[#141414] opacity-40">Layer 3 \u2014 Back</span>
+            <span className="absolute bottom-2 left-3 font-['JetBrains_Mono'] text-[11px] text-[#141414] opacity-40">Layer 3 — Back</span>
           </div>
           <div className="absolute bg-[#141414] opacity-30 rounded" style={{ width: 280, height: 180, left: 60, top: 60 }}>
-            <span className="absolute bottom-2 left-3 font-['JetBrains_Mono'] text-[11px] text-white opacity-60">Layer 2 \u2014 Mid</span>
+            <span className="absolute bottom-2 left-3 font-['JetBrains_Mono'] text-[11px] text-white opacity-60">Layer 2 — Mid</span>
           </div>
           <div className="absolute bg-[#141414] opacity-70 rounded" style={{ width: 280, height: 180, left: 120, top: 0 }}>
-            <span className="absolute bottom-2 left-3 font-['JetBrains_Mono'] text-[11px] text-white opacity-80">Layer 1 \u2014 Front</span>
+            <span className="absolute bottom-2 left-3 font-['JetBrains_Mono'] text-[11px] text-white opacity-80">Layer 1 — Front</span>
           </div>
         </div>
       </div>
@@ -566,7 +566,7 @@ export function LayerStackObservationPage() {
         ].map(o => (
           <div key={o.key} className="flex items-baseline gap-4">
             <span className="font-['JetBrains_Mono'] text-[16px] text-[#141414] opacity-40">{o.key}</span>
-            <span className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-20">\u2192</span>
+            <span className="font-['JetBrains_Mono'] text-[14px] text-[#141414] opacity-20">→</span>
             <span className="font-['JetBrains_Mono'] text-[20px] font-bold text-[#141414] opacity-80">{o.result}</span>
           </div>
         ))}

@@ -194,25 +194,47 @@ export function ProjectGalleryPage({ type }: ProjectGalleryPageProps) {
       </header>
 
       <div className="absolute top-0 left-0 w-[34%] min-w-[300px] max-w-[500px] h-full flex items-center pl-[58px] max-lg:w-[260px] max-lg:min-w-[220px] max-lg:pl-8 max-md:relative max-md:w-full max-md:max-w-none max-md:min-w-0 max-md:h-auto max-md:px-5 max-md:pt-10 max-md:pb-5 max-md:pl-6 max-md:block">
-        <div className="flex items-start gap-3 max-md:items-center max-md:gap-2.5">
-          <div
-            className="w-5 h-[18px] text-[#141414] shrink-0 transition-colors duration-300"
-            style={{ marginTop: 'calc((clamp(36px, 3.75vw, 72px) * 1.07 - 18px) / 2)' }}
-          >
-            <PlayIcon />
-          </div>
-          <div className="transition-transform duration-300">
-            <h1 className="font-['JetBrains_Mono'] text-[clamp(36px,3.75vw,72px)] font-bold leading-[1.07] tracking-[-0.02em] text-[#141414] mb-5 transition-opacity duration-300 max-md:text-[32px] max-md:mb-2">
-              {title}
-            </h1>
-            <p
-              className={`font-['JetBrains_Mono'] text-[clamp(14px,1vw,19px)] font-bold leading-[1.47] tracking-[-0.02em] text-[#141414] max-w-[310px] transition-opacity duration-300 max-md:text-[14px] ${
-                showDescription ? 'opacity-100' : 'opacity-0'
-              }`}
+        <div className="flex flex-col gap-8 max-md:gap-4">
+          <div className="flex items-start gap-3 max-md:items-center max-md:gap-2.5">
+            <div
+              className="w-5 h-[18px] text-[#141414] shrink-0 transition-colors duration-300"
+              style={{ marginTop: 'calc((clamp(36px, 3.75vw, 72px) * 1.07 - 18px) / 2)' }}
             >
-              {description}
-            </p>
+              <PlayIcon />
+            </div>
+            <div className="transition-transform duration-300">
+              <h1 className="font-['DM_Sans'] text-[clamp(36px,3.75vw,72px)] font-bold leading-[1.07] tracking-[-0.02em] text-[#141414] mb-5 transition-opacity duration-300 max-md:text-[32px] max-md:mb-2">
+                {title}
+              </h1>
+              <p
+                className={`font-['DM_Sans'] text-[clamp(14px,1vw,19px)] font-bold leading-[1.47] tracking-[-0.02em] text-[#141414] max-w-[310px] transition-opacity duration-300 max-md:text-[14px] ${
+                  showDescription ? 'opacity-100' : 'opacity-0'
+                }`}
+              >
+                {description}
+              </p>
+            </div>
           </div>
+
+          {/* Services & Contact — Studio only */}
+          {type === 'works' && !hoveredProject && (
+            <div className="flex flex-col gap-6 mt-4 max-md:mt-2">
+              <div>
+                <div className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.1em] uppercase text-[#141414] opacity-30 mb-3">Services</div>
+                {['Stage & Set Design', 'Exhibition Spatial Design', 'Computational Object Design', 'Design Strategy Consultation', 'Perception Evaluation Research'].map(s => (
+                  <div key={s} className="py-1.5 border-b border-[#141414]/[0.04] font-['DM_Sans'] text-[12px] text-[#141414] opacity-50 last:border-b-0">
+                    {s}
+                  </div>
+                ))}
+              </div>
+              <div>
+                <div className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.1em] uppercase text-[#141414] opacity-30 mb-2">Contact</div>
+                <p className="font-['DM_Sans'] text-[12px] text-[#141414] opacity-40 leading-[1.6]">
+                  For collaboration, research inquiries, or studio projects — reach out directly.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

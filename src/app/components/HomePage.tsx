@@ -72,7 +72,6 @@ export function HomePage() {
   const animCompleteRef = useRef(false);
   const intervalRef = useRef<number | null>(null);
   const navigate = useNavigate();
-  const [isReady, setIsReady] = useState(false);
 
   const extractLetterShapes = useCallback(() => {
     const shapes: Record<string, { relCol: number; relRow: number }[]> = { o: [], x1: [], x2: [] };
@@ -163,7 +162,6 @@ export function HomePage() {
 
     letterMasksRef.current = masks;
 
-    // Position text overlay
     if (overlayRef.current) {
       const bottomOfPattern = (patternOffsetRow + PATTERN_ROWS) * cellSize;
       const x1CenterCol = patternOffsetCol + 8;
@@ -175,7 +173,6 @@ export function HomePage() {
   }, []);
 
   const setupHoverAreas = useCallback(() => {
-    // Remove existing hover areas
     document.querySelectorAll('.letter-hover-area').forEach(el => el.remove());
 
     Object.keys(letterMasksRef.current).forEach(letter => {
@@ -285,55 +282,6 @@ export function HomePage() {
     }, shuffled.length * 15 + 50);
   }, [setupHoverAreas]);
 
-  const typeAnimation = useCallback(() => {
-    const el = textRef.current;
-    if (!el) return;
-
-    let charIndex = 3;
-    const deleteInterval = setInterval(() => {
-      if (charIndex > 0) {
-        charIndex--;
-        el.textContent = 'lab'.substring(0, charIndex);
-      } else {
-        clearInterval(deleteInterval);
-        setTimeout(() => {
-          let studioIndex = 0;
-          const typeInterval = setInterval(() => {
-            if (studioIndex < 6) {
-              studioIndex++;
-              el.textContent = 'studio'.substring(0, studioIndex);
-            } else {
-              clearInterval(typeInterval);
-              setTimeout(() => {
-                // Delete studio, type "lab & studio"
-                let ci = 6;
-                const di = setInterval(() => {
-                  if (ci > 0) { ci--; el.textContent = 'studio'.substring(0, ci); }
-                  else {
-                    clearInterval(di);
-                    setTimeout(() => {
-                      const fullText = 'lab & studio';
-                      let ti = 0;
-                      const tii = setInterval(() => {
-                        if (ti < fullText.length) {
-                          ti++;
-                          el.textContent = fullText.substring(0, ti);
-                        } else {
-                          clearInterval(tii);
-                          showFinalLinks();
-                        }
-                      }, 54);
-                    }, 300);
-                  }
-                }, 38);
-              }, 2000);
-            }
-          }, 77);
-        }, 500);
-      }
-    }, 54);
-  }, []);
-
   const showFinalLinks = useCallback(() => {
     const el = textRef.current;
     if (!el) return;
@@ -359,7 +307,6 @@ export function HomePage() {
     el.appendChild(ampersand);
     el.appendChild(studioLink);
 
-    // Add underline animation
     setTimeout(() => {
       labLink.classList.add('oxx-animate-in');
       studioLink.classList.add('oxx-animate-in');
@@ -372,9 +319,7 @@ export function HomePage() {
   useEffect(() => {
     extractLetterShapes();
     createGrid();
-    setIsReady(true);
 
-    // Start random char animation
     intervalRef.current = window.setInterval(() => {
       cellsRef.current.forEach(cell => {
         if (Math.random() < CHANGE_PROBABILITY) {
@@ -383,16 +328,9 @@ export function HomePage() {
       });
     }, CHANGE_INTERVAL);
 
-    const hasVisited = sessionStorage.getItem('oxx_visited');
-    if (hasVisited) {
-      // Skip to final state
-      setTimeout(() => {
-        showFinalLinks();
-      }, 100);
-    } else {
-      sessionStorage.setItem('oxx_visited', 'true');
-      setTimeout(typeAnimation, 1500);
-    }
+    setTimeout(() => {
+      showFinalLinks();
+    }, 500);
 
     const handleResize = () => {
       clearTimeout((window as any).__oxxResizeTimer);
@@ -412,7 +350,7 @@ export function HomePage() {
       window.removeEventListener('resize', handleResize);
       document.querySelectorAll('.letter-hover-area').forEach(el => el.remove());
     };
-  }, [createGrid, extractLetterShapes, typeAnimation, showFinalLinks, setupHoverAreas]);
+  }, [createGrid, extractLetterShapes, showFinalLinks, setupHoverAreas]);
 
   return (
     <div className="w-screen h-screen relative overflow-hidden bg-[#141414]">
@@ -463,8 +401,8 @@ export function HomePage() {
           opacity: 0.4;
         }
       `}</style>
-      <h1 className="sr-only">OXX — Algorithmic Design lab</h1>
-      <div ref={gridRef} className="fixed top-0 left-0 w-screen h-screen" aria-hidden="true" role="presentation" data-nosnippet />
+      <h1 className="sr-only">OXX Lab — Algorithmic Design & Research Studio</h1>
+      <div ref={gridRef} className="fixed top-0 left-0 w-screen h-screen" />
       <div
         ref={overlayRef}
         className="fixed z-50 flex items-center justify-center"
