@@ -162,7 +162,7 @@ export function FrameworkPage() {
 
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Intro + Toggle */}
-        <div className="px-8 pt-6 pb-4 flex items-end justify-between max-md:flex-col max-md:items-start max-md:gap-4">
+        <div className="px-[58px] pt-6 pb-4 flex items-end justify-between max-md:flex-col max-md:items-start max-md:gap-4 max-md:px-6">
           <div>
             <h1 className="font-['DM_Sans'] text-[34px] font-semibold tracking-[-0.03em] leading-[1.1] max-md:text-[28px]" style={{ color: 'rgba(255,255,255,0.9)' }}>
               Framework
@@ -198,7 +198,7 @@ export function FrameworkPage() {
         </div>
 
         {/* Graph + Panel */}
-        <div className="flex-1 flex min-h-0 px-8 pb-8 gap-6 max-md:flex-col">
+        <div className="flex-1 flex min-h-0 px-[58px] pb-8 gap-6 max-md:flex-col max-md:px-6">
           {/* Strategy Graph Canvas */}
           <div
             ref={canvasRef}
