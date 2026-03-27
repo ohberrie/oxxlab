@@ -74,30 +74,30 @@ export function LabSystemPage() {
           : <>Define the world conditions. Hover any <GlossaryTerm term="Base Rules" expert={expertMode}>underlined term</GlossaryTerm> for a definition.</>}
       </p>
       <ExampleButton label={EXAMPLE_PRESETS.base.label} onClick={() => setBaseRules(EXAMPLE_PRESETS.base.data)} />
-      <div style={{ marginTop: 20 }}>
+      <div style={{ marginTop: 24 }}>
         {[
           { label: 'Domain', opts: DOMAINS, val: baseRules.domain, set: (d: string) => setBaseRules({ ...baseRules, domain: d }) },
         ].map(({ label, opts, val, set }) => (
-          <div key={label} style={{ marginBottom: 22 }}>
+          <div key={label} style={{ marginBottom: 32 }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>{label}</div>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>{opts.map(o => <Chip key={o} label={o} active={val === o} onClick={() => set(o)} />)}</div>
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>{opts.map(o => <Chip key={o} label={o} active={val === o} onClick={() => set(o)} />)}</div>
           </div>
         ))}
-        <div style={{ marginBottom: 22 }}>
+        <div style={{ marginBottom: 32 }}>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>World Axes</div>
-          <div style={{ display: 'flex', gap: 8 }}>{WORLD_AXES.map(w => <Chip key={w} label={w} active={baseRules.world.includes(w)} onClick={() => setBaseRules({ ...baseRules, world: toggleArray(baseRules.world, w) })} />)}</div>
+          <div style={{ display: 'flex', gap: 10 }}>{WORLD_AXES.map(w => <Chip key={w} label={w} active={baseRules.world.includes(w)} onClick={() => setBaseRules({ ...baseRules, world: toggleArray(baseRules.world, w) })} />)}</div>
         </div>
-        <div style={{ marginBottom: 22 }}>
+        <div style={{ marginBottom: 32 }}>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Visibility Emphasis</div>
-          <div style={{ display: 'flex', gap: 8 }}>{VISIBILITY.map(v => <Chip key={v} label={v} active={baseRules.visibility === v} onClick={() => setBaseRules({ ...baseRules, visibility: v })} />)}</div>
+          <div style={{ display: 'flex', gap: 10 }}>{VISIBILITY.map(v => <Chip key={v} label={v} active={baseRules.visibility === v} onClick={() => setBaseRules({ ...baseRules, visibility: v })} />)}</div>
         </div>
-        <div style={{ marginBottom: 22 }}>
+        <div style={{ marginBottom: 32 }}>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Main Actor</div>
-          <div style={{ display: 'flex', gap: 8 }}>{ACTORS.map(a => <Chip key={a} label={a} active={baseRules.actor === a} onClick={() => setBaseRules({ ...baseRules, actor: a })} />)}</div>
+          <div style={{ display: 'flex', gap: 10 }}>{ACTORS.map(a => <Chip key={a} label={a} active={baseRules.actor === a} onClick={() => setBaseRules({ ...baseRules, actor: a })} />)}</div>
         </div>
-        <div style={{ marginBottom: 22 }}>
+        <div style={{ marginBottom: 32 }}>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Constraint Type</div>
-          <div style={{ display: 'flex', gap: 8 }}>{CONSTRAINT_TYPES.map(c => <Chip key={c} label={c} active={baseRules.constraints.includes(c)} onClick={() => setBaseRules({ ...baseRules, constraints: toggleArray(baseRules.constraints, c) })} />)}</div>
+          <div style={{ display: 'flex', gap: 10 }}>{CONSTRAINT_TYPES.map(c => <Chip key={c} label={c} active={baseRules.constraints.includes(c)} onClick={() => setBaseRules({ ...baseRules, constraints: toggleArray(baseRules.constraints, c) })} />)}</div>
         </div>
       </div>
     </div>
@@ -111,24 +111,24 @@ export function LabSystemPage() {
           : <>Not a mood board. Each <GlossaryTerm term="Intent Vector" expert={expertMode}>intent</GlossaryTerm> narrows the strategy space.</>}
       </p>
       <ExampleButton label={EXAMPLE_PRESETS.intent.label} onClick={() => setIntents(EXAMPLE_PRESETS.intent.data)} />
-      <div style={{ marginTop: 20, marginBottom: 24 }}>
+      <div style={{ marginTop: 24, marginBottom: 32 }}>
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
           <GlossaryTerm term="Emotional Tone" expert={expertMode}>Emotional Tone</GlossaryTerm>
           {intents.tones.length > 3 && <span style={{ color: 'rgba(255,180,0,0.7)', marginLeft: 8 }}>narrowing recommended</span>}
         </div>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>{EMOTIONAL_TONES.map(t => <Chip key={t} label={t} active={intents.tones.includes(t)} onClick={() => setIntents({ ...intents, tones: toggleArray(intents.tones, t) })} />)}</div>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>{EMOTIONAL_TONES.map(t => <Chip key={t} label={t} active={intents.tones.includes(t)} onClick={() => setIntents({ ...intents, tones: toggleArray(intents.tones, t) })} />)}</div>
       </div>
-      <div style={{ marginBottom: 24 }}>
+      <div style={{ marginBottom: 32 }}>
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
           <GlossaryTerm term="Identity Positioning" expert={expertMode}>Identity Positioning</GlossaryTerm>
         </div>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>{IDENTITY_POSITIONS.map(p => <Chip key={p} label={p} active={intents.positions.includes(p)} onClick={() => setIntents({ ...intents, positions: toggleArray(intents.positions, p) })} />)}</div>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>{IDENTITY_POSITIONS.map(p => <Chip key={p} label={p} active={intents.positions.includes(p)} onClick={() => setIntents({ ...intents, positions: toggleArray(intents.positions, p) })} />)}</div>
       </div>
-      <div style={{ marginBottom: 24 }}>
+      <div style={{ marginBottom: 32 }}>
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
           <GlossaryTerm term="Narrative Function" expert={expertMode}>Narrative Function</GlossaryTerm> <span style={{ opacity: 0.5 }}>(1–2 max)</span>
         </div>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           {NARRATIVE_FUNCTIONS.map(n => <Chip key={n} label={n} active={intents.narratives.includes(n)}
             dim={!intents.narratives.includes(n) && intents.narratives.length >= 2}
             onClick={() => { if (intents.narratives.includes(n)) setIntents({ ...intents, narratives: intents.narratives.filter(x => x !== n) }); else if (intents.narratives.length < 2) setIntents({ ...intents, narratives: [...intents.narratives, n] }); }} />)}
@@ -160,12 +160,12 @@ export function LabSystemPage() {
         { title: 'B. Form Generation', data: FORM_GEN, key: 'form' as const },
         { title: 'C. Material / Light / Media', data: MATERIAL, key: 'material' as const },
       ].map(layer => (
-        <div key={layer.key} style={{ marginBottom: 28 }}>
+        <div key={layer.key} style={{ marginBottom: 40 }}>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(255,30,0,0.5)', marginBottom: 14 }}>{layer.title}</div>
           {Object.entries(layer.data).map(([param, opts]) => (
-            <div key={param} style={{ marginBottom: 14 }}>
+            <div key={param} style={{ marginBottom: 18 }}>
               <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>{param}</div>
-              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 {opts.map(o => <Chip key={o} label={o} active={strategySelections[layer.key]?.[param] === o}
                   onClick={() => setStrategySelections({ ...strategySelections, [layer.key]: { ...strategySelections[layer.key], [param]: o } })} />)}
               </div>
@@ -173,22 +173,24 @@ export function LabSystemPage() {
           ))}
         </div>
       ))}
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 20, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: 24, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
         <button onClick={saveCurrentStrategy} disabled={savedStrategies.length >= 4} style={{
           padding: '10px 24px', fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
           background: savedStrategies.length >= 4 ? 'rgba(255,255,255,0.05)' : 'rgba(255,30,0,0.1)',
           color: savedStrategies.length >= 4 ? 'rgba(255,255,255,0.2)' : '#FF1E00',
-          border: `1px solid ${savedStrategies.length >= 4 ? 'rgba(255,255,255,0.05)' : 'rgba(255,30,0,0.3)'}`, borderRadius: 2,
+          border: 'none', borderRadius: 8,
+          boxShadow: savedStrategies.length >= 4 ? 'none' : '0 0 0 1px rgba(255,30,0,0.2)',
           cursor: savedStrategies.length >= 4 ? 'not-allowed' : 'pointer',
+          transition: 'all 0.25s ease',
         }}>+ Save Snapshot ({savedStrategies.length}/4)</button>
-        <button onClick={handleShare} style={{ padding: '10px 20px', fontFamily: "'JetBrains Mono', monospace", fontSize: 11, background: 'transparent', color: 'rgba(255,255,255,0.3)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 2, cursor: 'pointer' }}>
+        <button onClick={handleShare} style={{ padding: '10px 20px', fontFamily: "'JetBrains Mono', monospace", fontSize: 11, background: 'transparent', color: 'rgba(255,255,255,0.3)', border: 'none', borderRadius: 8, cursor: 'pointer', boxShadow: '0 0 0 1px rgba(255,255,255,0.06)', transition: 'all 0.25s ease' }}>
           {shareNotice ? '✓ Copied' : 'Share URL'}
         </button>
       </div>
       {savedStrategies.length > 0 && (
         <div style={{ marginTop: 28 }}>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Compare Strategies</div>
-          <div style={{ marginBottom: 24, padding: 20, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 3 }}>
+          <div style={{ marginBottom: 24, padding: 24, background: 'rgba(255,255,255,0.03)', borderRadius: 16, boxShadow: '0 0 0 1px rgba(255,255,255,0.04), 0 2px 8px rgba(0,0,0,0.15)' }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.25)', marginBottom: 12 }}>
               {savedStrategies.map(s => <span key={s.id} style={{ color: s.color, marginRight: 14 }}>■ {s.label}</span>)}
             </div>
@@ -196,7 +198,7 @@ export function LabSystemPage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: `repeat(${savedStrategies.length}, 1fr)`, gap: 12 }}>
             {savedStrategies.map(s => (
-              <div key={s.id} style={{ padding: 16, background: 'rgba(255,255,255,0.02)', border: `1px solid ${s.color}22`, borderRadius: 3 }}>
+              <div key={s.id} style={{ padding: 20, background: 'rgba(255,255,255,0.03)', borderRadius: 16, boxShadow: `0 0 0 1px ${s.color}22, 0 2px 8px rgba(0,0,0,0.15)` }}>
                 <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: s.color, marginBottom: 12 }}>{s.label}</div>
                 {Object.entries(s.spatial).map(([k, v]) => <div key={k} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', marginBottom: 3 }}>{k}: <span style={{ color: 'rgba(255,255,255,0.6)' }}>{v}</span></div>)}
                 <div style={{ marginTop: 10 }}><RadarChart scores={s.scores} labels={EVAL_METRICS.map(m => m.split(' ')[0])} size={130} /></div>
@@ -215,11 +217,11 @@ export function LabSystemPage() {
         {expertMode ? 'Strategy → reality. Complexity, fabrication, camera, cost.'
           : <>Not a final render. Where your strategy meets real-world constraints.</>}
       </p>
-      <div style={{ marginBottom: 28 }}>
+      <div style={{ marginBottom: 36 }}>
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Complexity Level</div>
-        <div style={{ display: 'flex', gap: 8 }}>{['low', 'medium', 'high'].map(c => <Chip key={c} label={c} active={implSettings.complexity === c} onClick={() => setImplSettings({ ...implSettings, complexity: c })} />)}</div>
+        <div style={{ display: 'flex', gap: 10 }}>{['low', 'medium', 'high'].map(c => <Chip key={c} label={c} active={implSettings.complexity === c} onClick={() => setImplSettings({ ...implSettings, complexity: c })} />)}</div>
       </div>
-      <div style={{ marginBottom: 28 }}>
+      <div style={{ marginBottom: 36 }}>
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Constraint Toggles</div>
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           {[{ key: 'fabrication' as const, label: 'Fabrication Constraint' }, { key: 'camera' as const, label: 'Camera Emphasis' }].map(t => (
@@ -227,19 +229,20 @@ export function LabSystemPage() {
               padding: '8px 16px', fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
               background: implSettings[t.key] ? 'rgba(255,30,0,0.08)' : 'transparent',
               color: implSettings[t.key] ? '#FF1E00' : 'rgba(255,255,255,0.3)',
-              border: `1px solid ${implSettings[t.key] ? 'rgba(255,30,0,0.3)' : 'rgba(255,255,255,0.08)'}`, borderRadius: 2, cursor: 'pointer',
+              border: 'none', borderRadius: 8, cursor: 'pointer', transition: 'all 0.25s ease',
+              boxShadow: implSettings[t.key] ? '0 0 0 1px rgba(255,30,0,0.2)' : '0 0 0 1px rgba(255,255,255,0.06)',
             }}>{implSettings[t.key] ? '●' : '○'} {t.label}</button>
           ))}
         </div>
       </div>
-      <div style={{ marginBottom: 28 }}>
+      <div style={{ marginBottom: 36 }}>
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Cost / Time Sensitivity</div>
-        <div style={{ display: 'flex', gap: 8 }}>{['low', 'moderate', 'high'].map(c => <Chip key={c} label={c} active={implSettings.costSensitivity === c} onClick={() => setImplSettings({ ...implSettings, costSensitivity: c })} />)}</div>
+        <div style={{ display: 'flex', gap: 10 }}>{['low', 'moderate', 'high'].map(c => <Chip key={c} label={c} active={implSettings.costSensitivity === c} onClick={() => setImplSettings({ ...implSettings, costSensitivity: c })} />)}</div>
       </div>
       {/* Massing Preview */}
-      <div style={{ marginBottom: 28 }}>
+      <div style={{ marginBottom: 36 }}>
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14 }}>Diagrammatic Massing Preview</div>
-        <svg width="100%" height={200} viewBox="0 0 600 200" style={{ background: 'rgba(255,255,255,0.02)', borderRadius: 4, border: '1px solid rgba(255,255,255,0.06)' }}>
+        <svg width="100%" height={200} viewBox="0 0 600 200" style={{ background: 'rgba(255,255,255,0.02)', borderRadius: 16, boxShadow: '0 0 0 1px rgba(255,255,255,0.04), 0 2px 8px rgba(0,0,0,0.15)' }}>
           {(() => {
             const sym = strategySelections.spatial?.symmetry;
             const cent = strategySelections.spatial?.centrality;
@@ -278,8 +281,9 @@ export function LabSystemPage() {
           {CASES.filter(c => c.domain === baseRules.domain || !baseRules.domain).slice(0, 2).map(c => (
             <button key={c.id} onClick={() => navigate(`/lab/cases/${c.id}`)} style={{
               padding: '8px 14px', fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
-              background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)',
-              color: 'rgba(255,255,255,0.4)', borderRadius: 2, cursor: 'pointer',
+              background: 'rgba(255,255,255,0.03)', border: 'none',
+              color: 'rgba(255,255,255,0.4)', borderRadius: 8, cursor: 'pointer',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.06)', transition: 'all 0.25s ease',
             }}>→ {c.title} ({c.domain})</button>
           ))}
         </div>
@@ -326,7 +330,7 @@ export function LabSystemPage() {
           );
         })}
       </div>
-      <div style={{ padding: 16, background: 'rgba(255,60,60,0.04)', border: '1px solid rgba(255,60,60,0.15)', borderRadius: 3, marginBottom: 28 }}>
+      <div style={{ padding: 20, background: 'rgba(255,60,60,0.04)', borderRadius: 12, boxShadow: '0 0 0 1px rgba(255,60,60,0.1), 0 2px 8px rgba(0,0,0,0.1)', marginBottom: 36 }}>
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,60,60,0.6)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Diagnostic</div>
         <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, margin: 0 }}>
           High visual saliency but moderate attention flow suggests spatial hierarchy may be competing with focal points.
@@ -366,7 +370,7 @@ export function LabSystemPage() {
         {baseRules.world.length > 0 && <div style={{ marginBottom: 10 }}><span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>World: </span><span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>{baseRules.world.join(', ')}</span></div>}
         {baseRules.visibility && <div style={{ marginBottom: 10 }}><span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>Visibility: </span><span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>{baseRules.visibility}</span></div>}
         {baseRules.domain && (
-          <div style={{ marginTop: 20, padding: 14, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 3 }}>
+          <div style={{ marginTop: 20, padding: 14, background: 'rgba(255,255,255,0.02)', borderRadius: 16, boxShadow: '0 0 0 1px rgba(255,255,255,0.04), 0 2px 8px rgba(0,0,0,0.15)' }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,30,0,0.4)', marginBottom: 8, textTransform: 'uppercase' }}>What this means</div>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6, margin: 0 }}>
               {baseRules.domain === 'Stage' && 'Front-facing perception, camera legibility constraints, temporal sequencing within performance duration.'}
@@ -403,7 +407,7 @@ export function LabSystemPage() {
       return (<div>
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Constraint Analysis</div>
         {getConstraintExplanation().map((line, i) => (
-          <div key={i} style={{ padding: 12, marginBottom: 8, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+          <div key={i} style={{ padding: 14, marginBottom: 10, background: 'rgba(255,255,255,0.03)', borderRadius: 12, boxShadow: '0 0 0 1px rgba(255,255,255,0.04)' }}>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.45)', margin: 0, lineHeight: 1.5 }}>{line}</p>
           </div>
         ))}
@@ -423,7 +427,7 @@ export function LabSystemPage() {
     if (systemStep === 'implementation') {
       return (<div>
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Implementation Notes</div>
-        <div style={{ padding: 14, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 3 }}>
+        <div style={{ padding: 16, background: 'rgba(255,255,255,0.03)', borderRadius: 12, boxShadow: '0 0 0 1px rgba(255,255,255,0.04)' }}>
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.4)', margin: 0, lineHeight: 1.6 }}>
             Complexity: <span style={{ color: '#FF1E00' }}>{implSettings.complexity}</span>
           </p>
@@ -434,7 +438,7 @@ export function LabSystemPage() {
       return (<div>
         <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Mismatch Notes</div>
         <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6, marginBottom: 16 }}>Mismatches are data points for iteration, not failures.</p>
-        <div style={{ padding: 14, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 3 }}>
+        <div style={{ padding: 16, background: 'rgba(255,255,255,0.03)', borderRadius: 12, boxShadow: '0 0 0 1px rgba(255,255,255,0.04)' }}>
           <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', margin: 0, lineHeight: 1.6 }}>Drag sliders to simulate different evaluation outcomes.</p>
         </div>
       </div>);
@@ -449,13 +453,13 @@ export function LabSystemPage() {
       <DarkLabNav />
       <div style={{ display: 'flex', height: 'calc(100vh - 56px)', overflow: 'hidden' }}>
         {/* Left sidebar */}
-        <div style={{ width: 210, borderRight: '1px solid rgba(255,255,255,0.06)', padding: '28px 0', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ width: 210, boxShadow: '1px 0 0 rgba(255,255,255,0.04)', padding: '28px 0', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: 'rgba(255,255,255,0.2)', textTransform: 'uppercase', letterSpacing: '0.12em', padding: '0 20px', marginBottom: 20 }}>System Pipeline</div>
           {/* Intro item */}
           <button onClick={() => setSystemStep('intro')} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 20px', background: isIntro ? 'rgba(255,30,0,0.04)' : 'transparent', border: 'none', borderLeft: isIntro ? '2px solid #FF1E00' : '2px solid transparent', cursor: 'pointer', marginBottom: 8 }}>
             <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: isIntro ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.4)', fontWeight: isIntro ? 500 : 400 }}>Overview</span>
           </button>
-          <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '0 20px 8px' }} />
+          <div style={{ height: 1, background: 'rgba(255,255,255,0.04)', margin: '0 20px 8px' }} />
           {STEPS.map((s, i) => {
             const isA = systemStep === s.id; const isP = !isIntro && i < si;
             return (<button key={s.id} onClick={() => setSystemStep(s.id)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 20px', background: isA ? 'rgba(255,30,0,0.04)' : 'transparent', border: 'none', borderLeft: isA ? '2px solid #FF1E00' : '2px solid transparent', cursor: 'pointer' }}>
@@ -465,13 +469,15 @@ export function LabSystemPage() {
             </button>);
           })}
           <div style={{ marginTop: 'auto', padding: '0 20px' }}>
-            <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 16, marginBottom: 16 }}>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: 16, marginBottom: 16 }}>
               <button onClick={() => setExpertMode(!expertMode)} style={{
                 fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
                 color: expertMode ? '#FF1E00' : 'rgba(255,255,255,0.3)',
                 background: expertMode ? 'rgba(255,30,0,0.04)' : 'transparent',
-                border: `1px solid ${expertMode ? 'rgba(255,30,0,0.2)' : 'rgba(255,255,255,0.06)'}`,
-                padding: '6px 12px', borderRadius: 2, cursor: 'pointer', width: '100%', textAlign: 'left',
+                border: 'none',
+                boxShadow: expertMode ? '0 0 0 1px rgba(255,30,0,0.2)' : '0 0 0 1px rgba(255,255,255,0.06)',
+                padding: '7px 12px', borderRadius: 8, cursor: 'pointer', width: '100%', textAlign: 'left',
+                transition: 'all 0.25s ease',
               }}>{expertMode ? '● Expert' : '○ Beginner'} View</button>
             </div>
             <button onClick={() => navigate('/lab/cases')} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', background: 'none', border: 'none', cursor: 'pointer' }}>→ View Cases</button>
@@ -497,7 +503,7 @@ export function LabSystemPage() {
                     { num: '02', title: 'Form Strategy', desc: 'Form is the spatial, material, structural translation of meaning under constraint.' },
                     { num: '03', title: 'Perception', desc: 'The test is whether the perceived experience aligns with intended meaning.' },
                   ].map((item, i) => (
-                    <div key={i} style={{ padding: '24px 20px', borderTop: '1px solid rgba(255,30,0,0.15)' }}>
+                    <div key={i} style={{ padding: '28px 24px', borderTop: '1px solid rgba(255,30,0,0.1)' }}>
                       <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#FF1E00', opacity: 0.5 }}>{item.num}</span>
                       <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 22, fontWeight: 600, color: '#fff', margin: '10px 0 12px', letterSpacing: '-0.03em' }}>{item.title}</h3>
                       <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, lineHeight: 1.7, color: 'rgba(255,255,255,0.45)', margin: 0 }}>{item.desc}</p>
@@ -517,7 +523,8 @@ export function LabSystemPage() {
                 <button onClick={() => setSystemStep('base')} style={{
                   padding: '12px 28px', fontFamily: "'JetBrains Mono', monospace", fontSize: 12,
                   letterSpacing: '0.06em', textTransform: 'uppercase', background: '#FF1E00',
-                  color: '#fff', border: 'none', borderRadius: 2, cursor: 'pointer', fontWeight: 600,
+                  color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontWeight: 600,
+                  transition: 'all 0.25s ease', boxShadow: '0 2px 8px rgba(255,30,0,0.3)',
                 }}>Begin → 01 Base Rules</button>
               </div>
             </div>
@@ -526,12 +533,12 @@ export function LabSystemPage() {
             <>
               <div style={{ marginBottom: 28 }}><PipelineDiagram currentStep={systemStep} /></div>
               {stepRenderers[systemStep]?.()}
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 36, paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 40, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.04)' }}>
                 {si > 0
-                  ? <button onClick={() => setSystemStep(STEPS[si - 1].id)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(255,255,255,0.3)', background: 'none', border: '1px solid rgba(255,255,255,0.08)', padding: '8px 20px', borderRadius: 2, cursor: 'pointer' }}>← Previous</button>
-                  : <button onClick={() => setSystemStep('intro')} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(255,255,255,0.3)', background: 'none', border: '1px solid rgba(255,255,255,0.08)', padding: '8px 20px', borderRadius: 2, cursor: 'pointer' }}>← Overview</button>}
+                  ? <button onClick={() => setSystemStep(STEPS[si - 1].id)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(255,255,255,0.3)', background: 'none', border: 'none', padding: '8px 20px', borderRadius: 8, cursor: 'pointer', boxShadow: '0 0 0 1px rgba(255,255,255,0.06)', transition: 'all 0.25s ease' }}>← Previous</button>
+                  : <button onClick={() => setSystemStep('intro')} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(255,255,255,0.3)', background: 'none', border: 'none', padding: '8px 20px', borderRadius: 8, cursor: 'pointer', boxShadow: '0 0 0 1px rgba(255,255,255,0.06)', transition: 'all 0.25s ease' }}>← Overview</button>}
                 {si < STEPS.length - 1 &&
-                  <button onClick={() => setSystemStep(STEPS[si + 1].id)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#FF1E00', background: 'rgba(255,30,0,0.06)', border: '1px solid rgba(255,30,0,0.2)', padding: '8px 20px', borderRadius: 2, cursor: 'pointer' }}>Next →</button>}
+                  <button onClick={() => setSystemStep(STEPS[si + 1].id)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#FF1E00', background: 'rgba(255,30,0,0.06)', border: 'none', padding: '8px 20px', borderRadius: 8, cursor: 'pointer', boxShadow: '0 0 0 1px rgba(255,30,0,0.15)', transition: 'all 0.25s ease' }}>Next →</button>}
               </div>
             </>
           )}
@@ -539,7 +546,7 @@ export function LabSystemPage() {
 
         {/* Right panel — hidden on intro */}
         {!isIntro && (
-          <div style={{ width: 260, borderLeft: '1px solid rgba(255,255,255,0.06)', padding: '28px 20px', flexShrink: 0, overflow: 'auto' }}>{renderRightPanel()}</div>
+          <div style={{ width: 260, boxShadow: '-1px 0 0 rgba(255,255,255,0.04)', padding: '28px 20px', flexShrink: 0, overflow: 'auto' }}>{renderRightPanel()}</div>
         )}
       </div>
     </DarkPageWrapper>
