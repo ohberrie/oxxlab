@@ -14,19 +14,20 @@ export function Chip({ label, active, onClick, dim }: {
 }) {
   return (
     <button onClick={onClick} style={{
-      padding: '6px 14px', fontSize: 12, fontFamily: "'JetBrains Mono', monospace", letterSpacing: '0.03em',
-      border: active ? '1px solid #FF1E00' : '1px solid rgba(255,255,255,0.12)', borderRadius: 2,
-      background: active ? 'rgba(255,30,0,0.08)' : 'transparent',
+      padding: '7px 16px', fontSize: 12, fontFamily: "'JetBrains Mono', monospace", letterSpacing: '0.03em',
+      border: 'none', borderRadius: 20,
+      background: active ? 'rgba(255,30,0,0.12)' : 'rgba(255,255,255,0.06)',
       color: dim ? 'rgba(255,255,255,0.2)' : active ? '#FF1E00' : 'rgba(255,255,255,0.55)',
-      cursor: dim ? 'not-allowed' : 'pointer', transition: 'all 0.2s',
+      cursor: dim ? 'not-allowed' : 'pointer', transition: 'all 0.25s ease',
       textDecoration: dim ? 'line-through' : 'none', pointerEvents: dim ? 'none' : 'auto',
+      boxShadow: active ? '0 0 0 1px rgba(255,30,0,0.3)' : 'none',
     }}>{label}</button>
   );
 }
 
 export function SectionTitle({ num, label }: { num: string; label: string }) {
   return (
-    <div style={{ marginBottom: 16, display: 'flex', alignItems: 'baseline', gap: 10 }}>
+    <div style={{ marginBottom: 20, display: 'flex', alignItems: 'baseline', gap: 10 }}>
       <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#FF1E00', opacity: 0.6 }}>{num}</span>
       <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600, color: 'rgba(255,255,255,0.9)', letterSpacing: '0.02em' }}>{label}</span>
     </div>
@@ -45,10 +46,10 @@ export function GlossaryTerm({ term, children, expert }: {
       {show && GLOSSARY[term] && (
         <span style={{
           position: 'absolute', bottom: '120%', left: '50%', transform: 'translateX(-50%)',
-          background: '#141414', border: '1px solid rgba(255,30,0,0.2)', padding: '8px 12px',
+          background: '#1a1a1a', padding: '10px 14px',
           fontSize: 11, color: 'rgba(255,255,255,0.65)', width: 260, lineHeight: 1.5,
-          borderRadius: 3, zIndex: 99, fontFamily: "'DM Sans', sans-serif", whiteSpace: 'normal',
-          pointerEvents: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+          borderRadius: 12, zIndex: 99, fontFamily: "'DM Sans', sans-serif", whiteSpace: 'normal',
+          pointerEvents: 'none', boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)',
         }}>
           <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: '#FF1E00', opacity: 0.5, display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{term}</span>
           {GLOSSARY[term]}
@@ -61,9 +62,10 @@ export function GlossaryTerm({ term, children, expert }: {
 export function ExampleButton({ label, onClick }: { label: string; onClick: () => void }) {
   return (
     <button onClick={onClick} style={{
-      padding: '6px 14px', fontSize: 10, fontFamily: "'JetBrains Mono', monospace", letterSpacing: '0.04em',
-      color: 'rgba(255,30,0,0.5)', background: 'rgba(255,30,0,0.03)',
-      border: '1px dashed rgba(255,30,0,0.15)', borderRadius: 2, cursor: 'pointer',
+      padding: '7px 16px', fontSize: 10, fontFamily: "'JetBrains Mono', monospace", letterSpacing: '0.04em',
+      color: 'rgba(255,30,0,0.5)', background: 'rgba(255,30,0,0.04)',
+      border: '1px dashed rgba(255,30,0,0.15)', borderRadius: 8, cursor: 'pointer',
+      transition: 'all 0.2s ease',
     }}>↳ {label}</button>
   );
 }
@@ -114,8 +116,8 @@ export function CompareBar({ label, values, colors }: {
       <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
         {values.map((v, i) => (
           <div key={i} style={{ flex: 1 }}>
-            <div style={{ height: 8, background: 'rgba(255,255,255,0.04)', borderRadius: 2, overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: `${v * 100}%`, background: colors[i], borderRadius: 2, transition: 'width 0.4s' }} />
+            <div style={{ height: 8, background: 'rgba(255,255,255,0.04)', borderRadius: 6, overflow: 'hidden' }}>
+              <div style={{ height: '100%', width: `${v * 100}%`, background: colors[i], borderRadius: 6, transition: 'width 0.4s ease' }} />
             </div>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: colors[i], marginTop: 3, textAlign: 'center' }}>{Math.round(v * 100)}</div>
           </div>
@@ -158,11 +160,11 @@ export function ConstraintZone({ baseRules, intents }: {
     neutral: { bg: 'rgba(255,255,255,0.03)', border: 'rgba(255,255,255,0.1)', text: 'rgba(255,255,255,0.3)' },
   };
   return (
-    <div style={{ position: 'relative', width: '100%', height: 380, background: 'rgba(255,255,255,0.02)', borderRadius: 4, border: '1px solid rgba(255,255,255,0.06)' }}>
-      <div style={{ position: 'absolute', top: 12, left: 14, display: 'flex', gap: 16, fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>
+    <div style={{ position: 'relative', width: '100%', height: 380, background: 'rgba(255,255,255,0.02)', borderRadius: 16, boxShadow: '0 0 0 1px rgba(255,255,255,0.04), 0 2px 8px rgba(0,0,0,0.2)' }}>
+      <div style={{ position: 'absolute', top: 16, left: 18, display: 'flex', gap: 16, fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>
         {(['allowed', 'risky', 'blocked'] as const).map(z => (
           <span key={z} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            <span style={{ width: 8, height: 8, borderRadius: 1, background: zc[z].border }} />
+            <span style={{ width: 8, height: 8, borderRadius: 4, background: zc[z].border }} />
             <span style={{ color: zc[z].text }}>{z}</span>
           </span>
         ))}
@@ -172,9 +174,10 @@ export function ConstraintZone({ baseRules, intents }: {
         return (
           <div key={i} style={{
             position: 'absolute', left: `${s.x}%`, top: `${s.y}%`, transform: 'translate(-50%, -50%)',
-            padding: '8px 14px', background: c.bg, border: `1px solid ${c.border}`, borderRadius: 2,
+            padding: '8px 16px', background: c.bg, borderRadius: 10,
             fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: c.text,
-            transition: 'all 0.4s', cursor: zone === 'blocked' ? 'not-allowed' : 'pointer',
+            transition: 'all 0.3s ease', cursor: zone === 'blocked' ? 'not-allowed' : 'pointer',
+            boxShadow: `0 0 0 1px ${c.border}`,
           }}>
             {s.label}{zone === 'blocked' && <span style={{ marginLeft: 6, fontSize: 9, opacity: 0.5 }}>✕</span>}
           </div>
@@ -208,7 +211,7 @@ export function PipelineDiagram({ currentStep }: { currentStep: string }) {
         const isA = STEPS[i]?.id === currentStep; const isP = i < si;
         return (
           <g key={n.id}>
-            <rect x={n.x - 34} y={32} width={68} height={36} rx={3}
+            <rect x={n.x - 34} y={32} width={68} height={36} rx={10}
               fill={isA ? 'rgba(255,30,0,0.15)' : isP ? 'rgba(255,30,0,0.05)' : 'rgba(255,255,255,0.02)'}
               stroke={isA ? '#FF1E00' : isP ? 'rgba(255,30,0,0.3)' : 'rgba(255,255,255,0.08)'} strokeWidth={1.2} />
             <text x={n.x} y={51} textAnchor="middle" dominantBaseline="middle"
@@ -230,9 +233,9 @@ export function DarkPageWrapper({ children }: { children: React.ReactNode }) {
       <style>{`
         .dark-lab-page ::-webkit-scrollbar { width: 4px; }
         .dark-lab-page ::-webkit-scrollbar-track { background: transparent; }
-        .dark-lab-page ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+        .dark-lab-page ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
         .dark-lab-page ::selection { background: rgba(255,30,0,0.2); color: #fff; }
-        .dark-lab-page input[type=range] { height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; appearance: auto; }
+        .dark-lab-page input[type=range] { height: 3px; background: rgba(255,255,255,0.08); border-radius: 4px; appearance: auto; }
         @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
       `}</style>
       <div className="dark-lab-page">

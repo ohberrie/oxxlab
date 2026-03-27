@@ -162,7 +162,7 @@ export function FrameworkPage() {
 
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Intro + Toggle */}
-        <div className="px-[58px] pt-6 pb-4 flex items-end justify-between max-md:flex-col max-md:items-start max-md:gap-4 max-md:px-6">
+        <div className="px-[58px] pt-10 pb-6 flex items-end justify-between max-md:flex-col max-md:items-start max-md:gap-4 max-md:px-6">
           <div>
             <h1 className="font-['DM_Sans'] text-[34px] font-semibold tracking-[-0.03em] leading-[1.1] max-md:text-[28px]" style={{ color: 'rgba(255,255,255,0.9)' }}>
               Framework
@@ -173,23 +173,25 @@ export function FrameworkPage() {
           </div>
 
           {/* Mode Toggle */}
-          <div className="flex items-center gap-0 rounded-sm overflow-hidden shrink-0" style={{ border: '1px solid rgba(255,255,255,0.12)' }}>
+          <div className="flex items-center gap-1 shrink-0 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.06)' }}>
             <button
               onClick={() => setViewMode('lab')}
-              className={`font-['JetBrains_Mono'] text-[11px] font-bold tracking-[0.08em] uppercase px-4 py-1.5 transition-all duration-200 cursor-pointer border-none`}
+              className={`font-['JetBrains_Mono'] text-[11px] font-bold tracking-[0.08em] uppercase px-5 py-2 transition-all duration-250 cursor-pointer border-none rounded-lg`}
               style={{
-                background: viewMode === 'lab' ? 'rgba(255,255,255,0.9)' : 'transparent',
-                color: viewMode === 'lab' ? '#0a0a0a' : 'rgba(255,255,255,0.35)',
+                background: viewMode === 'lab' ? 'rgba(255,255,255,0.12)' : 'transparent',
+                color: viewMode === 'lab' ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
+                boxShadow: viewMode === 'lab' ? '0 1px 4px rgba(0,0,0,0.3)' : 'none',
               }}
             >
               Lab
             </button>
             <button
               onClick={() => setViewMode('studio')}
-              className={`font-['JetBrains_Mono'] text-[11px] font-bold tracking-[0.08em] uppercase px-4 py-1.5 transition-all duration-200 cursor-pointer border-none`}
+              className={`font-['JetBrains_Mono'] text-[11px] font-bold tracking-[0.08em] uppercase px-5 py-2 transition-all duration-250 cursor-pointer border-none rounded-lg`}
               style={{
-                background: viewMode === 'studio' ? 'rgba(255,255,255,0.9)' : 'transparent',
-                color: viewMode === 'studio' ? '#0a0a0a' : 'rgba(255,255,255,0.35)',
+                background: viewMode === 'studio' ? 'rgba(255,255,255,0.12)' : 'transparent',
+                color: viewMode === 'studio' ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
+                boxShadow: viewMode === 'studio' ? '0 1px 4px rgba(0,0,0,0.3)' : 'none',
               }}
             >
               Studio
@@ -198,12 +200,12 @@ export function FrameworkPage() {
         </div>
 
         {/* Graph + Panel */}
-        <div className="flex-1 flex min-h-0 px-[58px] pb-8 gap-6 max-md:flex-col max-md:px-6">
+        <div className="flex-1 flex min-h-0 px-[58px] pb-10 gap-6 max-md:flex-col max-md:px-6">
           {/* Strategy Graph Canvas */}
           <div
             ref={canvasRef}
-            className="flex-1 relative min-h-[400px] rounded-sm"
-            style={{ border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}
+            className="flex-1 relative min-h-[400px] rounded-2xl"
+            style={{ background: 'rgba(255,255,255,0.02)', boxShadow: '0 0 0 1px rgba(255,255,255,0.04), 0 2px 12px rgba(0,0,0,0.2)' }}
             onClick={(e) => {
               if (e.target === e.currentTarget) setSelectedNode(null);
             }}
@@ -304,14 +306,14 @@ export function FrameworkPage() {
 
           {/* Detail Panel */}
           <div
-            className={`transition-all duration-300 overflow-y-auto rounded-sm ${
+            className={`transition-all duration-300 overflow-y-auto rounded-2xl ${
               selected
-                ? 'w-[340px] max-md:w-full opacity-100 p-6'
+                ? 'w-[340px] max-md:w-full opacity-100 p-8'
                 : 'w-0 max-md:h-0 opacity-0 p-0 overflow-hidden'
             }`}
             style={{
-              border: selected ? '1px solid rgba(255,255,255,0.08)' : '1px solid transparent',
               background: selected ? 'rgba(255,255,255,0.03)' : 'transparent',
+              boxShadow: selected ? '0 0 0 1px rgba(255,255,255,0.04), 0 2px 12px rgba(0,0,0,0.2)' : 'none',
             }}
           >
             {selected && (
@@ -356,8 +358,8 @@ export function FrameworkPage() {
                           <button
                             key={link.path}
                             onClick={() => navigate(link.path)}
-                            className="font-['JetBrains_Mono'] text-[12px] text-left bg-transparent border-none cursor-pointer p-0 underline underline-offset-2 transition-colors duration-200"
-                            style={{ color: 'rgba(255,255,255,0.5)', textDecorationColor: 'rgba(255,255,255,0.12)' }}
+                            className="font-['JetBrains_Mono'] text-[12px] text-left bg-transparent border-none cursor-pointer p-0 transition-colors duration-200"
+                            style={{ color: 'rgba(255,255,255,0.5)' }}
                             onMouseEnter={(e) => { e.currentTarget.style.color = accent; }}
                             onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; }}
                           >
@@ -379,13 +381,12 @@ export function FrameworkPage() {
                             onClick={() => link.path !== '#' && navigate(link.path)}
                             className={`font-['JetBrains_Mono'] text-[12px] text-left bg-transparent border-none p-0 transition-colors duration-200 ${
                               link.path !== '#'
-                                ? 'cursor-pointer underline underline-offset-2'
+                                ? 'cursor-pointer'
                                 : 'cursor-default'
                             }`}
                             style={{
                               color: link.path !== '#' ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.25)',
-                              textDecorationColor: link.path !== '#' ? 'rgba(255,255,255,0.12)' : 'transparent',
-                            }}
+                                                          }}
                             onMouseEnter={(e) => { if (link.path !== '#') e.currentTarget.style.color = accent; }}
                             onMouseLeave={(e) => { if (link.path !== '#') e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; }}
                           >
@@ -409,13 +410,12 @@ export function FrameworkPage() {
                             onClick={() => link.path !== '#' && navigate(link.path)}
                             className={`font-['JetBrains_Mono'] text-[12px] text-left bg-transparent border-none p-0 transition-colors duration-200 ${
                               link.path !== '#'
-                                ? 'cursor-pointer underline underline-offset-2'
+                                ? 'cursor-pointer'
                                 : 'cursor-default'
                             }`}
                             style={{
                               color: link.path !== '#' ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.25)',
-                              textDecorationColor: link.path !== '#' ? 'rgba(255,255,255,0.12)' : 'transparent',
-                            }}
+                                                          }}
                             onMouseEnter={(e) => { if (link.path !== '#') e.currentTarget.style.color = accent; }}
                             onMouseLeave={(e) => { if (link.path !== '#') e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; }}
                           >
@@ -453,8 +453,8 @@ export function FrameworkPage() {
                           <button
                             key={link.path}
                             onClick={() => navigate(link.path)}
-                            className="font-['JetBrains_Mono'] text-[12px] text-left bg-transparent border-none cursor-pointer p-0 underline underline-offset-2 transition-colors duration-200"
-                            style={{ color: 'rgba(255,255,255,0.5)', textDecorationColor: 'rgba(255,255,255,0.12)' }}
+                            className="font-['JetBrains_Mono'] text-[12px] text-left bg-transparent border-none cursor-pointer p-0 transition-colors duration-200"
+                            style={{ color: 'rgba(255,255,255,0.5)' }}
                             onMouseEnter={(e) => { e.currentTarget.style.color = accent; }}
                             onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; }}
                           >
