@@ -1,21 +1,14 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { oxx } from '../tokens';
+import { OXX_PATTERN } from '../oxxPattern';
 
 const OX_CHARS = ['O', 'X'];
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const CHANGE_INTERVAL = 80;
 const CHANGE_PROBABILITY = 0.06;
 
-const oxxPattern = [
-  '01110011011011011',
-  '11011011011011011',
-  '11011001110001110',
-  '11011000100000100',
-  '11011001110001110',
-  '11011011011011011',
-  '01110011011011011',
-];
+const oxxPattern = OXX_PATTERN;
 
 const PATTERN_COLS = oxxPattern[0].length;
 const PATTERN_ROWS = oxxPattern.length;

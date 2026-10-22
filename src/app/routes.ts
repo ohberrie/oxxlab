@@ -5,7 +5,8 @@ import { HomePage } from './components/HomePage';
 export const router = createBrowserRouter([
   { path: '/', Component: HomePage },
   { path: '/about', lazy: () => import('./components/AboutPage').then((m) => ({ Component: m.AboutPage })) },
-  { path: '/lab', lazy: () => import('./components/LabPage').then((m) => ({ Component: m.LabPage })) },
+  { path: '/lab', lazy: () => import('./components/LabLandingPage').then((m) => ({ Component: m.LabLandingPage })) },
+  { path: '/lab/gallery', lazy: () => import('./components/LabPage').then((m) => ({ Component: m.LabPage })) },
   { path: '/lab/systems', lazy: () => import('./components/LabSystemPage').then((m) => ({ Component: m.LabSystemPage })) },
   { path: '/lab/cases', lazy: () => import('./components/LabCasesPage').then((m) => ({ Component: m.LabCasesPage })) },
   { path: '/lab/cases/:id', lazy: () => import('./components/LabCasesPage').then((m) => ({ Component: m.LabCasesPage })) },
