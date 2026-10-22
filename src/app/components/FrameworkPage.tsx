@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import { NavBar } from './NavBar';
+import { oxx } from '../tokens';
 
 // --- Data ---
 
@@ -152,10 +153,10 @@ export function FrameworkPage() {
     return { x: (p.x / 100) * canvasSize.w, y: (p.y / 100) * canvasSize.h };
   };
 
-  const accent = '#FF1E00';
+  const accent = oxx.accent;
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#0a0a0a' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: oxx.void }}>
       <header className="relative z-20">
         <NavBar mode="lab" dark />
       </header>
@@ -164,10 +165,10 @@ export function FrameworkPage() {
         {/* Intro + Toggle */}
         <div className="px-[58px] pt-10 pb-6 flex items-end justify-between max-md:flex-col max-md:items-start max-md:gap-4 max-md:px-6">
           <div>
-            <h1 className="font-['DM_Sans'] text-[34px] font-semibold tracking-[-0.03em] leading-[1.1] max-md:text-[28px]" style={{ color: 'rgba(255,255,255,0.9)' }}>
+            <h1 className="font-body text-[34px] font-semibold tracking-[-0.03em] leading-[1.1] max-md:text-[28px]" style={{ color: 'rgba(255,255,255,0.9)' }}>
               Framework
             </h1>
-            <p className="font-['DM_Sans'] text-[14px] mt-2 leading-[1.5] max-w-[520px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            <p className="font-body text-[14px] mt-2 leading-[1.5] max-w-[520px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
               Explore how research systems, form strategies, and studio works connect inside OXX Lab.
             </p>
           </div>
@@ -176,7 +177,7 @@ export function FrameworkPage() {
           <div className="flex items-center gap-1 shrink-0 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.06)' }}>
             <button
               onClick={() => setViewMode('lab')}
-              className={`font-['JetBrains_Mono'] text-[11px] font-bold tracking-[0.08em] uppercase px-5 py-2 transition-all duration-250 cursor-pointer border-none rounded-lg`}
+              className={`font-mono text-[11px] font-bold tracking-[0.08em] uppercase px-5 py-2 transition-all duration-250 cursor-pointer border-none rounded-lg`}
               style={{
                 background: viewMode === 'lab' ? 'rgba(255,255,255,0.12)' : 'transparent',
                 color: viewMode === 'lab' ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
@@ -187,7 +188,7 @@ export function FrameworkPage() {
             </button>
             <button
               onClick={() => setViewMode('studio')}
-              className={`font-['JetBrains_Mono'] text-[11px] font-bold tracking-[0.08em] uppercase px-5 py-2 transition-all duration-250 cursor-pointer border-none rounded-lg`}
+              className={`font-mono text-[11px] font-bold tracking-[0.08em] uppercase px-5 py-2 transition-all duration-250 cursor-pointer border-none rounded-lg`}
               style={{
                 background: viewMode === 'studio' ? 'rgba(255,255,255,0.12)' : 'transparent',
                 color: viewMode === 'studio' ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
@@ -274,7 +275,7 @@ export function FrameworkPage() {
                   />
                   {/* Label */}
                   <span
-                    className="font-['JetBrains_Mono'] font-bold text-[12px] tracking-[-0.01em] mt-2 whitespace-nowrap transition-all duration-300"
+                    className="font-mono font-bold text-[12px] tracking-[-0.01em] mt-2 whitespace-nowrap transition-all duration-300"
                     style={{
                       color: isSelected || isConnected ? accent : 'rgba(255,255,255,0.7)',
                       opacity: isDimmed ? 0.2 : 1,
@@ -284,7 +285,7 @@ export function FrameworkPage() {
                   </span>
                   {/* Tag */}
                   <span
-                    className="font-['JetBrains_Mono'] text-[9px] tracking-[0.06em] uppercase mt-0.5 whitespace-nowrap transition-all duration-300"
+                    className="font-mono text-[9px] tracking-[0.06em] uppercase mt-0.5 whitespace-nowrap transition-all duration-300"
                     style={{
                       color: isSelected ? accent : 'rgba(255,255,255,0.5)',
                       opacity: isDimmed ? 0.1 : 0.35,
@@ -298,7 +299,7 @@ export function FrameworkPage() {
 
             {/* Empty state hint */}
             {!selectedNode && !hovered && (
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 font-['JetBrains_Mono'] text-[11px] tracking-[0.04em]" style={{ color: 'rgba(255,255,255,0.15)' }}>
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-[11px] tracking-[0.04em]" style={{ color: 'rgba(255,255,255,0.15)' }}>
                 Select a strategy node to explore related research, projects, and objects.
               </div>
             )}
@@ -320,27 +321,27 @@ export function FrameworkPage() {
               <div className="flex flex-col gap-6 min-w-[290px]">
                 {/* Header */}
                 <div>
-                  <h2 className="font-['DM_Sans'] text-[20px] font-bold tracking-[-0.02em] leading-[1.2]" style={{ color: 'rgba(255,255,255,0.9)' }}>
+                  <h2 className="font-body text-[20px] font-bold tracking-[-0.02em] leading-[1.2]" style={{ color: 'rgba(255,255,255,0.9)' }}>
                     {selected.label}
                   </h2>
-                  <span className="font-['JetBrains_Mono'] text-[10px] tracking-[0.08em] uppercase mt-1 inline-block" style={{ color: accent }}>
+                  <span className="font-mono text-[10px] tracking-[0.08em] uppercase mt-1 inline-block" style={{ color: accent }}>
                     {selected.tag}
                   </span>
                 </div>
 
                 {/* Description */}
                 <div>
-                  <p className="font-['DM_Sans'] text-[12px] leading-[1.7]" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  <p className="font-body text-[12px] leading-[1.7]" style={{ color: 'rgba(255,255,255,0.5)' }}>
                     {selected.description}
                   </p>
                 </div>
 
                 {/* Inside OXX */}
                 <div>
-                  <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  <h3 className="font-mono text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
                     Inside OXX
                   </h3>
-                  <p className="font-['JetBrains_Mono'] text-[11px] leading-[1.7]" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                  <p className="font-mono text-[11px] leading-[1.7]" style={{ color: 'rgba(255,255,255,0.45)' }}>
                     {selected.insideOxx}
                   </p>
                 </div>
@@ -350,7 +351,7 @@ export function FrameworkPage() {
                   <>
                     {/* Lab Links first */}
                     <div>
-                      <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                      <h3 className="font-mono text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
                         Related Research
                       </h3>
                       <div className="flex flex-col gap-1.5">
@@ -358,7 +359,7 @@ export function FrameworkPage() {
                           <button
                             key={link.path}
                             onClick={() => navigate(link.path)}
-                            className="font-['JetBrains_Mono'] text-[12px] text-left bg-transparent border-none cursor-pointer p-0 transition-colors duration-200"
+                            className="font-mono text-[12px] text-left bg-transparent border-none cursor-pointer p-0 transition-colors duration-200"
                             style={{ color: 'rgba(255,255,255,0.5)' }}
                             onMouseEnter={(e) => { e.currentTarget.style.color = accent; }}
                             onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; }}
@@ -371,7 +372,7 @@ export function FrameworkPage() {
 
                     {/* Studio Links below */}
                     <div>
-                      <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                      <h3 className="font-mono text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
                         Studio Applications
                       </h3>
                       <div className="flex flex-col gap-1.5">
@@ -379,7 +380,7 @@ export function FrameworkPage() {
                           <button
                             key={link.label}
                             onClick={() => link.path !== '#' && navigate(link.path)}
-                            className={`font-['JetBrains_Mono'] text-[12px] text-left bg-transparent border-none p-0 transition-colors duration-200 ${
+                            className={`font-mono text-[12px] text-left bg-transparent border-none p-0 transition-colors duration-200 ${
                               link.path !== '#'
                                 ? 'cursor-pointer'
                                 : 'cursor-default'
@@ -400,7 +401,7 @@ export function FrameworkPage() {
                   <>
                     {/* Studio first */}
                     <div>
-                      <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                      <h3 className="font-mono text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
                         Studio Work
                       </h3>
                       <div className="flex flex-col gap-1.5">
@@ -408,7 +409,7 @@ export function FrameworkPage() {
                           <button
                             key={link.label}
                             onClick={() => link.path !== '#' && navigate(link.path)}
-                            className={`font-['JetBrains_Mono'] text-[12px] text-left bg-transparent border-none p-0 transition-colors duration-200 ${
+                            className={`font-mono text-[12px] text-left bg-transparent border-none p-0 transition-colors duration-200 ${
                               link.path !== '#'
                                 ? 'cursor-pointer'
                                 : 'cursor-default'
@@ -427,14 +428,14 @@ export function FrameworkPage() {
 
                     {/* Objects */}
                     <div>
-                      <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                      <h3 className="font-mono text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
                         Objects
                       </h3>
                       <div className="flex flex-col gap-1.5">
                         {selected.objects.map((obj) => (
                           <span
                             key={obj}
-                            className="font-['JetBrains_Mono'] text-[12px]"
+                            className="font-mono text-[12px]"
                             style={{ color: 'rgba(255,255,255,0.35)' }}
                           >
                             {obj}
@@ -445,7 +446,7 @@ export function FrameworkPage() {
 
                     {/* Research Origins below */}
                     <div>
-                      <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                      <h3 className="font-mono text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
                         Research Origins
                       </h3>
                       <div className="flex flex-col gap-1.5">
@@ -453,7 +454,7 @@ export function FrameworkPage() {
                           <button
                             key={link.path}
                             onClick={() => navigate(link.path)}
-                            className="font-['JetBrains_Mono'] text-[12px] text-left bg-transparent border-none cursor-pointer p-0 transition-colors duration-200"
+                            className="font-mono text-[12px] text-left bg-transparent border-none cursor-pointer p-0 transition-colors duration-200"
                             style={{ color: 'rgba(255,255,255,0.5)' }}
                             onMouseEnter={(e) => { e.currentTarget.style.color = accent; }}
                             onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; }}
@@ -469,14 +470,14 @@ export function FrameworkPage() {
                 {/* Objects (lab mode only) */}
                 {viewMode === 'lab' && (
                   <div>
-                    <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                    <h3 className="font-mono text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
                       Related Objects
                     </h3>
                     <div className="flex flex-col gap-1.5">
                       {selected.objects.map((obj) => (
                         <span
                           key={obj}
-                          className="font-['JetBrains_Mono'] text-[12px]"
+                          className="font-mono text-[12px]"
                           style={{ color: 'rgba(255,255,255,0.35)' }}
                         >
                           {obj}
@@ -488,7 +489,7 @@ export function FrameworkPage() {
 
                 {/* Connected nodes */}
                 <div>
-                  <h3 className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  <h3 className="font-mono text-[10px] font-bold tracking-[0.08em] uppercase mb-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
                     Connected Systems
                   </h3>
                   <div className="flex flex-col gap-1.5">
@@ -499,7 +500,7 @@ export function FrameworkPage() {
                         <button
                           key={connId}
                           onClick={() => setSelectedNode(connId)}
-                          className="font-['JetBrains_Mono'] text-[12px] hover:opacity-70 transition-opacity duration-200 text-left bg-transparent border-none cursor-pointer p-0"
+                          className="font-mono text-[12px] hover:opacity-70 transition-opacity duration-200 text-left bg-transparent border-none cursor-pointer p-0"
                           style={{ color: accent }}
                         >
                           {connNode.label}

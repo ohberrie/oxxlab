@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { GLOSSARY, STEPS } from './LabData';
 import { NavBar } from './NavBar';
+import { oxx } from '../tokens';
 
 // Backward-compat wrapper
 export function DarkLabNav() {
@@ -9,15 +10,20 @@ export function DarkLabNav() {
 
 // ─── UTILITY COMPONENTS ─────────────────────────────────────────
 
+export const fieldLabel: React.CSSProperties = {
+  fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.35)',
+  textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10,
+};
+
 export function Chip({ label, active, onClick, dim }: {
   label: string; active?: boolean; onClick?: () => void; dim?: boolean;
 }) {
   return (
     <button onClick={onClick} style={{
-      padding: '7px 16px', fontSize: 12, fontFamily: "'JetBrains Mono', monospace", letterSpacing: '0.03em',
+      padding: '7px 16px', fontSize: 12, fontFamily: oxx.mono, letterSpacing: '0.03em',
       border: 'none', borderRadius: 20,
       background: active ? 'rgba(255,30,0,0.12)' : 'rgba(255,255,255,0.06)',
-      color: dim ? 'rgba(255,255,255,0.2)' : active ? '#FF1E00' : 'rgba(255,255,255,0.55)',
+      color: dim ? 'rgba(255,255,255,0.2)' : active ? oxx.accent : 'rgba(255,255,255,0.55)',
       cursor: dim ? 'not-allowed' : 'pointer', transition: 'all 0.25s ease',
       textDecoration: dim ? 'line-through' : 'none', pointerEvents: dim ? 'none' : 'auto',
       boxShadow: active ? '0 0 0 1px rgba(255,30,0,0.3)' : 'none',
@@ -28,8 +34,8 @@ export function Chip({ label, active, onClick, dim }: {
 export function SectionTitle({ num, label }: { num: string; label: string }) {
   return (
     <div style={{ marginBottom: 20, display: 'flex', alignItems: 'baseline', gap: 10 }}>
-      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#FF1E00', opacity: 0.6 }}>{num}</span>
-      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600, color: 'rgba(255,255,255,0.9)', letterSpacing: '0.02em' }}>{label}</span>
+      <span style={{ fontFamily: oxx.mono, fontSize: 11, color: oxx.accent, opacity: 0.6 }}>{num}</span>
+      <span style={{ fontFamily: oxx.body, fontSize: 15, fontWeight: 600, color: 'rgba(255,255,255,0.9)', letterSpacing: '0.02em' }}>{label}</span>
     </div>
   );
 }
@@ -48,10 +54,10 @@ export function GlossaryTerm({ term, children, expert }: {
           position: 'absolute', bottom: '120%', left: '50%', transform: 'translateX(-50%)',
           background: '#1a1a1a', padding: '10px 14px',
           fontSize: 11, color: 'rgba(255,255,255,0.65)', width: 260, lineHeight: 1.5,
-          borderRadius: 12, zIndex: 99, fontFamily: "'DM Sans', sans-serif", whiteSpace: 'normal',
+          borderRadius: 12, zIndex: 99, fontFamily: oxx.body, whiteSpace: 'normal',
           pointerEvents: 'none', boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)',
         }}>
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: '#FF1E00', opacity: 0.5, display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{term}</span>
+          <span style={{ fontFamily: oxx.mono, fontSize: 9, color: oxx.accent, opacity: 0.5, display: 'block', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{term}</span>
           {GLOSSARY[term]}
         </span>
       )}
@@ -62,7 +68,7 @@ export function GlossaryTerm({ term, children, expert }: {
 export function ExampleButton({ label, onClick }: { label: string; onClick: () => void }) {
   return (
     <button onClick={onClick} style={{
-      padding: '7px 16px', fontSize: 10, fontFamily: "'JetBrains Mono', monospace", letterSpacing: '0.04em',
+      padding: '7px 16px', fontSize: 10, fontFamily: oxx.mono, letterSpacing: '0.04em',
       color: 'rgba(255,30,0,0.5)', background: 'rgba(255,30,0,0.04)',
       border: '1px dashed rgba(255,30,0,0.15)', borderRadius: 8, cursor: 'pointer',
       transition: 'all 0.2s ease',
@@ -93,13 +99,13 @@ export function RadarChart({ scores, intentScores, labels, size = 220 }: {
       ))}
       {labels.map((l, i) => {
         const [x, y] = pt(i, 1.22);
-        return <text key={i} x={x} y={y} textAnchor="middle" dominantBaseline="middle" fill="rgba(255,255,255,0.4)" fontSize={8} fontFamily="'JetBrains Mono', monospace">
+        return <text key={i} x={x} y={y} textAnchor="middle" dominantBaseline="middle" fill="rgba(255,255,255,0.4)" fontSize={8} fontFamily={oxx.mono}>
           {l.split(' ').map((w, wi) => <tspan key={wi} x={x} dy={wi === 0 ? 0 : 10}>{w}</tspan>)}
         </text>;
       })}
       {intentScores && poly(intentScores, '#555', 0.15)}
-      {poly(scores, '#FF1E00', 0.12)}
-      {scores.map((v, i) => { const [x, y] = pt(i, v); return <circle key={i} cx={x} cy={y} r={3} fill="#FF1E00" />; })}
+      {poly(scores, oxx.accent, 0.12)}
+      {scores.map((v, i) => { const [x, y] = pt(i, v); return <circle key={i} cx={x} cy={y} r={3} fill={oxx.accent} />; })}
       {intentScores && intentScores.map((v, i) => { const [x, y] = pt(i, v); return <circle key={`i${i}`} cx={x} cy={y} r={2.5} fill="rgba(255,255,255,0.3)" />; })}
     </svg>
   );
@@ -112,14 +118,14 @@ export function CompareBar({ label, values, colors }: {
 }) {
   return (
     <div style={{ marginBottom: 12 }}>
-      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', marginBottom: 6 }}>{label}</div>
+      <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.35)', marginBottom: 6 }}>{label}</div>
       <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
         {values.map((v, i) => (
           <div key={i} style={{ flex: 1 }}>
             <div style={{ height: 8, background: 'rgba(255,255,255,0.04)', borderRadius: 6, overflow: 'hidden' }}>
               <div style={{ height: '100%', width: `${v * 100}%`, background: colors[i], borderRadius: 6, transition: 'width 0.4s ease' }} />
             </div>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: colors[i], marginTop: 3, textAlign: 'center' }}>{Math.round(v * 100)}</div>
+            <div style={{ fontFamily: oxx.mono, fontSize: 9, color: colors[i], marginTop: 3, textAlign: 'center' }}>{Math.round(v * 100)}</div>
           </div>
         ))}
       </div>
@@ -154,14 +160,14 @@ export function ConstraintZone({ baseRules, intents }: {
     return score >= 2 ? 'allowed' : score >= 0 ? 'risky' : 'blocked';
   };
   const zc: Record<string, { bg: string; border: string; text: string }> = {
-    allowed: { bg: 'rgba(255,30,0,0.12)', border: 'rgba(255,30,0,0.4)', text: '#FF1E00' },
+    allowed: { bg: 'rgba(255,30,0,0.12)', border: 'rgba(255,30,0,0.4)', text: oxx.accent },
     risky: { bg: 'rgba(93,255,217,0.08)', border: 'rgba(93,255,217,0.3)', text: 'rgba(93,255,217,0.7)' },
     blocked: { bg: 'rgba(255,60,60,0.06)', border: 'rgba(255,60,60,0.2)', text: 'rgba(255,60,60,0.4)' },
     neutral: { bg: 'rgba(255,255,255,0.03)', border: 'rgba(255,255,255,0.1)', text: 'rgba(255,255,255,0.3)' },
   };
   return (
     <div style={{ position: 'relative', width: '100%', height: 380, background: 'rgba(255,255,255,0.02)', borderRadius: 16, boxShadow: '0 0 0 1px rgba(255,255,255,0.04), 0 2px 8px rgba(0,0,0,0.2)' }}>
-      <div style={{ position: 'absolute', top: 16, left: 18, display: 'flex', gap: 16, fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}>
+      <div style={{ position: 'absolute', top: 16, left: 18, display: 'flex', gap: 16, fontSize: 10, fontFamily: oxx.mono }}>
         {(['allowed', 'risky', 'blocked'] as const).map(z => (
           <span key={z} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             <span style={{ width: 8, height: 8, borderRadius: 4, background: zc[z].border }} />
@@ -175,7 +181,7 @@ export function ConstraintZone({ baseRules, intents }: {
           <div key={i} style={{
             position: 'absolute', left: `${s.x}%`, top: `${s.y}%`, transform: 'translate(-50%, -50%)',
             padding: '8px 16px', background: c.bg, borderRadius: 10,
-            fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: c.text,
+            fontSize: 11, fontFamily: oxx.mono, color: c.text,
             transition: 'all 0.3s ease', cursor: zone === 'blocked' ? 'not-allowed' : 'pointer',
             boxShadow: `0 0 0 1px ${c.border}`,
           }}>
@@ -213,11 +219,11 @@ export function PipelineDiagram({ currentStep }: { currentStep: string }) {
           <g key={n.id}>
             <rect x={n.x - 34} y={32} width={68} height={36} rx={10}
               fill={isA ? 'rgba(255,30,0,0.15)' : isP ? 'rgba(255,30,0,0.05)' : 'rgba(255,255,255,0.02)'}
-              stroke={isA ? '#FF1E00' : isP ? 'rgba(255,30,0,0.3)' : 'rgba(255,255,255,0.08)'} strokeWidth={1.2} />
+              stroke={isA ? oxx.accent : isP ? 'rgba(255,30,0,0.3)' : 'rgba(255,255,255,0.08)'} strokeWidth={1.2} />
             <text x={n.x} y={51} textAnchor="middle" dominantBaseline="middle"
-              fill={isA ? '#FF1E00' : isP ? 'rgba(255,30,0,0.6)' : 'rgba(255,255,255,0.2)'}
-              fontSize={9} fontFamily="'JetBrains Mono', monospace" fontWeight={isA ? 600 : 400}>{n.label}</text>
-            {isP && <circle cx={n.x + 26} cy={40} r={4} fill="#FF1E00" fillOpacity={0.6} />}
+              fill={isA ? oxx.accent : isP ? 'rgba(255,30,0,0.6)' : 'rgba(255,255,255,0.2)'}
+              fontSize={9} fontFamily={oxx.mono} fontWeight={isA ? 600 : 400}>{n.label}</text>
+            {isP && <circle cx={n.x + 26} cy={40} r={4} fill={oxx.accent} fillOpacity={0.6} />}
           </g>
         );
       })}
@@ -229,7 +235,7 @@ export function PipelineDiagram({ currentStep }: { currentStep: string }) {
 
 export function DarkPageWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0a', color: '#fff', fontFamily: "'DM Sans', sans-serif" }}>
+    <div style={{ minHeight: '100vh', background: oxx.void, color: '#fff', fontFamily: oxx.body }}>
       <style>{`
         .dark-lab-page ::-webkit-scrollbar { width: 4px; }
         .dark-lab-page ::-webkit-scrollbar-track { background: transparent; }

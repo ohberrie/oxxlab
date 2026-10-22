@@ -9,8 +9,9 @@ import {
 } from './LabData';
 import {
   DarkLabNav, DarkPageWrapper, Chip, SectionTitle, GlossaryTerm,
-  ExampleButton, RadarChart, CompareBar, ConstraintZone, PipelineDiagram,
+  ExampleButton, RadarChart, fieldLabel, CompareBar, ConstraintZone, PipelineDiagram,
 } from './LabShared';
+import { oxx } from '../tokens';
 
 /* cache-bust */
 export function LabSystemPage() {
@@ -26,7 +27,7 @@ export function LabSystemPage() {
   const [shareNotice, setShareNotice] = useState(false);
 
   const toggleArray = (arr: string[], item: string) => arr.includes(item) ? arr.filter(x => x !== item) : [...arr, item];
-  const stratColors = ['#FF1E00', '#5DFFD9', '#ff6b6b', '#ffd93d'];
+  const stratColors = [oxx.accent, '#5DFFD9', '#ff6b6b', '#ffd93d'];
 
   const getConstraintExplanation = () => {
     const lines: string[] = [];
@@ -69,7 +70,7 @@ export function LabSystemPage() {
   const renderBaseRules = () => (
     <div>
       <SectionTitle num="01" label="Base Rules" />
-      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 20 }}>
+      <p style={{ fontFamily: oxx.body, fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 20 }}>
         {expertMode ? 'Define world-level premises. Domain, spatiotemporal axes, visibility emphasis, actor structure, constraint hardness.'
           : <>Define the world conditions. Hover any <GlossaryTerm term="Base Rules" expert={expertMode}>underlined term</GlossaryTerm> for a definition.</>}
       </p>
@@ -79,24 +80,24 @@ export function LabSystemPage() {
           { label: 'Domain', opts: DOMAINS, val: baseRules.domain, set: (d: string) => setBaseRules({ ...baseRules, domain: d }) },
         ].map(({ label, opts, val, set }) => (
           <div key={label} style={{ marginBottom: 32 }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>{label}</div>
+            <div style={fieldLabel}>{label}</div>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>{opts.map(o => <Chip key={o} label={o} active={val === o} onClick={() => set(o)} />)}</div>
           </div>
         ))}
         <div style={{ marginBottom: 32 }}>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>World Axes</div>
+          <div style={fieldLabel}>World Axes</div>
           <div style={{ display: 'flex', gap: 10 }}>{WORLD_AXES.map(w => <Chip key={w} label={w} active={baseRules.world.includes(w)} onClick={() => setBaseRules({ ...baseRules, world: toggleArray(baseRules.world, w) })} />)}</div>
         </div>
         <div style={{ marginBottom: 32 }}>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Visibility Emphasis</div>
+          <div style={fieldLabel}>Visibility Emphasis</div>
           <div style={{ display: 'flex', gap: 10 }}>{VISIBILITY.map(v => <Chip key={v} label={v} active={baseRules.visibility === v} onClick={() => setBaseRules({ ...baseRules, visibility: v })} />)}</div>
         </div>
         <div style={{ marginBottom: 32 }}>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Main Actor</div>
+          <div style={fieldLabel}>Main Actor</div>
           <div style={{ display: 'flex', gap: 10 }}>{ACTORS.map(a => <Chip key={a} label={a} active={baseRules.actor === a} onClick={() => setBaseRules({ ...baseRules, actor: a })} />)}</div>
         </div>
         <div style={{ marginBottom: 32 }}>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Constraint Type</div>
+          <div style={fieldLabel}>Constraint Type</div>
           <div style={{ display: 'flex', gap: 10 }}>{CONSTRAINT_TYPES.map(c => <Chip key={c} label={c} active={baseRules.constraints.includes(c)} onClick={() => setBaseRules({ ...baseRules, constraints: toggleArray(baseRules.constraints, c) })} />)}</div>
         </div>
       </div>
@@ -106,26 +107,26 @@ export function LabSystemPage() {
   const renderIntent = () => (
     <div>
       <SectionTitle num="02" label="Intent Vector" />
-      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 20 }}>
+      <p style={{ fontFamily: oxx.body, fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 20 }}>
         {expertMode ? 'Structured meaning input. Emotional tone × identity positioning × narrative function.'
           : <>Not a mood board. Each <GlossaryTerm term="Intent Vector" expert={expertMode}>intent</GlossaryTerm> narrows the strategy space.</>}
       </p>
       <ExampleButton label={EXAMPLE_PRESETS.intent.label} onClick={() => setIntents(EXAMPLE_PRESETS.intent.data)} />
       <div style={{ marginTop: 24, marginBottom: 32 }}>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
+        <div style={fieldLabel}>
           <GlossaryTerm term="Emotional Tone" expert={expertMode}>Emotional Tone</GlossaryTerm>
           {intents.tones.length > 3 && <span style={{ color: 'rgba(255,180,0,0.7)', marginLeft: 8 }}>narrowing recommended</span>}
         </div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>{EMOTIONAL_TONES.map(t => <Chip key={t} label={t} active={intents.tones.includes(t)} onClick={() => setIntents({ ...intents, tones: toggleArray(intents.tones, t) })} />)}</div>
       </div>
       <div style={{ marginBottom: 32 }}>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
+        <div style={fieldLabel}>
           <GlossaryTerm term="Identity Positioning" expert={expertMode}>Identity Positioning</GlossaryTerm>
         </div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>{IDENTITY_POSITIONS.map(p => <Chip key={p} label={p} active={intents.positions.includes(p)} onClick={() => setIntents({ ...intents, positions: toggleArray(intents.positions, p) })} />)}</div>
       </div>
       <div style={{ marginBottom: 32 }}>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
+        <div style={fieldLabel}>
           <GlossaryTerm term="Narrative Function" expert={expertMode}>Narrative Function</GlossaryTerm> <span style={{ opacity: 0.5 }}>(1–2 max)</span>
         </div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
@@ -140,7 +141,7 @@ export function LabSystemPage() {
   const renderConstraint = () => (
     <div>
       <SectionTitle num="03" label="Constraint Compiler" />
-      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 28 }}>
+      <p style={{ fontFamily: oxx.body, fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 28 }}>
         {expertMode ? 'Base Rules + Intent → compressed strategy space.'
           : <><GlossaryTerm term="Constraint Compiler" expert={expertMode}>Rules + Intent</GlossaryTerm> compress the possible strategy space.</>}
       </p>
@@ -151,7 +152,7 @@ export function LabSystemPage() {
   const renderStrategy = () => (
     <div>
       <SectionTitle num="04" label="Form Strategy Explorer" />
-      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 20 }}>
+      <p style={{ fontFamily: oxx.body, fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 20 }}>
         {expertMode ? 'Three structural layers. Configure, snapshot, compare.'
           : <>Structural choices across three layers of <GlossaryTerm term="Form Strategy" expert={expertMode}>form strategy</GlossaryTerm>.</>}
       </p>
@@ -161,10 +162,10 @@ export function LabSystemPage() {
         { title: 'C. Material / Light / Media', data: MATERIAL, key: 'material' as const },
       ].map(layer => (
         <div key={layer.key} style={{ marginBottom: 40 }}>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(255,30,0,0.5)', marginBottom: 14 }}>{layer.title}</div>
+          <div style={{ fontFamily: oxx.mono, fontSize: 11, color: 'rgba(255,30,0,0.5)', marginBottom: 14 }}>{layer.title}</div>
           {Object.entries(layer.data).map(([param, opts]) => (
             <div key={param} style={{ marginBottom: 18 }}>
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>{param}</div>
+              <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>{param}</div>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 {opts.map(o => <Chip key={o} label={o} active={strategySelections[layer.key]?.[param] === o}
                   onClick={() => setStrategySelections({ ...strategySelections, [layer.key]: { ...strategySelections[layer.key], [param]: o } })} />)}
@@ -175,23 +176,23 @@ export function LabSystemPage() {
       ))}
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: 24, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
         <button onClick={saveCurrentStrategy} disabled={savedStrategies.length >= 4} style={{
-          padding: '10px 24px', fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+          padding: '10px 24px', fontFamily: oxx.mono, fontSize: 11,
           background: savedStrategies.length >= 4 ? 'rgba(255,255,255,0.05)' : 'rgba(255,30,0,0.1)',
-          color: savedStrategies.length >= 4 ? 'rgba(255,255,255,0.2)' : '#FF1E00',
+          color: savedStrategies.length >= 4 ? 'rgba(255,255,255,0.2)' : oxx.accent,
           border: 'none', borderRadius: 8,
           boxShadow: savedStrategies.length >= 4 ? 'none' : '0 0 0 1px rgba(255,30,0,0.2)',
           cursor: savedStrategies.length >= 4 ? 'not-allowed' : 'pointer',
           transition: 'all 0.25s ease',
         }}>+ Save Snapshot ({savedStrategies.length}/4)</button>
-        <button onClick={handleShare} style={{ padding: '10px 20px', fontFamily: "'JetBrains Mono', monospace", fontSize: 11, background: 'transparent', color: 'rgba(255,255,255,0.3)', border: 'none', borderRadius: 8, cursor: 'pointer', boxShadow: '0 0 0 1px rgba(255,255,255,0.06)', transition: 'all 0.25s ease' }}>
+        <button onClick={handleShare} style={{ padding: '10px 20px', fontFamily: oxx.mono, fontSize: 11, background: 'transparent', color: 'rgba(255,255,255,0.3)', border: 'none', borderRadius: 8, cursor: 'pointer', boxShadow: '0 0 0 1px rgba(255,255,255,0.06)', transition: 'all 0.25s ease' }}>
           {shareNotice ? '✓ Copied' : 'Share URL'}
         </button>
       </div>
       {savedStrategies.length > 0 && (
         <div style={{ marginTop: 28 }}>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Compare Strategies</div>
+          <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Compare Strategies</div>
           <div style={{ marginBottom: 24, padding: 24, background: 'rgba(255,255,255,0.03)', borderRadius: 16, boxShadow: '0 0 0 1px rgba(255,255,255,0.04), 0 2px 8px rgba(0,0,0,0.15)' }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.25)', marginBottom: 12 }}>
+            <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.25)', marginBottom: 12 }}>
               {savedStrategies.map(s => <span key={s.id} style={{ color: s.color, marginRight: 14 }}>■ {s.label}</span>)}
             </div>
             {COMPARE_METRICS.map(m => <CompareBar key={m.key} label={m.label} values={savedStrategies.map(s => s.compareScores[m.key])} colors={savedStrategies.map(s => s.color)} />)}
@@ -199,8 +200,8 @@ export function LabSystemPage() {
           <div style={{ display: 'grid', gridTemplateColumns: `repeat(${savedStrategies.length}, 1fr)`, gap: 12 }}>
             {savedStrategies.map(s => (
               <div key={s.id} style={{ padding: 20, background: 'rgba(255,255,255,0.03)', borderRadius: 16, boxShadow: `0 0 0 1px ${s.color}22, 0 2px 8px rgba(0,0,0,0.15)` }}>
-                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: s.color, marginBottom: 12 }}>{s.label}</div>
-                {Object.entries(s.spatial).map(([k, v]) => <div key={k} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', marginBottom: 3 }}>{k}: <span style={{ color: 'rgba(255,255,255,0.6)' }}>{v}</span></div>)}
+                <div style={{ fontFamily: oxx.mono, fontSize: 12, color: s.color, marginBottom: 12 }}>{s.label}</div>
+                {Object.entries(s.spatial).map(([k, v]) => <div key={k} style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.35)', marginBottom: 3 }}>{k}: <span style={{ color: 'rgba(255,255,255,0.6)' }}>{v}</span></div>)}
                 <div style={{ marginTop: 10 }}><RadarChart scores={s.scores} labels={EVAL_METRICS.map(m => m.split(' ')[0])} size={130} /></div>
               </div>
             ))}
@@ -213,22 +214,22 @@ export function LabSystemPage() {
   const renderImplementation = () => (
     <div>
       <SectionTitle num="05" label="Implementation Preview" />
-      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 28 }}>
+      <p style={{ fontFamily: oxx.body, fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 28 }}>
         {expertMode ? 'Strategy → reality. Complexity, fabrication, camera, cost.'
           : <>Not a final render. Where your strategy meets real-world constraints.</>}
       </p>
       <div style={{ marginBottom: 36 }}>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Complexity Level</div>
+        <div style={{ ...fieldLabel, marginBottom: 12 }}>Complexity Level</div>
         <div style={{ display: 'flex', gap: 10 }}>{['low', 'medium', 'high'].map(c => <Chip key={c} label={c} active={implSettings.complexity === c} onClick={() => setImplSettings({ ...implSettings, complexity: c })} />)}</div>
       </div>
       <div style={{ marginBottom: 36 }}>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Constraint Toggles</div>
+        <div style={{ ...fieldLabel, marginBottom: 12 }}>Constraint Toggles</div>
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           {[{ key: 'fabrication' as const, label: 'Fabrication Constraint' }, { key: 'camera' as const, label: 'Camera Emphasis' }].map(t => (
             <button key={t.key} onClick={() => setImplSettings({ ...implSettings, [t.key]: !implSettings[t.key] })} style={{
-              padding: '8px 16px', fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
+              padding: '8px 16px', fontFamily: oxx.mono, fontSize: 11,
               background: implSettings[t.key] ? 'rgba(255,30,0,0.08)' : 'transparent',
-              color: implSettings[t.key] ? '#FF1E00' : 'rgba(255,255,255,0.3)',
+              color: implSettings[t.key] ? oxx.accent : 'rgba(255,255,255,0.3)',
               border: 'none', borderRadius: 8, cursor: 'pointer', transition: 'all 0.25s ease',
               boxShadow: implSettings[t.key] ? '0 0 0 1px rgba(255,30,0,0.2)' : '0 0 0 1px rgba(255,255,255,0.06)',
             }}>{implSettings[t.key] ? '●' : '○'} {t.label}</button>
@@ -236,12 +237,12 @@ export function LabSystemPage() {
         </div>
       </div>
       <div style={{ marginBottom: 36 }}>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Cost / Time Sensitivity</div>
+        <div style={{ ...fieldLabel, marginBottom: 12 }}>Cost / Time Sensitivity</div>
         <div style={{ display: 'flex', gap: 10 }}>{['low', 'moderate', 'high'].map(c => <Chip key={c} label={c} active={implSettings.costSensitivity === c} onClick={() => setImplSettings({ ...implSettings, costSensitivity: c })} />)}</div>
       </div>
       {/* Massing Preview */}
       <div style={{ marginBottom: 36 }}>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14 }}>Diagrammatic Massing Preview</div>
+        <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14 }}>Diagrammatic Massing Preview</div>
         <svg width="100%" height={200} viewBox="0 0 600 200" style={{ background: 'rgba(255,255,255,0.02)', borderRadius: 16, boxShadow: '0 0 0 1px rgba(255,255,255,0.04), 0 2px 8px rgba(0,0,0,0.15)' }}>
           {(() => {
             const sym = strategySelections.spatial?.symmetry;
@@ -257,30 +258,30 @@ export function LabSystemPage() {
               const h = 40 + (i % 3) * 25;
               const op = 0.15 + (i / count) * 0.3;
               if (curv === 'Organic' || curv === 'Parametric')
-                els.push(<ellipse key={i} cx={x} cy={y} rx={w * 0.7} ry={h * 0.5} fill="none" stroke="#FF1E00" strokeWidth={1} opacity={op} />);
+                els.push(<ellipse key={i} cx={x} cy={y} rx={w * 0.7} ry={h * 0.5} fill="none" stroke={oxx.accent} strokeWidth={1} opacity={op} />);
               else
-                els.push(<rect key={i} x={x - w / 2} y={y - h / 2} width={w} height={h} rx={curv === 'Angular' ? 0 : 2} fill="none" stroke="#FF1E00" strokeWidth={1} opacity={op} />);
+                els.push(<rect key={i} x={x - w / 2} y={y - h / 2} width={w} height={h} rx={curv === 'Angular' ? 0 : 2} fill="none" stroke={oxx.accent} strokeWidth={1} opacity={op} />);
               if (implSettings.camera)
                 els.push(<line key={`cam${i}`} x1={300} y1={190} x2={x} y2={y} stroke="rgba(255,255,255,0.04)" strokeWidth={0.5} strokeDasharray="2 4" />);
             }
             if (implSettings.fabrication) {
               els.push(<line key="fab" x1={20} y1={170} x2={580} y2={170} stroke="rgba(255,60,60,0.15)" strokeWidth={1} strokeDasharray="6 4" />);
-              els.push(<text key="fabt" x={585} y={174} fill="rgba(255,60,60,0.3)" fontSize={8} fontFamily="'JetBrains Mono', monospace" textAnchor="end">fabrication limit</text>);
+              els.push(<text key="fabt" x={585} y={174} fill="rgba(255,60,60,0.3)" fontSize={8} fontFamily={oxx.mono} textAnchor="end">fabrication limit</text>);
             }
             if (implSettings.camera) {
               els.push(<polygon key="camicon" points="290,185 300,175 310,185" fill="rgba(255,255,255,0.15)" />);
-              els.push(<text key="camt" x={300} y={196} fill="rgba(255,255,255,0.2)" fontSize={7} fontFamily="'JetBrains Mono', monospace" textAnchor="middle">camera POV</text>);
+              els.push(<text key="camt" x={300} y={196} fill="rgba(255,255,255,0.2)" fontSize={7} fontFamily={oxx.mono} textAnchor="middle">camera POV</text>);
             }
             return els;
           })()}
         </svg>
       </div>
       <div>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Related Cases</div>
+        <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Related Cases</div>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           {CASES.filter(c => c.domain === baseRules.domain || !baseRules.domain).slice(0, 2).map(c => (
             <button key={c.id} onClick={() => navigate(`/lab/cases/${c.id}`)} style={{
-              padding: '8px 14px', fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
+              padding: '8px 14px', fontFamily: oxx.mono, fontSize: 10,
               background: 'rgba(255,255,255,0.03)', border: 'none',
               color: 'rgba(255,255,255,0.4)', borderRadius: 8, cursor: 'pointer',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.06)', transition: 'all 0.25s ease',
@@ -294,7 +295,7 @@ export function LabSystemPage() {
   const renderEvaluation = () => (
     <div>
       <SectionTitle num="06" label="Evaluation" />
-      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 28 }}>
+      <p style={{ fontFamily: oxx.body, fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 28 }}>
         {expertMode ? 'Perceptual metrics: saliency, density, clarity, flow, arousal.'
           : <>Reveals <GlossaryTerm term="Mismatch" expert={expertMode}>mismatches</GlossaryTerm> between intent and perception.</>}
       </p>
@@ -302,15 +303,15 @@ export function LabSystemPage() {
         <RadarChart scores={evalScores} intentScores={[0.85, 0.5, 0.9, 0.7, 0.75]} labels={EVAL_METRICS} size={280} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginBottom: 32 }}>
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{ width: 10, height: 3, background: '#FF1E00', display: 'inline-block' }} /> Perceived
+        <span style={{ fontFamily: oxx.mono, fontSize: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ width: 10, height: 3, background: oxx.accent, display: 'inline-block' }} /> Perceived
         </span>
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.4)' }}>
+        <span style={{ fontFamily: oxx.mono, fontSize: 10, display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,0.4)' }}>
           <span style={{ width: 10, height: 3, background: 'rgba(255,255,255,0.3)', display: 'inline-block' }} /> Intended
         </span>
       </div>
       <div style={{ marginBottom: 28 }}>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14 }}>Alignment Analysis</div>
+        <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14 }}>Alignment Analysis</div>
         {EVAL_METRICS.map((m, i) => {
           const intended = [0.85, 0.5, 0.9, 0.7, 0.75][i]; const perceived = evalScores[i];
           const diff = Math.abs(intended - perceived);
@@ -318,33 +319,33 @@ export function LabSystemPage() {
           const sc = status === 'aligned' ? 'rgba(255,30,0,0.6)' : status === 'drift' ? 'rgba(255,180,0,0.6)' : 'rgba(255,60,60,0.6)';
           return (
             <div key={m} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(255,255,255,0.5)', width: 140 }}>
+              <div style={{ fontFamily: oxx.mono, fontSize: 11, color: 'rgba(255,255,255,0.5)', width: 140 }}>
                 <GlossaryTerm term={m} expert={expertMode}>{m}</GlossaryTerm>
               </div>
               <div style={{ flex: 1, height: 6, background: 'rgba(255,255,255,0.04)', borderRadius: 3, position: 'relative' }}>
                 <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${intended * 100}%`, background: 'rgba(255,255,255,0.08)', borderRadius: 3 }} />
                 <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${perceived * 100}%`, background: sc, borderRadius: 3 }} />
               </div>
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: sc, width: 70, textAlign: 'right', textTransform: 'uppercase' }}>{status}</div>
+              <div style={{ fontFamily: oxx.mono, fontSize: 9, color: sc, width: 70, textAlign: 'right', textTransform: 'uppercase' }}>{status}</div>
             </div>
           );
         })}
       </div>
       <div style={{ padding: 20, background: 'rgba(255,60,60,0.04)', borderRadius: 12, boxShadow: '0 0 0 1px rgba(255,60,60,0.1), 0 2px 8px rgba(0,0,0,0.1)', marginBottom: 36 }}>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,60,60,0.6)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Diagnostic</div>
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, margin: 0 }}>
+        <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,60,60,0.6)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Diagnostic</div>
+        <p style={{ fontFamily: oxx.body, fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, margin: 0 }}>
           High visual saliency but moderate attention flow suggests spatial hierarchy may be competing with focal points.
         </p>
       </div>
       <div>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Adjust Perceived Scores</div>
+        <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Adjust Perceived Scores</div>
         {EVAL_METRICS.map((m, i) => (
           <div key={m} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.4)', width: 120 }}>{m}</div>
+            <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.4)', width: 120 }}>{m}</div>
             <input type="range" min={0} max={100} value={evalScores[i] * 100}
               onChange={e => { const n = [...evalScores]; n[i] = Number(e.target.value) / 100; setEvalScores(n); }}
-              style={{ flex: 1, accentColor: '#FF1E00' }} />
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#FF1E00', width: 36, textAlign: 'right' }}>{Math.round(evalScores[i] * 100)}</div>
+              style={{ flex: 1, accentColor: oxx.accent }} />
+            <div style={{ fontFamily: oxx.mono, fontSize: 10, color: oxx.accent, width: 36, textAlign: 'right' }}>{Math.round(evalScores[i] * 100)}</div>
           </div>
         ))}
       </div>
@@ -365,14 +366,14 @@ export function LabSystemPage() {
   const renderRightPanel = () => {
     if (systemStep === 'base') {
       return (<div>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Current Selection</div>
-        {baseRules.domain && <div style={{ marginBottom: 10 }}><span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>Domain: </span><span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#FF1E00' }}>{baseRules.domain}</span></div>}
-        {baseRules.world.length > 0 && <div style={{ marginBottom: 10 }}><span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>World: </span><span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>{baseRules.world.join(', ')}</span></div>}
-        {baseRules.visibility && <div style={{ marginBottom: 10 }}><span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>Visibility: </span><span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>{baseRules.visibility}</span></div>}
+        <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Current Selection</div>
+        {baseRules.domain && <div style={{ marginBottom: 10 }}><span style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>Domain: </span><span style={{ fontFamily: oxx.mono, fontSize: 12, color: oxx.accent }}>{baseRules.domain}</span></div>}
+        {baseRules.world.length > 0 && <div style={{ marginBottom: 10 }}><span style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>World: </span><span style={{ fontFamily: oxx.mono, fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>{baseRules.world.join(', ')}</span></div>}
+        {baseRules.visibility && <div style={{ marginBottom: 10 }}><span style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>Visibility: </span><span style={{ fontFamily: oxx.mono, fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>{baseRules.visibility}</span></div>}
         {baseRules.domain && (
           <div style={{ marginTop: 20, padding: 14, background: 'rgba(255,255,255,0.02)', borderRadius: 16, boxShadow: '0 0 0 1px rgba(255,255,255,0.04), 0 2px 8px rgba(0,0,0,0.15)' }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,30,0,0.4)', marginBottom: 8, textTransform: 'uppercase' }}>What this means</div>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6, margin: 0 }}>
+            <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,30,0,0.4)', marginBottom: 8, textTransform: 'uppercase' }}>What this means</div>
+            <p style={{ fontFamily: oxx.body, fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6, margin: 0 }}>
               {baseRules.domain === 'Stage' && 'Front-facing perception, camera legibility constraints, temporal sequencing within performance duration.'}
               {baseRules.domain === 'Exhibition' && 'Spatial circulation, multi-angle encounter, self-paced viewer engagement.'}
               {baseRules.domain === 'Object' && 'Haptic proximity, 360° legibility, material-first perception hierarchy.'}
@@ -385,7 +386,7 @@ export function LabSystemPage() {
     }
     if (systemStep === 'intent') {
       return (<div>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Intent Constellation</div>
+        <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Intent Constellation</div>
         <svg width="100%" height={200} viewBox="0 0 200 200">
           <circle cx={100} cy={100} r={80} fill="none" stroke="rgba(255,255,255,0.04)" />
           <circle cx={100} cy={100} r={50} fill="none" stroke="rgba(255,255,255,0.04)" />
@@ -394,52 +395,52 @@ export function LabSystemPage() {
             const rad = 45 + (i % 2) * 25;
             const x = 100 + rad * Math.cos(a), y = 100 + rad * Math.sin(a);
             return (<g key={t}>
-              <circle cx={x} cy={y} r={4} fill="#FF1E00" fillOpacity={0.6} />
-              <text x={x} y={y - 10} textAnchor="middle" fill="rgba(255,30,0,0.7)" fontSize={8} fontFamily="'JetBrains Mono', monospace">{t}</text>
+              <circle cx={x} cy={y} r={4} fill={oxx.accent} fillOpacity={0.6} />
+              <text x={x} y={y - 10} textAnchor="middle" fill="rgba(255,30,0,0.7)" fontSize={8} fontFamily={oxx.mono}>{t}</text>
               <line x1={100} y1={100} x2={x} y2={y} stroke="rgba(255,30,0,0.1)" strokeWidth={0.8} />
             </g>);
           })}
-          {intents.tones.length === 0 && <text x={100} y={100} textAnchor="middle" fill="rgba(255,255,255,0.15)" fontSize={10} fontFamily="'JetBrains Mono', monospace">select tones</text>}
+          {intents.tones.length === 0 && <text x={100} y={100} textAnchor="middle" fill="rgba(255,255,255,0.15)" fontSize={10} fontFamily={oxx.mono}>select tones</text>}
         </svg>
       </div>);
     }
     if (systemStep === 'constraint') {
       return (<div>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Constraint Analysis</div>
+        <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Constraint Analysis</div>
         {getConstraintExplanation().map((line, i) => (
           <div key={i} style={{ padding: 14, marginBottom: 10, background: 'rgba(255,255,255,0.03)', borderRadius: 12, boxShadow: '0 0 0 1px rgba(255,255,255,0.04)' }}>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.45)', margin: 0, lineHeight: 1.5 }}>{line}</p>
+            <p style={{ fontFamily: oxx.body, fontSize: 12, color: 'rgba(255,255,255,0.45)', margin: 0, lineHeight: 1.5 }}>{line}</p>
           </div>
         ))}
       </div>);
     }
     if (systemStep === 'strategy') {
       return (<div>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Current Configuration</div>
+        <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Current Configuration</div>
         {(['spatial', 'form', 'material'] as const).map(l => Object.entries(strategySelections[l] || {}).length > 0 && (
           <div key={l} style={{ marginBottom: 14 }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,30,0,0.4)', marginBottom: 6, textTransform: 'uppercase' }}>{l}</div>
-            {Object.entries(strategySelections[l]).map(([k, v]) => <div key={k} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 3 }}>{k}: <span style={{ color: 'rgba(255,255,255,0.7)' }}>{v}</span></div>)}
+            <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,30,0,0.4)', marginBottom: 6, textTransform: 'uppercase' }}>{l}</div>
+            {Object.entries(strategySelections[l]).map(([k, v]) => <div key={k} style={{ fontFamily: oxx.mono, fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 3 }}>{k}: <span style={{ color: 'rgba(255,255,255,0.7)' }}>{v}</span></div>)}
           </div>
         ))}
       </div>);
     }
     if (systemStep === 'implementation') {
       return (<div>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Implementation Notes</div>
+        <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Implementation Notes</div>
         <div style={{ padding: 16, background: 'rgba(255,255,255,0.03)', borderRadius: 12, boxShadow: '0 0 0 1px rgba(255,255,255,0.04)' }}>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.4)', margin: 0, lineHeight: 1.6 }}>
-            Complexity: <span style={{ color: '#FF1E00' }}>{implSettings.complexity}</span>
+          <p style={{ fontFamily: oxx.body, fontSize: 12, color: 'rgba(255,255,255,0.4)', margin: 0, lineHeight: 1.6 }}>
+            Complexity: <span style={{ color: oxx.accent }}>{implSettings.complexity}</span>
           </p>
         </div>
       </div>);
     }
     if (systemStep === 'evaluation') {
       return (<div>
-        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Mismatch Notes</div>
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6, marginBottom: 16 }}>Mismatches are data points for iteration, not failures.</p>
+        <div style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>Mismatch Notes</div>
+        <p style={{ fontFamily: oxx.body, fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6, marginBottom: 16 }}>Mismatches are data points for iteration, not failures.</p>
         <div style={{ padding: 16, background: 'rgba(255,255,255,0.03)', borderRadius: 12, boxShadow: '0 0 0 1px rgba(255,255,255,0.04)' }}>
-          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.35)', margin: 0, lineHeight: 1.6 }}>Drag sliders to simulate different evaluation outcomes.</p>
+          <p style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.35)', margin: 0, lineHeight: 1.6 }}>Drag sliders to simulate different evaluation outcomes.</p>
         </div>
       </div>);
     }
@@ -454,25 +455,25 @@ export function LabSystemPage() {
       <div style={{ display: 'flex', height: 'calc(100vh - 56px)', overflow: 'hidden' }}>
         {/* Left sidebar */}
         <div style={{ width: 210, boxShadow: '1px 0 0 rgba(255,255,255,0.04)', padding: '28px 0', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: 'rgba(255,255,255,0.2)', textTransform: 'uppercase', letterSpacing: '0.12em', padding: '0 20px', marginBottom: 20 }}>System Pipeline</div>
+          <div style={{ fontFamily: oxx.mono, fontSize: 9, color: 'rgba(255,255,255,0.2)', textTransform: 'uppercase', letterSpacing: '0.12em', padding: '0 20px', marginBottom: 20 }}>System Pipeline</div>
           {/* Intro item */}
-          <button onClick={() => setSystemStep('intro')} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 20px', background: isIntro ? 'rgba(255,30,0,0.04)' : 'transparent', border: 'none', borderLeft: isIntro ? '2px solid #FF1E00' : '2px solid transparent', cursor: 'pointer', marginBottom: 8 }}>
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: isIntro ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.4)', fontWeight: isIntro ? 500 : 400 }}>Overview</span>
+          <button onClick={() => setSystemStep('intro')} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 20px', background: isIntro ? 'rgba(255,30,0,0.04)' : 'transparent', border: 'none', borderLeft: isIntro ? `2px solid ${oxx.accent}` : '2px solid transparent', cursor: 'pointer', marginBottom: 8 }}>
+            <span style={{ fontFamily: oxx.body, fontSize: 13, color: isIntro ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.4)', fontWeight: isIntro ? 500 : 400 }}>Overview</span>
           </button>
           <div style={{ height: 1, background: 'rgba(255,255,255,0.04)', margin: '0 20px 8px' }} />
           {STEPS.map((s, i) => {
             const isA = systemStep === s.id; const isP = !isIntro && i < si;
-            return (<button key={s.id} onClick={() => setSystemStep(s.id)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 20px', background: isA ? 'rgba(255,30,0,0.04)' : 'transparent', border: 'none', borderLeft: isA ? '2px solid #FF1E00' : '2px solid transparent', cursor: 'pointer' }}>
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: isA ? '#FF1E00' : isP ? 'rgba(255,30,0,0.3)' : 'rgba(255,255,255,0.15)' }}>{s.num}</span>
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: isA ? 'rgba(255,255,255,0.9)' : isP ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.25)', fontWeight: isA ? 500 : 400 }}>{s.label}</span>
+            return (<button key={s.id} onClick={() => setSystemStep(s.id)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 20px', background: isA ? 'rgba(255,30,0,0.04)' : 'transparent', border: 'none', borderLeft: isA ? `2px solid ${oxx.accent}` : '2px solid transparent', cursor: 'pointer' }}>
+              <span style={{ fontFamily: oxx.mono, fontSize: 10, color: isA ? oxx.accent : isP ? 'rgba(255,30,0,0.3)' : 'rgba(255,255,255,0.15)' }}>{s.num}</span>
+              <span style={{ fontFamily: oxx.body, fontSize: 13, color: isA ? 'rgba(255,255,255,0.9)' : isP ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.25)', fontWeight: isA ? 500 : 400 }}>{s.label}</span>
               {isP && <span style={{ marginLeft: 'auto', width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,30,0,0.4)' }} />}
             </button>);
           })}
           <div style={{ marginTop: 'auto', padding: '0 20px' }}>
             <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: 16, marginBottom: 16 }}>
               <button onClick={() => setExpertMode(!expertMode)} style={{
-                fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
-                color: expertMode ? '#FF1E00' : 'rgba(255,255,255,0.3)',
+                fontFamily: oxx.mono, fontSize: 10,
+                color: expertMode ? oxx.accent : 'rgba(255,255,255,0.3)',
                 background: expertMode ? 'rgba(255,30,0,0.04)' : 'transparent',
                 border: 'none',
                 boxShadow: expertMode ? '0 0 0 1px rgba(255,30,0,0.2)' : '0 0 0 1px rgba(255,255,255,0.06)',
@@ -480,7 +481,7 @@ export function LabSystemPage() {
                 transition: 'all 0.25s ease',
               }}>{expertMode ? '● Expert' : '○ Beginner'} View</button>
             </div>
-            <button onClick={() => navigate('/lab/cases')} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: 'rgba(255,255,255,0.3)', background: 'none', border: 'none', cursor: 'pointer' }}>→ View Cases</button>
+            <button onClick={() => navigate('/lab/cases')} style={{ fontFamily: oxx.mono, fontSize: 10, color: 'rgba(255,255,255,0.3)', background: 'none', border: 'none', cursor: 'pointer' }}>→ View Cases</button>
           </div>
         </div>
 
@@ -491,8 +492,8 @@ export function LabSystemPage() {
             <div>
               {/* Title section */}
               <div style={{ padding: '60px 36px 0' }}>
-                <h1 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 34, fontWeight: 600, color: '#fff', letterSpacing: '-0.03em', margin: 0, marginBottom: 8 }}>Systems</h1>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: 'rgba(255,255,255,0.35)', margin: 0, marginBottom: 0 }}>A decision interface for meaning, form, and perception</p>
+                <h1 style={{ fontFamily: oxx.body, fontSize: 34, fontWeight: 600, color: '#fff', letterSpacing: '-0.03em', margin: 0, marginBottom: 8 }}>Systems</h1>
+                <p style={{ fontFamily: oxx.body, fontSize: 14, color: 'rgba(255,255,255,0.35)', margin: 0, marginBottom: 0 }}>A decision interface for meaning, form, and perception</p>
               </div>
 
               {/* 3-Column: Meaning / Form / Perception */}
@@ -504,9 +505,9 @@ export function LabSystemPage() {
                     { num: '03', title: 'Perception', desc: 'The test is whether the perceived experience aligns with intended meaning.' },
                   ].map((item, i) => (
                     <div key={i} style={{ padding: '28px 24px', borderTop: '1px solid rgba(255,30,0,0.1)' }}>
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#FF1E00', opacity: 0.5 }}>{item.num}</span>
-                      <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 22, fontWeight: 600, color: '#fff', margin: '10px 0 12px', letterSpacing: '-0.03em' }}>{item.title}</h3>
-                      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, lineHeight: 1.7, color: 'rgba(255,255,255,0.45)', margin: 0 }}>{item.desc}</p>
+                      <span style={{ fontFamily: oxx.mono, fontSize: 10, color: oxx.accent, opacity: 0.5 }}>{item.num}</span>
+                      <h3 style={{ fontFamily: oxx.body, fontSize: 22, fontWeight: 600, color: '#fff', margin: '10px 0 12px', letterSpacing: '-0.03em' }}>{item.title}</h3>
+                      <p style={{ fontFamily: oxx.body, fontSize: 13, lineHeight: 1.7, color: 'rgba(255,255,255,0.45)', margin: 0 }}>{item.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -514,15 +515,15 @@ export function LabSystemPage() {
 
               {/* Pipeline Overview */}
               <div style={{ padding: '60px 36px 40px' }}>
-                <h2 style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 28 }}>Pipeline Overview</h2>
+                <h2 style={{ fontFamily: oxx.mono, fontSize: 11, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 28 }}>Pipeline Overview</h2>
                 <PipelineDiagram currentStep="base" />
               </div>
 
               {/* CTA to start */}
               <div style={{ padding: '0 36px 60px', display: 'flex', justifyContent: 'flex-end' }}>
                 <button onClick={() => setSystemStep('base')} style={{
-                  padding: '12px 28px', fontFamily: "'JetBrains Mono', monospace", fontSize: 12,
-                  letterSpacing: '0.06em', textTransform: 'uppercase', background: '#FF1E00',
+                  padding: '12px 28px', fontFamily: oxx.mono, fontSize: 12,
+                  letterSpacing: '0.06em', textTransform: 'uppercase', background: oxx.accent,
                   color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontWeight: 600,
                   transition: 'all 0.25s ease', boxShadow: '0 2px 8px rgba(255,30,0,0.3)',
                 }}>Begin → 01 Base Rules</button>
@@ -535,10 +536,10 @@ export function LabSystemPage() {
               {stepRenderers[systemStep]?.()}
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 40, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.04)' }}>
                 {si > 0
-                  ? <button onClick={() => setSystemStep(STEPS[si - 1].id)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(255,255,255,0.3)', background: 'none', border: 'none', padding: '8px 20px', borderRadius: 8, cursor: 'pointer', boxShadow: '0 0 0 1px rgba(255,255,255,0.06)', transition: 'all 0.25s ease' }}>← Previous</button>
-                  : <button onClick={() => setSystemStep('intro')} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: 'rgba(255,255,255,0.3)', background: 'none', border: 'none', padding: '8px 20px', borderRadius: 8, cursor: 'pointer', boxShadow: '0 0 0 1px rgba(255,255,255,0.06)', transition: 'all 0.25s ease' }}>← Overview</button>}
+                  ? <button onClick={() => setSystemStep(STEPS[si - 1].id)} style={{ fontFamily: oxx.mono, fontSize: 11, color: 'rgba(255,255,255,0.3)', background: 'none', border: 'none', padding: '8px 20px', borderRadius: 8, cursor: 'pointer', boxShadow: '0 0 0 1px rgba(255,255,255,0.06)', transition: 'all 0.25s ease' }}>← Previous</button>
+                  : <button onClick={() => setSystemStep('intro')} style={{ fontFamily: oxx.mono, fontSize: 11, color: 'rgba(255,255,255,0.3)', background: 'none', border: 'none', padding: '8px 20px', borderRadius: 8, cursor: 'pointer', boxShadow: '0 0 0 1px rgba(255,255,255,0.06)', transition: 'all 0.25s ease' }}>← Overview</button>}
                 {si < STEPS.length - 1 &&
-                  <button onClick={() => setSystemStep(STEPS[si + 1].id)} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#FF1E00', background: 'rgba(255,30,0,0.06)', border: 'none', padding: '8px 20px', borderRadius: 8, cursor: 'pointer', boxShadow: '0 0 0 1px rgba(255,30,0,0.15)', transition: 'all 0.25s ease' }}>Next →</button>}
+                  <button onClick={() => setSystemStep(STEPS[si + 1].id)} style={{ fontFamily: oxx.mono, fontSize: 11, color: oxx.accent, background: 'rgba(255,30,0,0.06)', border: 'none', padding: '8px 20px', borderRadius: 8, cursor: 'pointer', boxShadow: '0 0 0 1px rgba(255,30,0,0.15)', transition: 'all 0.25s ease' }}>Next →</button>}
               </div>
             </>
           )}

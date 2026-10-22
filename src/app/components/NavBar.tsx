@@ -1,5 +1,6 @@
 import { Link, useLocation, useSearchParams } from 'react-router';
 import { OxxUnifiedLogo } from './OxxUnifiedLogo';
+import { oxx } from '../tokens';
 
 interface NavBarProps {
   mode?: 'lab' | 'studio';
@@ -26,12 +27,12 @@ export function NavBar({ mode, dark = false, transparent = false }: NavBarProps)
 
   const aboutLink = isStudio ? '/about?ctx=studio' : '/about?ctx=lab';
 
-  const textColor = dark ? '#fff' : '#141414';
-  const activeUnderline = dark ? '#FF1E00' : '#141414';
-  const hoverEditionsColor = '#FF1E00';
+  const textColor = dark ? '#fff' : oxx.ink;
+  const activeUnderline = dark ? oxx.accent : oxx.ink;
+  const hoverEditionsColor = oxx.accent;
 
   // Accent color for editions
-  const editionsUnderline = '#FF1E00';
+  const editionsUnderline = oxx.accent;
 
   type NavItem = { label: string; path: string; active: boolean; accent?: boolean };
 
@@ -68,11 +69,11 @@ export function NavBar({ mode, dark = false, transparent = false }: NavBarProps)
               to={item.path}
               className="no-underline relative inline-block group"
               style={{
-                fontFamily: "'JetBrains Mono', monospace",
+                fontFamily: oxx.mono,
                 fontSize: 11,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
-                color: item.accent && !dark ? hoverEditionsColor : (dark ? (item.active ? '#FF1E00' : 'rgba(255,255,255,0.4)') : textColor),
+                color: item.accent && !dark ? hoverEditionsColor : (dark ? (item.active ? oxx.accent : 'rgba(255,255,255,0.4)') : textColor),
                 transition: 'color 0.2s',
               }}
             >

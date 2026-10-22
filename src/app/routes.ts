@@ -1,86 +1,55 @@
 import { createBrowserRouter } from 'react-router';
 import { HomePage } from './components/HomePage';
-import { AboutPage } from './components/AboutPage';
-import { LabPage } from './components/LabPage';
-import { LabSystemPage } from './components/LabSystemPage';
-import { LabCasesPage } from './components/LabCasesPage';
-import { ProjectsPage } from './components/ProjectsPage';
-import { NotesPage } from './components/NotesPage';
-import { ShopPage } from './components/ShopPage';
-import { FrameworkPage } from './components/FrameworkPage';
-import {
-  SelectionLogicOverviewPage,
-  SelectionLogicPrinciplePage,
-  SelectionLogicDiagramPage,
-  SelectionLogicExperimentPage,
-  SelectionLogicObservationPage,
-  DenseFieldOverviewPage,
-  DenseFieldPrinciplePage,
-  DenseFieldDiagramPage,
-  DenseFieldExperimentPage,
-  DenseFieldObservationPage,
-  ModularFillOverviewPage,
-  ModularFillPrinciplePage,
-  ModularFillDiagramPage,
-  ModularFillExperimentPage,
-  ModularFillObservationPage,
-  LayerStackOverviewPage,
-  LayerStackPrinciplePage,
-  LayerStackDiagramPage,
-  LayerStackExperimentPage,
-  LayerStackObservationPage,
-} from './components/LabProjectPage';
-import { ShaperConfigurePage } from './components/ShaperConfigurePage';
-import { ShaperLogicPage } from './components/ShaperLogicPage';
 
+// Home ships in the main bundle; every other page is split into its own chunk.
 export const router = createBrowserRouter([
   { path: '/', Component: HomePage },
-  { path: '/about', Component: AboutPage },
-  { path: '/lab', Component: LabPage },
-  { path: '/lab/systems', Component: LabSystemPage },
-  { path: '/lab/cases', Component: LabCasesPage },
-  { path: '/lab/cases/:id', Component: LabCasesPage },
-  { path: '/projects', Component: ProjectsPage },
-  { path: '/notes', Component: NotesPage },
-  { path: '/shop', Component: ShopPage },
-  { path: '/framework', Component: FrameworkPage },
+  { path: '/about', lazy: () => import('./components/AboutPage').then((m) => ({ Component: m.AboutPage })) },
+  { path: '/lab', lazy: () => import('./components/LabPage').then((m) => ({ Component: m.LabPage })) },
+  { path: '/lab/systems', lazy: () => import('./components/LabSystemPage').then((m) => ({ Component: m.LabSystemPage })) },
+  { path: '/lab/cases', lazy: () => import('./components/LabCasesPage').then((m) => ({ Component: m.LabCasesPage })) },
+  { path: '/lab/cases/:id', lazy: () => import('./components/LabCasesPage').then((m) => ({ Component: m.LabCasesPage })) },
+  { path: '/projects', lazy: () => import('./components/ProjectsPage').then((m) => ({ Component: m.ProjectsPage })) },
+  { path: '/notes', lazy: () => import('./components/NotesPage').then((m) => ({ Component: m.NotesPage })) },
+  { path: '/shop', lazy: () => import('./components/ShopPage').then((m) => ({ Component: m.ShopPage })) },
+  { path: '/framework', lazy: () => import('./components/FrameworkPage').then((m) => ({ Component: m.FrameworkPage })) },
 
   // Lab / Selection Logic
-  { path: '/lab/selection-logic', Component: SelectionLogicOverviewPage },
-  { path: '/lab/selection-logic/overview', Component: SelectionLogicOverviewPage },
-  { path: '/lab/selection-logic/principle', Component: SelectionLogicPrinciplePage },
-  { path: '/lab/selection-logic/diagram', Component: SelectionLogicDiagramPage },
-  { path: '/lab/selection-logic/experiment', Component: SelectionLogicExperimentPage },
-  { path: '/lab/selection-logic/observation', Component: SelectionLogicObservationPage },
+  { path: '/lab/selection-logic', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.SelectionLogicOverviewPage })) },
+  { path: '/lab/selection-logic/overview', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.SelectionLogicOverviewPage })) },
+  { path: '/lab/selection-logic/principle', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.SelectionLogicPrinciplePage })) },
+  { path: '/lab/selection-logic/diagram', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.SelectionLogicDiagramPage })) },
+  { path: '/lab/selection-logic/experiment', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.SelectionLogicExperimentPage })) },
+  { path: '/lab/selection-logic/observation', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.SelectionLogicObservationPage })) },
 
   // Lab / Dense Field
-  { path: '/lab/dense-field', Component: DenseFieldOverviewPage },
-  { path: '/lab/dense-field/overview', Component: DenseFieldOverviewPage },
-  { path: '/lab/dense-field/principle', Component: DenseFieldPrinciplePage },
-  { path: '/lab/dense-field/diagram', Component: DenseFieldDiagramPage },
-  { path: '/lab/dense-field/experiment', Component: DenseFieldExperimentPage },
-  { path: '/lab/dense-field/observation', Component: DenseFieldObservationPage },
+  { path: '/lab/dense-field', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.DenseFieldOverviewPage })) },
+  { path: '/lab/dense-field/overview', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.DenseFieldOverviewPage })) },
+  { path: '/lab/dense-field/principle', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.DenseFieldPrinciplePage })) },
+  { path: '/lab/dense-field/diagram', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.DenseFieldDiagramPage })) },
+  { path: '/lab/dense-field/experiment', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.DenseFieldExperimentPage })) },
+  { path: '/lab/dense-field/observation', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.DenseFieldObservationPage })) },
 
   // Lab / Modular Fill
-  { path: '/lab/modular-fill', Component: ModularFillOverviewPage },
-  { path: '/lab/modular-fill/overview', Component: ModularFillOverviewPage },
-  { path: '/lab/modular-fill/principle', Component: ModularFillPrinciplePage },
-  { path: '/lab/modular-fill/diagram', Component: ModularFillDiagramPage },
-  { path: '/lab/modular-fill/experiment', Component: ModularFillExperimentPage },
-  { path: '/lab/modular-fill/observation', Component: ModularFillObservationPage },
+  { path: '/lab/modular-fill', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.ModularFillOverviewPage })) },
+  { path: '/lab/modular-fill/overview', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.ModularFillOverviewPage })) },
+  { path: '/lab/modular-fill/principle', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.ModularFillPrinciplePage })) },
+  { path: '/lab/modular-fill/diagram', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.ModularFillDiagramPage })) },
+  { path: '/lab/modular-fill/experiment', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.ModularFillExperimentPage })) },
+  { path: '/lab/modular-fill/observation', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.ModularFillObservationPage })) },
 
   // Lab / Layer Stack
-  { path: '/lab/layer-stack', Component: LayerStackOverviewPage },
-  { path: '/lab/layer-stack/overview', Component: LayerStackOverviewPage },
-  { path: '/lab/layer-stack/principle', Component: LayerStackPrinciplePage },
-  { path: '/lab/layer-stack/diagram', Component: LayerStackDiagramPage },
-  { path: '/lab/layer-stack/experiment', Component: LayerStackExperimentPage },
-  { path: '/lab/layer-stack/observation', Component: LayerStackObservationPage },
+  { path: '/lab/layer-stack', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.LayerStackOverviewPage })) },
+  { path: '/lab/layer-stack/overview', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.LayerStackOverviewPage })) },
+  { path: '/lab/layer-stack/principle', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.LayerStackPrinciplePage })) },
+  { path: '/lab/layer-stack/diagram', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.LayerStackDiagramPage })) },
+  { path: '/lab/layer-stack/experiment', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.LayerStackExperimentPage })) },
+  { path: '/lab/layer-stack/observation', lazy: () => import('./components/LabProjectPage').then((m) => ({ Component: m.LayerStackObservationPage })) },
 
   // Projects / SHAPER (Design Selection)
-  { path: '/projects/shaper', Component: ShaperConfigurePage },
-  { path: '/projects/shaper/configure', Component: ShaperConfigurePage },
-  { path: '/projects/shaper/logic', Component: ShaperLogicPage },
+  { path: '/projects/shaper', lazy: () => import('./components/ShaperConfigurePage').then((m) => ({ Component: m.ShaperConfigurePage })) },
+  { path: '/projects/shaper/configure', lazy: () => import('./components/ShaperConfigurePage').then((m) => ({ Component: m.ShaperConfigurePage })) },
+  { path: '/projects/shaper/logic', lazy: () => import('./components/ShaperLogicPage').then((m) => ({ Component: m.ShaperLogicPage })) },
 
   // Catch-all
   { path: '*', Component: HomePage },

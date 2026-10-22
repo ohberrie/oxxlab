@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { oxx } from '../tokens';
 
 /* ─── Pixel Logo (parameterized for light/dark) ──────────────── */
 
@@ -76,7 +77,7 @@ export function OxxUnifiedLogo({ isStudio, dark = false }: OxxUnifiedLogoProps) 
   const labOpacity = hovered === 'studio' ? 0.5 : 1;
   const studioOpacity = hovered === 'lab' ? 0.5 : 1;
 
-  const textColor = dark ? '#fff' : '#141414';
+  const textColor = dark ? '#fff' : oxx.ink;
   const dividerColor = dark ? 'rgba(255,255,255,0.3)' : 'black';
 
   return (
@@ -94,7 +95,7 @@ export function OxxUnifiedLogo({ isStudio, dark = false }: OxxUnifiedLogoProps) 
           to="/lab"
           className="no-underline transition-all duration-200 cursor-pointer lowercase whitespace-nowrap"
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: oxx.mono,
             fontSize: '12.153px',
             letterSpacing: '1.823px',
             lineHeight: '8.414px',
@@ -118,7 +119,7 @@ export function OxxUnifiedLogo({ isStudio, dark = false }: OxxUnifiedLogoProps) 
           to="/projects"
           className="no-underline transition-all duration-200 cursor-pointer lowercase whitespace-nowrap"
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: oxx.mono,
             fontSize: '12.153px',
             letterSpacing: '1.823px',
             lineHeight: '8.414px',

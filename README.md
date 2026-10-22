@@ -1,11 +1,35 @@
+# oxxlab.com
 
-  # oxxlab 개편
+OXX — Algorithmic Design lab. Vite + React + Tailwind v4, deployed on Vercel.
 
-  This is a code bundle for oxxlab 개편. The original project is available at https://www.figma.com/design/P7GDup23ZpcDB8MzVAT7ge/oxxlab-%EA%B0%9C%ED%8E%B8.
+```sh
+npm i
+npm run dev        # local dev server
+npm run typecheck  # tsc --noEmit
+npm run build      # -> dist/
+```
 
-  ## Running the code
+## Structure
 
-  Run `npm i` to install the dependencies.
+- `src/app/routes.ts` — all routes. Home is in the main bundle; other pages are lazy-loaded chunks.
+- `src/app/components/` — pages and shared components (`NavBar`, `ScaledSlide`, `LabShared`, `CrossLinks`).
+- `src/assets/img/` — images bundled by Vite (import them, don't hotlink).
+- `public/` — files served as-is at the site root (`og-image.png`, `robots.txt`, `sitemap.xml`, `favicon.svg`, `CNAME`).
 
-  Run `npm run dev` to start the development server.
-  
+## Design tokens
+
+Defined twice and kept in sync:
+
+| Token  | Value     | Tailwind (`src/styles/theme.css`) | Inline/SVG (`src/app/tokens.ts`) |
+|--------|-----------|-----------------------------------|----------------------------------|
+| ink    | `#141414` | `text-ink`, `bg-ink`, `border-ink/10` | `oxx.ink`    |
+| paper  | `#f8f8fd` | `bg-paper`                        | `oxx.paper`  |
+| void   | `#0a0a0a` | `bg-void`                         | `oxx.void`   |
+| accent | `#FF1E00` | `text-accent`, `bg-accent`        | `oxx.accent` |
+| studio | `#FF4D00` | `bg-studio`                       | `oxx.studio` |
+| mist   | `#e8e8ed` | `bg-mist`                         | `oxx.mist`   |
+| mono   | JetBrains Mono | `font-mono`                  | `oxx.mono`   |
+| body   | DM Sans   | `font-body`                       | `oxx.body`   |
+
+Fonts are loaded once from Google Fonts in `index.html` (variable weights).
+When adding a page, add it to `public/sitemap.xml` too.

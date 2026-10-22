@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, createContext, useContext, ReactNode } from 'react';
 import { useLocation } from 'react-router';
 import { NavBar } from './NavBar';
+import { oxx } from '../tokens';
 
 const MobileContext = createContext(false);
 export const useIsMobile = () => useContext(MobileContext);
@@ -55,12 +56,12 @@ export function ScaledSlide({ children, mode, dark = false }: ScaledSlideProps) 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const bg = dark ? '#0a0a0a' : '#F8F8FD';
+  const bg = dark ? oxx.void : oxx.paper;
   const dividerColor = dark ? 'rgba(255,255,255,0.06)' : '#D2D2D2';
 
   return (
     <MobileContext.Provider value={isMobile}>
-      <div className="overflow-hidden m-0 p-0 min-h-screen font-['JetBrains_Mono']" style={{ background: bg }}>
+      <div className="overflow-hidden m-0 p-0 min-h-screen font-mono" style={{ background: bg }}>
         <div className="w-full relative">
           <NavBar mode={resolvedMode} dark={dark} />
           <div className="absolute left-0 right-0 top-[60px] h-px" style={{ background: dividerColor }} />

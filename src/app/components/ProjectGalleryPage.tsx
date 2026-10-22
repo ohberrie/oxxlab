@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import { NavBar } from './NavBar';
 import { PlayIcon, ShaperSVG, AIASVG, IntuitionEncoderSVG, MamaVCRSVG } from './ProjectSVGs';
+import { oxx } from '../tokens';
 
 function PixelSquare() {
   return (
@@ -189,13 +190,13 @@ export function ProjectGalleryPage({ type }: ProjectGalleryPageProps) {
   const showDescription = type === 'lab' ? true : !!hoveredProject;
 
   // Color scheme
-  const bg = isDark ? '#0a0a0a' : '#f8f8fd';
-  const textColor = isDark ? 'rgba(255,255,255,0.9)' : '#141414';
-  const descColor = isDark ? 'rgba(255,255,255,0.45)' : '#141414';
-  const itemColor = isDark ? 'rgba(255,255,255,0.7)' : '#141414';
-  const accent = isDark ? '#FF1E00' : '#FF4D00';
-  const labelColor = isDark ? 'rgba(255,255,255,0.25)' : '#141414';
-  const serviceColor = isDark ? 'rgba(255,255,255,0.4)' : '#141414';
+  const bg = isDark ? oxx.void : oxx.paper;
+  const textColor = isDark ? 'rgba(255,255,255,0.9)' : oxx.ink;
+  const descColor = isDark ? 'rgba(255,255,255,0.45)' : oxx.ink;
+  const itemColor = isDark ? 'rgba(255,255,255,0.7)' : oxx.ink;
+  const accent = isDark ? oxx.accent : oxx.studio;
+  const labelColor = isDark ? 'rgba(255,255,255,0.25)' : oxx.ink;
+  const serviceColor = isDark ? 'rgba(255,255,255,0.4)' : oxx.ink;
   const borderColor = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(20,20,20,0.04)';
 
   return (
@@ -212,19 +213,19 @@ export function ProjectGalleryPage({ type }: ProjectGalleryPageProps) {
           <div className="flex items-start gap-3 max-md:items-center max-md:gap-2.5">
             <div
               className="w-5 h-[18px] shrink-0 transition-colors duration-300"
-              style={{ marginTop: 'calc((clamp(36px, 3.75vw, 72px) * 1.07 - 18px) / 2)', color: isDark ? 'rgba(255,255,255,0.7)' : '#141414' }}
+              style={{ marginTop: 'calc((clamp(36px, 3.75vw, 72px) * 1.07 - 18px) / 2)', color: isDark ? 'rgba(255,255,255,0.7)' : oxx.ink }}
             >
               <PlayIcon />
             </div>
             <div className="transition-transform duration-300">
               <h1
-                className="font-['DM_Sans'] text-[clamp(36px,3.75vw,72px)] font-bold leading-[1.07] tracking-[-0.02em] mb-5 transition-opacity duration-300 max-md:text-[32px] max-md:mb-2"
+                className="font-body text-[clamp(36px,3.75vw,72px)] font-bold leading-[1.07] tracking-[-0.02em] mb-5 transition-opacity duration-300 max-md:text-[32px] max-md:mb-2"
                 style={{ color: textColor }}
               >
                 {title}
               </h1>
               <p
-                className={`font-['DM_Sans'] text-[clamp(14px,1vw,19px)] font-bold leading-[1.47] tracking-[-0.02em] max-w-[310px] transition-opacity duration-300 max-md:text-[14px] ${
+                className={`font-body text-[clamp(14px,1vw,19px)] font-bold leading-[1.47] tracking-[-0.02em] max-w-[310px] transition-opacity duration-300 max-md:text-[14px] ${
                   showDescription ? 'opacity-100' : 'opacity-0'
                 }`}
                 style={{ color: descColor }}
@@ -238,16 +239,16 @@ export function ProjectGalleryPage({ type }: ProjectGalleryPageProps) {
           {type === 'works' && !hoveredProject && (
             <div className="flex flex-col gap-6 mt-4 max-md:mt-2">
               <div>
-                <div className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.1em] uppercase opacity-30 mb-3" style={{ color: labelColor }}>Services</div>
+                <div className="font-mono text-[10px] font-bold tracking-[0.1em] uppercase opacity-30 mb-3" style={{ color: labelColor }}>Services</div>
                 {['Stage & Set Design', 'Exhibition Spatial Design', 'Computational Object Design', 'Design Strategy Consultation', 'Perception Evaluation Research'].map(s => (
-                  <div key={s} className="py-1.5 font-['DM_Sans'] text-[12px] opacity-50 last:border-b-0" style={{ color: serviceColor, borderBottom: `1px solid ${borderColor}` }}>
+                  <div key={s} className="py-1.5 font-body text-[12px] opacity-50 last:border-b-0" style={{ color: serviceColor, borderBottom: `1px solid ${borderColor}` }}>
                     {s}
                   </div>
                 ))}
               </div>
               <div>
-                <div className="font-['JetBrains_Mono'] text-[10px] font-bold tracking-[0.1em] uppercase opacity-30 mb-2" style={{ color: labelColor }}>Contact</div>
-                <p className="font-['DM_Sans'] text-[12px] opacity-40 leading-[1.6]" style={{ color: serviceColor }}>
+                <div className="font-mono text-[10px] font-bold tracking-[0.1em] uppercase opacity-30 mb-2" style={{ color: labelColor }}>Contact</div>
+                <p className="font-body text-[12px] opacity-40 leading-[1.6]" style={{ color: serviceColor }}>
                   For collaboration, research inquiries, or studio projects — reach out directly.
                 </p>
               </div>
@@ -286,7 +287,7 @@ export function ProjectGalleryPage({ type }: ProjectGalleryPageProps) {
                 <project.SvgComponent />
               </div>
               <div
-                className="font-['JetBrains_Mono'] text-[clamp(16px,1.35vw,26px)] font-bold leading-[1.04] tracking-[-0.025em] text-center mt-1 transition-colors duration-300 whitespace-pre-line max-md:text-[16px] max-md:mt-0.5"
+                className="font-mono text-[clamp(16px,1.35vw,26px)] font-bold leading-[1.04] tracking-[-0.025em] text-center mt-1 transition-colors duration-300 whitespace-pre-line max-md:text-[16px] max-md:mt-0.5"
                 style={{ color: itemColor }}
                 onMouseEnter={(e) => { e.currentTarget.style.color = accent; }}
                 onMouseLeave={(e) => { e.currentTarget.style.color = itemColor; }}

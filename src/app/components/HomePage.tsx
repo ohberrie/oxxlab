@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { oxx } from '../tokens';
 
 const OX_CHARS = ['O', 'X'];
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -116,7 +117,7 @@ export function HomePage() {
         cell.style.width = cellSize + 'px';
         cell.style.height = cellSize + 'px';
         cell.style.fontSize = fontSize + 'px';
-        cell.style.fontFamily = "'JetBrains Mono', monospace";
+        cell.style.fontFamily = oxx.mono;
         cell.style.display = 'flex';
         cell.style.alignItems = 'center';
         cell.style.justifyContent = 'center';
@@ -133,8 +134,8 @@ export function HomePage() {
           oxxPattern[patternRow][patternCol] === '1'
         ) {
           isMasked = true;
-          cell.style.background = '#f8f8fd';
-          cell.style.color = '#141414';
+          cell.style.background = oxx.paper;
+          cell.style.color = oxx.ink;
           cell.style.fontWeight = '800';
           cell.textContent = getRandomOX();
 
@@ -149,7 +150,7 @@ export function HomePage() {
             masks.x2.push({ row, col, relCol: patternCol - 12, relRow: patternRow, element: cell });
           }
         } else {
-          cell.style.background = '#141414';
+          cell.style.background = oxx.ink;
           cell.style.color = 'rgba(255, 255, 255, 0.12)';
           cell.style.fontWeight = '400';
           cell.textContent = getRandomChar();
@@ -214,7 +215,7 @@ export function HomePage() {
     currentCells.forEach(cellData => {
       const idx = cellData.row * cols + cellData.col;
       if (idx >= 0 && idx < cells.length) {
-        cells[idx].element.style.background = '#141414';
+        cells[idx].element.style.background = oxx.ink;
         cells[idx].element.style.color = 'rgba(255, 255, 255, 0.12)';
         cells[idx].element.style.fontWeight = '400';
         cells[idx].element.textContent = getRandomChar();
@@ -260,8 +261,8 @@ export function HomePage() {
         if (cellIndex >= 0 && cellIndex < cells.length) {
           const target = cells[cellIndex];
           setTimeout(() => {
-            target.element.style.background = '#f8f8fd';
-            target.element.style.color = '#141414';
+            target.element.style.background = oxx.paper;
+            target.element.style.color = oxx.ink;
             target.element.style.fontWeight = '800';
             target.element.textContent = getRandomOX();
             target.isMasked = true;
@@ -353,10 +354,10 @@ export function HomePage() {
   }, [createGrid, extractLetterShapes, showFinalLinks, setupHoverAreas]);
 
   return (
-    <div className="w-screen h-screen relative overflow-hidden bg-[#141414]">
+    <div className="w-screen h-screen relative overflow-hidden bg-ink">
       <style>{`
         .oxx-nav-link {
-          color: #f8f8fd;
+          color: var(--color-paper);
           text-decoration: none;
           opacity: 0.8;
           transition: opacity 0.3s ease;
@@ -371,7 +372,7 @@ export function HomePage() {
           transform: translateX(-50%) scaleX(0);
           width: 85%;
           height: 1px;
-          background-color: #f8f8fd;
+          background-color: var(--color-paper);
           transition: transform 0.3s ease, opacity 0.3s ease;
         }
         .oxx-link-studio::after {
@@ -409,7 +410,7 @@ export function HomePage() {
       >
         <span
           ref={textRef}
-          className="oxx-typing-text font-['JetBrains_Mono'] font-bold text-[clamp(16px,2.5vw,26px)] tracking-[clamp(3px,0.5vw,6px)] text-[#f8f8fd] lowercase whitespace-nowrap"
+          className="oxx-typing-text font-mono font-bold text-[clamp(16px,2.5vw,26px)] tracking-[clamp(3px,0.5vw,6px)] text-paper lowercase whitespace-nowrap"
         >
           lab
         </span>
