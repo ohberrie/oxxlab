@@ -3,9 +3,10 @@ import { oxx } from '../tokens';
 import { OXX_PATTERN } from '../oxxPattern';
 
 // A full-screen grid of O/X glyph cells driven by a density field.
-// Density (0–1) picks a glyph from an 8-step ladder: · : \ + o ◎ ▣ (O family)
-// or · : \ × ✖ ⊠ (X family). The OXX wordmark, the active lab system (mode)
-// and a pointer trail all write into the same density value.
+// Density (0–1) picks a glyph from a 5-step ladder: · / + then o ◎ (O family)
+// or x ✖ (X family). The active lab system (mode) and a pointer trail shape the
+// field. The OXX wordmark sits in a quiet zone; the pointer scatters it (O↔X flip,
+// letters break into / + debris) and it reassembles as the disturbance fades.
 
 export type FieldMode = 'field' | 'selection-logic' | 'dense-field' | 'modular-fill' | 'layer-stack';
 const MODES: FieldMode[] = ['field', 'selection-logic', 'dense-field', 'modular-fill', 'layer-stack'];
@@ -61,30 +62,20 @@ const circle = (g: CanvasRenderingContext2D, c: number, r: number, fill = false)
 // Drawn in an s×s box; c = centre, u = s/16.
 const GLYPHS: Record<string, DrawGlyph> = {
   dot: (g, c, u) => g.fillRect(c - 1.2 * u, c - 1.2 * u, 2.4 * u, 2.4 * u),
-  colon: (g, c, u) => { g.fillRect(c - 1.1 * u, c - 4 * u, 2.2 * u, 2.2 * u); g.fillRect(c - 1.1 * u, c + 1.8 * u, 2.2 * u, 2.2 * u); },
-  slash: (g, c, u) => { g.lineWidth = 1.3 * u; line(g, c - 4 * u, c - 4 * u, c + 4 * u, c + 4 * u); },
+  slash: (g, c, u) => { g.lineWidth = 1.4 * u; line(g, c - 4 * u, c + 4 * u, c + 4 * u, c - 4 * u); },
   plus: (g, c, u) => { g.lineWidth = 1.5 * u; line(g, c - 4 * u, c, c + 4 * u, c); line(g, c, c - 4 * u, c, c + 4 * u); },
-  thinX: (g, c, u) => { g.lineWidth = 1.4 * u; cross(g, c, 3.5 * u); },
   ring: (g, c, u) => { g.lineWidth = 2 * u; circle(g, c, 4.2 * u); },
-  boldX: (g, c, u) => { g.lineWidth = 2.8 * u; cross(g, c, 3.8 * u); },
+  smallX: (g, c, u) => { g.lineWidth = 2.4 * u; cross(g, c, 3.6 * u); },
   target: (g, c, u) => { g.lineWidth = 1.9 * u; circle(g, c, 5.6 * u); circle(g, c, 2.3 * u, true); },
   heavyX: (g, c, u) => { g.lineWidth = 3.6 * u; cross(g, c, 4.6 * u); },
-  squareDot: (g, c, u) => {
-    g.lineWidth = 2.1 * u; g.beginPath(); g.roundRect(c - 5.6 * u, c - 5.6 * u, 11.2 * u, 11.2 * u, 2.4 * u); g.stroke();
-    g.fillRect(c - 1.8 * u, c - 1.8 * u, 3.6 * u, 3.6 * u);
-  },
-  squareX: (g, c, u) => {
-    g.lineWidth = 2.1 * u; g.beginPath(); g.roundRect(c - 5.6 * u, c - 5.6 * u, 11.2 * u, 11.2 * u, 2.4 * u); g.stroke();
-    g.lineWidth = 1.8 * u; cross(g, c, 2.6 * u);
-  },
 };
 
-// Level 1–7 → [O family, X family]
+// Level 1–5 → [O family, X family]. Levels 1–3 are shared "debris" marks.
 const LADDER: [string, string][] = [
-  ['', ''], ['dot', 'dot'], ['colon', 'colon'], ['slash', 'slash'], ['plus', 'thinX'],
-  ['ring', 'boldX'], ['target', 'heavyX'], ['squareDot', 'squareX'],
+  ['', ''], ['dot', 'dot'], ['slash', 'slash'], ['plus', 'plus'], ['ring', 'smallX'], ['target', 'heavyX'],
 ];
-const LEVEL_ALPHA = [0, 0.45, 0.5, 0.55, 0.75, 1, 1, 1];
+const LEVEL_ALPHA = [0, 0.4, 0.55, 0.7, 0.9, 1];
+const TOP = LADDER.length - 1;
 
 // sprites[tone][level][family]
 function buildSprites(size: number) {
@@ -104,6 +95,9 @@ function buildSprites(size: number) {
 
 const FRAME_MS = 50; // ~20fps: a stepped, digital cadence rather than smooth motion
 const INTRO_MS = 1400;
+const QUIET = 3;          // cells around the wordmark kept clear of the field
+const FADE = 9;           // the field fades back in between QUIET and FADE
+const SCATTER_DECAY = 0.955; // ~2s for a scattered letter to fully reassemble
 
 export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlacement; mode: FieldMode }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -136,7 +130,7 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
         letterCells.push([col, row]);
       }
     }));
-    const pad = 6;
+    const pad = FADE + 1;
     const c0 = Math.max(0, logo.col - pad), c1 = Math.min(cols - 1, logo.col + 17 * logo.scale + pad);
     const r0 = Math.max(0, logo.row - pad), r1 = Math.min(rows - 1, logo.row + 7 * logo.scale + pad);
     for (let row = r0; row <= r1; row++) for (let col = c0; col <= c1; col++) {
@@ -146,17 +140,19 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
     }
 
     const trail = new Float32Array(N);
+    const scatter = new Float32Array(N);
     const weights = MODES.map(m => (m === modeRef.current ? 1 : 0));
     const start = performance.now();
 
     const stamp = (cx: number, cy: number) => {
-      const R = 4;
+      const R = 5;
       for (let dy = -R; dy <= R; dy++) for (let dx = -R; dx <= R; dx++) {
         const col = Math.floor(cx) + dx, row = Math.floor(cy) + dy;
         if (col < 0 || col >= cols || row < 0 || row >= rows) continue;
         const d2 = (col + 0.5 - cx) ** 2 + (row + 0.5 - cy) ** 2;
         const i = row * cols + col;
-        trail[i] = Math.max(trail[i], Math.exp(-d2 / 8));
+        if (logoDist[i] <= QUIET) scatter[i] = Math.max(scatter[i], Math.exp(-d2 / 14));
+        else trail[i] = Math.max(trail[i], Math.exp(-d2 / 8));
       }
     };
 
@@ -187,43 +183,58 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
           const i = row * cols + col;
-          const n = fbm(col * 0.05, row * 0.05, t * 0.05);
-          const base = smoothstep(0.4, 0.72, n);
-
-          let d = 0;
-          if (wField > 0.01) d += wField * base;
-          if (wSelect > 0.01) d += wSelect * (base > 0.45 ? 0.68 : 0.14);
-          if (wDense > 0.01) d += wDense * smoothstep(0.26, 0.56, n);
-          if (wModular > 0.01) {
-            const edge = col % 5 === 4 || row % 3 === 2;
-            const m = fbm(Math.floor(col / 5) * 0.25, Math.floor(row / 3) * 0.15, t * 0.05);
-            d += wModular * (edge ? 0 : smoothstep(0.4, 0.62, m));
-          }
-          if (wLayer > 0.01) {
-            const band = Math.floor((row + t * 1.5) / 5);
-            d += wLayer * (0.45 * base + [0.12, 0.42, 0.78][((band % 3) + 3) % 3] * 0.6);
-          }
-
-          let fam = 0;
           const ld = logoDist[i];
-          // wordmark: O in ◎, X in ✖ (level 6), with a few heavier cells for texture
-          if (logoFam[i]) { d = hash(col, row, 5) < 0.12 ? 1 : 0.8; fam = logoFam[i] - 1; }
-          else if (ld <= 1.5) d = 0;
-          else if (ld <= 5.5) d = Math.max(d * 0.3, 0.52 * (1 - (ld - 1.5) / 4));
+          let level = 0, fam = 0, red = false;
 
-          const tr = trail[i];
-          if (tr > d) d = tr;
-          trail[i] = tr * 0.92;
+          if (ld <= QUIET) {
+            // Wordmark zone. Each cell has its own threshold, so cells break and
+            // reassemble at different moments as the scatter value rises and fades.
+            const sc = scatter[i];
+            scatter[i] = sc * SCATTER_DECAY;
+            const lf = logoFam[i];
+            if (lf) {
+              const th = 0.25 + 0.4 * hash(col, row, 21);
+              if (sc > th + 0.35) level = hash(col, row, tick) < 0.5 ? 2 : 3; // broken into / +
+              else { level = TOP; fam = sc > th ? 2 - lf : lf - 1; }           // O↔X flip
+              red = sc > 0.85;
+            } else if (sc > 0.15 && hash(col, row, 24) < 1 - ld / (QUIET + 1)) {
+              const th = 0.2 + 0.5 * hash(col, row, 23);                      // debris spilling between letters
+              if (sc > th) level = sc > th + 0.3 ? (hash(col, row, tick) < 0.5 ? 2 : 3) : 1;
+            }
+          } else {
+            const n = fbm(col * 0.05, row * 0.05, t * 0.05);
+            const base = smoothstep(0.4, 0.72, n);
 
-          if (hash(col, row, 7) > intro * 1.15) continue; // staggered reveal
-          if (d > 0.06 && !logoFam[i]) d += (hash(col, row, tick) - 0.5) * 0.1; // shimmer
-          // a stable per-cell offset mixes ◎ / ▣ / ✖ inside dense clusters instead of saturating
-          if (d > 0.5 && !logoFam[i]) d += (hash(col, row, 11) - 0.5) * 0.24;
-          const level = Math.min(7, Math.floor(d * 7.6));
-          if (level <= 0) continue;
+            let d = 0;
+            if (wField > 0.01) d += wField * base;
+            if (wSelect > 0.01) d += wSelect * (base > 0.45 ? 0.7 : 0.1);
+            if (wDense > 0.01) d += wDense * smoothstep(0.26, 0.56, n);
+            if (wModular > 0.01) {
+              const edge = col % 5 === 4 || row % 3 === 2;
+              const m = fbm(Math.floor(col / 5) * 0.25, Math.floor(row / 3) * 0.15, t * 0.05);
+              d += wModular * (edge ? 0 : smoothstep(0.4, 0.62, m));
+            }
+            if (wLayer > 0.01) {
+              const band = Math.floor((row + t * 1.5) / 5);
+              d += wLayer * (0.45 * base + [0.12, 0.42, 0.78][((band % 3) + 3) % 3] * 0.6);
+            }
+            const near = ld < FADE;
+            if (near) d *= smoothstep(QUIET, FADE, ld);
 
-          if (!logoFam[i]) fam = noise3(col * 0.09 + 50, row * 0.09, t * 0.03) + hash(col, row, 3) * 0.35 > 0.72 ? 1 : 0;
-          ctx.drawImage(sprites[tr > 0.7 ? 1 : 0][level][fam], Math.round(col * cell * dpr), Math.round(row * cell * dpr));
+            const tr = trail[i];
+            if (tr > d) d = tr;
+            trail[i] = tr * 0.92;
+            red = tr > 0.7;
+
+            if (d > 0.06 && !near) d += (hash(col, row, tick) - 0.5) * 0.1; // shimmer, kept away from the wordmark
+            // a stable per-cell offset mixes o/◎ and x/✖ inside dense clusters
+            if (d > 0.5) d += (hash(col, row, 11) - 0.5) * 0.2;
+            level = Math.min(TOP, Math.floor(d * 6));
+            fam = noise3(col * 0.09 + 50, row * 0.09, t * 0.03) + hash(col, row, 3) * 0.35 > 0.72 ? 1 : 0;
+          }
+
+          if (level <= 0 || hash(col, row, 7) > intro * 1.15) continue; // staggered reveal
+          ctx.drawImage(sprites[red ? 1 : 0][level][fam], Math.round(col * cell * dpr), Math.round(row * cell * dpr));
         }
       }
     };
