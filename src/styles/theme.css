@@ -5,11 +5,10 @@
  */
 @theme {
   --color-ink: #141414;
-  --color-paper: #f8f8fd;
+  --color-paper: #ffffff;
   --color-void: #0a0a0a;
   --color-accent: #ff1e00;
-  --color-studio: #ff4d00;
-  --color-mist: #e8e8ed;
+  --color-blue: #294bdc;
 
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --font-body: 'DM Sans', system-ui, sans-serif;
@@ -18,43 +17,5 @@
 @layer base {
   * {
     border-color: rgb(0 0 0 / 0.1);
-    outline-color: oklch(0.708 0 0 / 0.5);
-  }
-
-  body {
-    background: #fff;
-    color: oklch(0.145 0 0);
-  }
-
-  h1 {
-    font-size: var(--text-2xl);
-    font-weight: 500;
-    line-height: 1.5;
-  }
-
-  h2 {
-    font-size: var(--text-xl);
-    font-weight: 500;
-    line-height: 1.5;
-  }
-
-  h3 {
-    font-size: var(--text-lg);
-    font-weight: 500;
-    line-height: 1.5;
-  }
-
-  h4,
-  label,
-  button {
-    font-size: var(--text-base);
-    font-weight: 500;
-    line-height: 1.5;
-  }
-
-  input {
-    font-size: var(--text-base);
-    font-weight: 400;
-    line-height: 1.5;
   }
 }

@@ -8,8 +8,8 @@ import { OXX_PATTERN } from '../oxxPattern';
 // field. The OXX wordmark sits in a quiet zone; the pointer scatters it (O↔X flip,
 // letters break into / + debris) and it reassembles as the disturbance fades.
 
-export type FieldMode = 'field' | 'selection-logic' | 'dense-field' | 'modular-fill' | 'layer-stack';
-const MODES: FieldMode[] = ['field', 'selection-logic', 'dense-field', 'modular-fill', 'layer-stack'];
+export type FieldMode = 'field' | 'select' | 'dense' | 'modular' | 'layer';
+const MODES: FieldMode[] = ['field', 'select', 'dense', 'modular', 'layer'];
 
 export interface Grid { cols: number; rows: number; cell: number; width: number; height: number }
 export interface LogoPlacement { col: number; row: number; scale: number }
