@@ -141,6 +141,13 @@ export function ribs(count = 15, curvature = 45) {
     };
   });
 }
+export function flatSvg(parts = ribs()) {
+  const paths = parts.map((p, i) => {
+    const x = 50 + (i % 8) * 75, y = 100 + Math.floor(i / 8) * 180, h = p.halfHeight, w = 5 + h * 0.18;
+    return '<g transform="translate(' + x + ' ' + y + ')"><path d="M-' + w + ' -' + h + 'H' + w + 'L' + (w + 3) + ' ' + h + 'H-' + (w + 3) + 'Z" fill="none" stroke="blue"/><text x="-10" y="' + (h + 16) + '" font-size="9">' + p.id + '</text></g>';
+  }).join('');
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 430">' + paths + '</svg>';
+}
 `;
 
 export function saveFile(name: string, data: string, type = 'text/plain') {

@@ -39,30 +39,25 @@ export interface Case {
   note?: string;
   song?: string;
   verified: boolean;
+  placeholder?: boolean;
 }
 
-// Only cases with a readable analysis are published. The 02–06 corpus slots stay out until source material exists.
+// 02–06 are corpus placeholders, shown as CANDIDATE until source material is supplied.
 export const CASES: Case[] = [
   { id: '09', name: 'Progressive Convergence', engine: 'convergence', type: 'Form finding', status: 'USED', note: 'Design-stage logic described in the supplied narrative.', summary: 'Translate repetition into a directional spatial sequence.', song: 'Metronome · supplied narrative', verified: true },
   { id: '08', name: 'Adaptive Spine', engine: 'spine', type: 'Fabrication', status: 'BUILT', note: 'Production workflow described in the supplied narrative.', summary: 'Translate a continuous curve into adaptive, identifiable ribs.', verified: true },
   { id: '01', name: 'Hierarchical Crossing', engine: 'crossing', type: 'Form finding', status: 'EXTRACTED', summary: 'Make a hierarchy from crossing fields.', verified: false },
   { id: '07', name: 'Radial Propagation', engine: 'radial', type: 'Form finding', status: 'EXTRACTED', summary: 'Carry one gesture through a radial field.', verified: false },
   { id: '10', name: 'Offset Frames', engine: 'offset', type: 'Form finding', status: 'EXTRACTED', summary: 'Establish tension through progressive displacement.', verified: false },
+  { id: '02', name: 'Central Field', engine: 'radial', type: 'Form finding', status: 'CANDIDATE', summary: 'Working principle · confirm against source material.', verified: false, placeholder: true },
+  { id: '03', name: 'Displaced Surface Field', engine: 'offset', type: 'Form finding', status: 'CANDIDATE', summary: 'Working principle · confirm against source material.', verified: false, placeholder: true },
+  { id: '04', name: 'Layered Thresholds', engine: 'convergence', type: 'Form finding', status: 'CANDIDATE', summary: 'Working principle · confirm against source material.', verified: false, placeholder: true },
+  { id: '05', name: 'Distributed Lines', engine: 'crossing', type: 'Form finding', status: 'CANDIDATE', summary: 'Working principle · confirm against source material.', verified: false, placeholder: true },
+  { id: '06', name: 'Fragmented Continuity', engine: 'offset', type: 'Form finding', status: 'CANDIDATE', summary: 'Working principle · confirm against source material.', verified: false, placeholder: true },
 ];
 export const getCase = (id: string | undefined) => CASES.find(c => c.id === id);
 export const caseKind = (c: Case): Kind => (c.engine === 'spine' ? 'spine' : ENGINES[c.engine].kind);
-export const caseLogicPath = (c: Case) => (c.engine === 'spine' ? '/tools/spine' : `/engine/${c.engine}`);
-
-// The seven steps every case is read through, from the brief to the reusable rule.
-export const STEPS = [
-  { id: 'given', title: 'Given', phase: 'Problem', question: 'What conditions defined the problem?', body: 'Industry rules, director intent, production conditions and the designer’s own intent. Nothing formal yet — only the constraints and the people.' },
-  { id: 'move', title: 'Move', phase: 'Problem', question: 'Which spatial move made it actionable?', body: 'The one relationship that turns a brief into something that can be drawn: a sequence, a crossing, a center, a displacement.' },
-  { id: 'design-space', title: 'Design Space', phase: 'Form', question: 'What else could the move have become?', body: 'Operators and their combinations generate alternatives. Reconstructed alternatives are labelled as such; they are not claimed as historical options.' },
-  { id: 'formal-system', title: 'Formal System', phase: 'Form', question: 'How does the rule act across scales?', body: 'The same relationship followed from the whole space, through the relation between parts, down to a single profile.' },
-  { id: 'judgment', title: 'Judgment', phase: 'Form', question: 'Why this configuration and not another?', body: 'The criteria that selected one possibility: legibility, silhouette, directional force, depth, camera. Judgment stays human.' },
-  { id: 'realization', title: 'Realization', phase: 'Return', question: 'What changed when it met structure and time?', body: 'Built photographs, drawings and the divergence between intended and realized form, with the reasons for it.' },
-  { id: 'extraction', title: 'Extraction', phase: 'Return', question: 'What can the next design reuse?', body: 'The behavior is kept and the particulars are dropped. The result is an engine or a tool, linked back to this case.' },
-] as const;
+export const caseLogicPath = (c: Case) => (c.engine === 'spine' ? '/tools' : `/engine/${c.engine}`);
 
 export type StepRow = [title: string, conclusion: string, detail: string];
 
@@ -73,7 +68,7 @@ export function caseSteps(c: Case): StepRow[] {
     ['DESIGN SPACE', 'Choose progressive frames rather than isolated objects.', 'These alternatives reconstruct possible strategies. They do not claim that every alternative was considered during the original design.'],
     ['FORMAL SYSTEM', 'The same directional rule acts across the sequence.', 'At the scale of the stage, the sequence establishes focus. Between frames, scale and rotation establish rhythm. At the profile, the triangular boundary gives that rhythm a silhouette.'],
     ['JUDGMENT', 'Tune the force of convergence without losing legibility.', 'Depth, rotation and the size of the opening shape the camera image. The comparative studies below illustrate that judgment; they are not recovered original variants.'],
-    ['REALIZATION', 'Geometry meets structure, camera and production.', 'Rigging diagrams, connection details and built photographs belong here, compared against the intended depth. No verified divergence record has been supplied yet.'],
+    ['REALIZATION', 'Geometry meets structure, camera and production.', 'Insert rigging diagrams, connection details and built photographs here. Compare intended depth with the realized camera image and note the reasons for divergence. No verified divergence record has been supplied.'],
     ['EXTRACTION', 'Keep the behavior. Change the profile.', 'The reconstructed engine abstracts Repeat → Scale → Rotate → Depth from the particular triangular stage. Circle and square inputs test whether the behavior remains useful.'],
   ];
   if (c.id === '08') return [
@@ -92,7 +87,7 @@ export function caseSteps(c: Case): StepRow[] {
     ['FORMAL SYSTEM', 'Follow one relationship through different scales.', 'The diagrams illustrate a candidate principle. Confirm where this relationship actually appears in the work.'],
     ['JUDGMENT', 'Make the selection criteria explicit.', 'Compare density, silhouette, directional force and depth. Record why the selected configuration served this particular brief.'],
     ['REALIZATION', 'Connect the intended form to the built record.', 'Photographs, fabrication drawings, credits and divergence notes still need to be supplied.'],
-    ['EXTRACTION', 'A reusable formal principle to test.', 'The associated simulator illustrates the proposed reading. Its parameters do not reproduce the original project files.'],
+    ['EXTRACTION', c.placeholder ? 'A candidate logic, not yet a verified extraction.' : 'A reusable formal principle to test.', 'The associated simulator illustrates the proposed reading. Its parameters do not reproduce the original project files.'],
   ];
 }
 

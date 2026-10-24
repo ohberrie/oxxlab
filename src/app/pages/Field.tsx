@@ -45,7 +45,7 @@ export function FieldPage() {
                   <td>{c.type === 'Fabrication' ? <span className="dot" aria-label="primary route" /> : '—'}</td>
                   <td>{c.engine === 'convergence' || c.engine === 'offset' ? <span className="dot" aria-label="depth lens" /> : '—'}</td>
                   <td><span className="dot" aria-label="repetition lens" /></td>
-                  <td><Link to={c.engine === 'spine' ? '/tools' : `/engine/${c.engine}`}>OPEN LOGIC ↗</Link></td>
+                  <td><Link to={c.engine === 'spine' ? '/tools' : `/engine/${c.engine}`}>{c.placeholder ? 'CANDIDATE' : 'OPEN LOGIC'} ↗</Link></td>
                 </tr>
               ))}
             </tbody>
@@ -58,7 +58,7 @@ export function FieldPage() {
               <Viewer kind={caseKind(c)} interactive={false} params={THUMB} angle={{ yaw: -0.5, pitch: 0.15 }} />
               <div className="card-info">
                 <div>
-                  <span className="mono">Field {c.id} / {c.type}</span>
+                  <span className="mono">Field {c.id} / {c.type}{c.placeholder && ' / Placeholder'}</span>
                   <h2>{c.name}</h2>
                   <span className="mono">{c.verified ? 'Narrative-based study' : 'Provisional reading'}</span>
                 </div>
@@ -70,7 +70,7 @@ export function FieldPage() {
       )}
       <p className="field-note">
         Case labels describe the dominant route into OXX, not exclusive categories. Each case can link both form and fabrication logics.<br />
-        All geometry is schematic. Further cases join the field once their source material is verified.
+        All geometry is schematic. 02–06 are corpus placeholders; other analyses require source verification. Artist/song credits remain inside cases.
       </p>
     </section>
   );

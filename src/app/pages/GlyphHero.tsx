@@ -1,17 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { GlyphField, computeGrid, FieldMode, Grid, LogoPlacement } from '../components/GlyphField';
+import { useOs } from '../os/Shell';
 
-// Each section of OXX OS drives one behavior of the glyph field.
-const SECTIONS: { to: string; num: string; name: string; desc: string; mode: FieldMode }[] = [
+// Each section of OXX OS drives one behavior of the glyph field. "How OXX thinks" is a dialog, not a page.
+const SECTIONS: { to?: string; num: string; name: string; desc: string; mode: FieldMode }[] = [
   { to: '/engine', num: '01', name: 'Engine', desc: 'Form finding: change a variable, keep the principle', mode: 'dense' },
-  { to: '/field', num: '02', name: 'Field', desc: 'Built work read through formal decisions', mode: 'modular' },
-  { to: '/tools', num: '03', name: 'Tools', desc: 'From selected form to identifiable parts', mode: 'layer' },
-  { to: '/method', num: '04', name: 'Method', desc: 'Seven steps from a brief to a reusable rule', mode: 'select' },
+  { to: '/field', num: '02', name: 'Field', desc: 'Where the rules come from', mode: 'modular' },
+  { to: '/tools', num: '03', name: 'Tools', desc: 'From form to parts', mode: 'layer' },
+  { num: '04', name: 'How OXX thinks', desc: 'Practice → extraction → engine → new practice', mode: 'select' },
 ];
 
 interface Rect { col: number; row: number; w: number; h: number }
-interface Layout { grid: Grid; logo: LogoPlacement; slabs: Rect[]; tagline: Rect; footer: Rect; compact: boolean }
+interface Layout { grid: Grid; logo: LogoPlacement; slabs: Rect[]; tagline: Rect; compact: boolean }
 
 // Everything is placed in grid cells so the white slabs cut the glyph field on cell boundaries.
 function layoutHero(width: number, height: number): Layout {
@@ -43,7 +44,6 @@ function layoutHero(width: number, height: number): Layout {
       grid, compact: false, slabs,
       logo: { col: logoCol, row: logoRow, scale },
       tagline: { col: logoCol, row: logoRow + logoH + 2, w: logoW, h: 3 },
-      footer: { col: logoCol, row: rows - 4, w: logoW, h: 2 },
     };
   }
 
@@ -53,10 +53,9 @@ function layoutHero(width: number, height: number): Layout {
   const tagline = { col: 2, row: logo.row + 7 * s + 2, w: cols - 4, h: 3 };
   const w = cols - 5;
   const slabs = SECTIONS.map((_, i) => ({ col: i % 2 ? 3 : 2, row: tagline.row + 5 + i * (slabH + 2), w, h: slabH }));
-  const footer = { col: 2, row: slabs[3].row + slabH + 3, w: cols - 4, h: 2 };
-  const needRows = footer.row + 5;
+  const needRows = slabs[3].row + slabH + 6;
   if (needRows > rows) grid = { ...grid, rows: needRows, height: needRows * cell };
-  return { grid, compact: true, logo, slabs, tagline, footer };
+  return { grid, compact: true, logo, slabs, tagline };
 }
 
 const SLAB_CSS = `
@@ -68,6 +67,7 @@ const SLAB_CSS = `
 `;
 
 export function GlyphHero() {
+  const { openDialog } = useOs();
   const [size, setSize] = useState(() => ({ w: window.innerWidth, h: window.innerHeight }));
   const [mode, setMode] = useState<FieldMode>('field');
 
@@ -102,25 +102,24 @@ export function GlyphHero() {
       <div className="absolute flex flex-col items-start gap-1.5" style={box(layout.tagline)}>
         <span className="bg-void pr-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white/60">OXX OS / Form engine</span>
         <span className="bg-void pr-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white/30">
-          {layout.compact ? 'Practice → principle → possibility' : 'Move across the field · hover a section'}
+          {layout.compact ? 'Practice → Principle → Possibility' : 'Move across the field · hover a section'}
         </span>
       </div>
 
       <nav aria-label="Sections">
         {SECTIONS.map((s, i) => {
           const active = mode === s.mode;
-          return (
-            <Link
-              key={s.to}
-              to={s.to}
-              data-active={active}
-              className="hero-slab absolute flex flex-col justify-between rounded-[3px] bg-white px-4 py-3 no-underline text-ink"
-              style={{ ...box(layout.slabs[i]), animationDelay: `${450 + i * 130}ms` }}
-              onMouseEnter={() => setMode(s.mode)}
-              onMouseLeave={() => setMode('field')}
-              onFocus={() => setMode(s.mode)}
-              onBlur={() => setMode('field')}
-            >
+          const slab = {
+            'data-active': active,
+            className: 'hero-slab absolute flex flex-col justify-between rounded-[3px] bg-white px-4 py-3 text-left no-underline text-ink',
+            style: { ...box(layout.slabs[i]), animationDelay: `${450 + i * 130}ms` },
+            onMouseEnter: () => setMode(s.mode),
+            onMouseLeave: () => setMode('field'),
+            onFocus: () => setMode(s.mode),
+            onBlur: () => setMode('field'),
+          };
+          const body = (
+            <>
               <span className="flex items-center justify-between font-mono text-[11px] tracking-[0.08em]">
                 <span className="flex items-center gap-2">
                   <span className="inline-block h-[7px] w-[7px]" style={{ background: active ? 'var(--color-blue)' : 'rgba(20,20,20,0.18)' }} />
@@ -132,14 +131,14 @@ export function GlyphHero() {
                 <span className="font-mono text-[18px] font-bold uppercase leading-none tracking-[-0.01em] max-md:text-[16px]">{s.name}</span>
                 <span className="font-body text-[12px] leading-[1.4] text-ink/55 line-clamp-2">{s.desc}</span>
               </span>
-            </Link>
+            </>
           );
+          return s.to
+            ? <Link key={s.num} to={s.to} {...slab}>{body}</Link>
+            : <button key={s.num} type="button" onClick={() => openDialog('method')} {...slab}>{body}</button>;
         })}
       </nav>
 
-      <div className="absolute flex items-end gap-6 font-mono text-[11px] uppercase tracking-[0.14em]" style={box(layout.footer)}>
-        <a href="#form-thinks-forward" className="bg-void pr-2 no-underline text-white/50 transition-colors hover:text-white">Scroll ↓</a>
-      </div>
     </section>
   );
 }

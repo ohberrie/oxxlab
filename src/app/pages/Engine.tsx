@@ -174,7 +174,7 @@ export function EnginePage() {
       {compose && (
         <section className="compose" ref={composeRef}>
           <div>
-            <span className="eyebrow">Test ground / strategy flow demo</span>
+            <span className="eyebrow">Test ground / AI flow demo</span>
             <h2>Brief → strategies.</h2>
             <p>Describe a spatial intention. Compare different combinations, then continue with one.</p>
             <textarea aria-label="Design brief" value={st.brief} onChange={ev => setEngine({ brief: ev.target.value })} />

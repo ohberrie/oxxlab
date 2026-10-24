@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type MutableRefObject, type ReactNode } from 'react';
-import { Link, NavLink, Outlet, ScrollRestoration, useLocation } from 'react-router';
+import { Link, Outlet, ScrollRestoration, useLocation } from 'react-router';
 import { DEFAULT_PARAMS, STATUS_DEFS, type EngineId, type Params, type Proposal } from './data';
 
 // Engine settings survive navigation, so a study can be checked against its field case and resumed.
@@ -20,7 +20,7 @@ const INITIAL: EngineState = {
   selected: -1,
 };
 
-type DialogId = 'status' | 'notes';
+type DialogId = 'status' | 'notes' | 'method';
 interface OsContext {
   engine: EngineState;
   setEngine: (patch: Partial<EngineState>) => void;
@@ -47,21 +47,38 @@ const STATUS_BODY = (
   <>
     <p>Tags apply to particular logics, with evidence from a source case. They can coexist; they are not a maturity ladder.</p>
     {STATUS_DEFS.map(([k, v]) => <div key={k} className="tag-def"><b>{k}</b><span>{v}</span></div>)}
-    <p style={{ marginTop: 14 }}>09’s design logic and 08’s production workflow are described in the supplied narrative. Simulator implementations are new reconstructions.</p>
+    <p style={{ marginTop: 14 }}>09’s design logic and 08’s production workflow are described in the supplied narrative. Simulator implementations are new reconstructions. Unverified case slots do not establish historical status.</p>
   </>
 );
 const NOTES_BODY = (
   <>
-    <p>OXX OS is an interaction prototype for OXX’s research direction. Geometry is schematic; original stage photographs and project files have not been supplied yet.</p>
-    <p>Field 09 and 08 follow the supplied narrative. Other cases are provisional readings. Artist, date and collaboration credits remain unfilled. No fake built photographs are used.</p>
-    <p>Engine studies are newly written implementations. Strategy exploration and reference extraction are simulated with local rules. No prompts, briefs or files leave this browser.</p>
+    <p>This is a local interaction prototype for OXX’s research direction. Geometry is schematic; original stage photographs and project files have not been supplied.</p>
+    <p>Field 09 and 08 follow the supplied narrative. Other cases are provisional; 02–06 are corpus placeholders. Artist, date and collaboration credits remain unfilled. No fake built photographs are used.</p>
+    <p>Engine studies are newly written implementations. AI strategy exploration and reference extraction are explicitly simulated. No prompts, briefs or files leave this browser.</p>
     <p>Form studies can be saved as JSON. Fabrication samples can be downloaded as SVG and JavaScript. They are not manufacturing-ready outputs.</p>
+  </>
+);
+const METHOD_BODY = (
+  <>
+    <span className="eyebrow">Practice → Extraction → Engine → New practice</span>
+    <p>OXX extracts tacit formal decisions from real design and turns them into reusable formal and production logics. The starting point is a particular decision under particular conditions.</p>
+    <p><b>Shaper → Real-world stage practice → OXX.</b><br />Controlled formal generation came first. Stage practice brought direction, camera, material, fabrication and time into the design problem. OXX formalizes what can be learned from those decisions.</p>
+    <h3>From a brief to a design space</h3>
+    <p>Industry rules + director intent + production conditions + designer intent define the problem. A spatial move makes it actionable. Operators and their combinations generate possibilities; human judgment selects among them.</p>
+    <h3>Two kinds of reusable knowledge</h3>
+    <p><b>Form finding</b> expresses spatial relationships: convergence, crossing, propagation, displacement.<br /><b>Make</b> translates selected form into constructible and identifiable parts.</p>
+    <h3>Evidence stays attached</h3>
+    <p>Every principle links to its source case. Seven steps trace Given, Move, Design Space, Formal System, Judgment, Realization and Extraction. Reconstructed alternatives are marked as such.</p>
+    <h3>A strategy engine in development</h3>
+    <p>The test ground illustrates how a brief might lead to different compatible combinations. A future AI assistant could propose, explain and organize those strategies. The current demo uses local rules and does not perform AI inference, automatic structural validation or an objective assessment of design quality.</p>
   </>
 );
 
 export function Shell() {
   const { pathname } = useLocation();
   const home = pathname === '/';
+  // Tools belong to the engine side of the site, as in the v2 prototype.
+  const section = pathname.startsWith('/field') ? 'field' : pathname.startsWith('/engine') || pathname.startsWith('/tools') ? 'engine' : '';
   const [engine, setEngineState] = useState(INITIAL);
   const angle = useRef({ yaw: -0.53, pitch: 0.15 });
   const [dialog, setDialog] = useState<{ title: string; body: ReactNode } | null>(null);
@@ -82,6 +99,7 @@ export function Shell() {
   const showDialog = useCallback((title: string, body: ReactNode) => setDialog({ title, body }), []);
   const openDialog = useCallback((id: DialogId) => {
     if (id === 'status') showDialog('Logic status', STATUS_BODY);
+    else if (id === 'method') showDialog('How OXX thinks', METHOD_BODY);
     else showDialog('Prototype notes', NOTES_BODY);
   }, [showDialog]);
   const closeDialog = useCallback(() => dialogRef.current?.close(), []);
@@ -114,9 +132,8 @@ export function Shell() {
             <span>OS</span>
           </Link>
           <nav className="os-nav" aria-label="Main navigation">
-            <NavLink to="/engine">Engine</NavLink>
-            <NavLink to="/field">Field</NavLink>
-            <NavLink to="/method">Method</NavLink>
+            <Link to="/engine" className={section === 'engine' ? 'active' : ''}>Engine</Link>
+            <Link to="/field" className={section === 'field' ? 'active' : ''}>Field</Link>
           </nav>
           <div className="header-end">
             <Link className="text-button" to="/tools">Tools <span>↗</span></Link>
@@ -124,8 +141,8 @@ export function Shell() {
         </header>
         <main className="os-main"><Outlet /></main>
         <footer className="os-footer">
-          <Link to="/">OXX OS / An evolving form engine</Link>
-          <Link className="text-button" to="/method">How OXX thinks <span>↗</span></Link>
+          <Link to="/">OXX / An evolving design system</Link>
+          <button className="text-button" onClick={() => openDialog('method')}>How OXX thinks <span>↗</span></button>
           <button className="text-button" onClick={() => openDialog('notes')}>Prototype notes <span>↗</span></button>
         </footer>
         <dialog ref={dialogRef} className="os-dialog" aria-labelledby="dialog-title" onClose={() => setDialog(null)}>

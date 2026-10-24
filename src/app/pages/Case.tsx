@@ -117,7 +117,9 @@ function StepVisual({ c, step, kind }: { c: Case; step: number; kind: Kind }) {
     case 5: return chips(['Intended form', 'Production translation', 'Built result', 'Divergence record']);
     case 6: return (
       <div className="chips">
-        <Tag status={c.engine === 'spine' ? 'BUILT' : 'EXTRACTED'} title={c.note ?? 'Provisional extraction'} />
+        {c.placeholder
+          ? <span className="mono">Candidate / source check needed</span>
+          : <Tag status={c.engine === 'spine' ? 'BUILT' : 'EXTRACTED'} title={c.note ?? 'Provisional extraction'} />}
         {c.id === '09' && <Tag status="USED" title="Source design-stage logic described in the narrative" />}
         <Link className="text-button blue" to={caseLogicPath(c)}>Open logic ↗</Link>
       </div>

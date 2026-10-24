@@ -12,29 +12,31 @@ npm run build      # -> dist/
 
 ## Pages
 
+Layout, copy and navigation follow the OXX OS v2 prototype; only the landing differs.
+
 | Route | Page |
 |-------|------|
-| `/` | Glyph hero (canvas O/X field) followed by the OXX OS introduction |
+| `/` | Glyph landing (canvas O/X field); slabs lead to Engine, Field, Tools and the "How OXX thinks" dialog |
 | `/engine/:principle` | Form finding: profile, count, rotation, depth; bypass operations; connect principles |
 | `/engine/:principle/compose` | Same engine with the brief → three strategies test ground (local rules, no AI) |
-| `/field` (`?type=`, `?view=atlas`) | Published field cases as a grid or atlas table |
+| `/field` (`?type=`, `?view=atlas`) | Field cases as a grid or atlas table (02–06 are placeholders) |
 | `/field/:id` | One case, read through the seven steps |
-| `/tools`, `/tools/spine` | Make utilities: adaptive spine array, flatten + label, sample downloads |
-| `/method` | The seven-step method and logic status tags |
+| `/tools` | Make utilities; "Adjust the array" opens the rib/flat-parts dialog |
 
+"How OXX thinks", "Prototype notes" and "Logic status" are dialogs. Unknown paths redirect to `/`.
 Old Lab / Projects / Framework URLs redirect permanently (see `vercel.json`).
 
 ## Structure
 
 - `src/app/routes.ts` — routes. Home is in the main bundle; the other pages are lazy chunks.
 - `src/app/os/` — the engine: `data.ts` (principles, cases, seven steps), `geometry.ts` (line models + projection), `Viewer.tsx` (canvas), `Shell.tsx` (header, footer, dialogs, engine state).
-- `src/app/pages/` — one file per page. `GlyphHero.tsx` + `components/GlyphField.tsx` are the landing canvas.
+- `src/app/pages/` — one file per page. `GlyphHero.tsx` (landing) + `components/GlyphField.tsx` (its canvas).
 - `src/styles/os.css` — OXX OS styles (in the `components` layer, so Tailwind utilities still win).
 - `public/` — served as-is (`brand/oxx-light.svg` + `brand/oxx-dark.svg` logos, `og-image.png`, `robots.txt`, `sitemap.xml`, `favicon.svg`, `CNAME`).
 
 Light/dark theme follows the device (`prefers-color-scheme`); the dark values are the `@media` block at the top of `os.css`. The glyph hero is dark in both.
 
-To publish another case, add it to `CASES` in `src/app/os/data.ts` (and to `public/sitemap.xml`).
+To fill in a case, edit `CASES` / `caseSteps` in `src/app/os/data.ts` (drop `placeholder`, add it to `public/sitemap.xml`).
 
 ## Design tokens
 
