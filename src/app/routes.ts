@@ -1,11 +1,11 @@
 import { createBrowserRouter } from 'react-router';
-import { HomePage } from './components/HomePage';
+import { LabLandingPage } from './components/LabLandingPage';
 
-// Home ships in the main bundle; every other page is split into its own chunk.
+// The landing ships in the main bundle; every other page is split into its own chunk.
 export const router = createBrowserRouter([
-  { path: '/', Component: HomePage },
+  { path: '/', Component: LabLandingPage },
   { path: '/about', lazy: () => import('./components/AboutPage').then((m) => ({ Component: m.AboutPage })) },
-  { path: '/lab', lazy: () => import('./components/LabLandingPage').then((m) => ({ Component: m.LabLandingPage })) },
+  { path: '/lab', Component: LabLandingPage },
   { path: '/lab/gallery', lazy: () => import('./components/LabPage').then((m) => ({ Component: m.LabPage })) },
   { path: '/lab/systems', lazy: () => import('./components/LabSystemPage').then((m) => ({ Component: m.LabSystemPage })) },
   { path: '/lab/cases', lazy: () => import('./components/LabCasesPage').then((m) => ({ Component: m.LabCasesPage })) },
@@ -53,5 +53,5 @@ export const router = createBrowserRouter([
   { path: '/projects/shaper/logic', lazy: () => import('./components/ShaperLogicPage').then((m) => ({ Component: m.ShaperLogicPage })) },
 
   // Catch-all
-  { path: '*', Component: HomePage },
+  { path: '*', Component: LabLandingPage },
 ]);
