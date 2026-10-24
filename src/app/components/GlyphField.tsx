@@ -5,8 +5,9 @@ import { OXX_PATTERN } from '../oxxPattern';
 // A full-screen grid of O/X glyph cells driven by a density field.
 // Density (0–1) picks a glyph from a 5-step ladder: · / + then o ◎ (O family)
 // or x ✖ (X family). The active lab system (mode) and a pointer trail shape the
-// field. The OXX wordmark sits in a quiet zone; the pointer scatters it (O↔X flip,
-// letters break into / + debris) and it reassembles as the disturbance fades.
+// field. The OXX wordmark sits in a quiet zone as solid blocks, like the logo; the pointer
+// scatters it (blocks flip to the other letter's glyph or break into / + debris) and it
+// reassembles into solid blocks as the disturbance fades.
 
 export type FieldMode = 'field' | 'select' | 'dense' | 'modular' | 'layer';
 const MODES: FieldMode[] = ['field', 'select', 'dense', 'modular', 'layer'];
@@ -119,6 +120,9 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
     // Wordmark: logoFam marks letter cells (1 = O, 2 = X); logoDist = distance to nearest letter cell.
     const N = cols * rows;
     const logoFam = new Uint8Array(N);
+    // Which sides of its logo pixel a cell sits on (1 left, 2 top, 4 right, 8 bottom):
+    // solid blocks leave a hairline gap between logo pixels, not between cells.
+    const logoEdge = new Uint8Array(N);
     const logoDist = new Float32Array(N).fill(Infinity);
     const letterCells: [number, number][] = [];
     OXX_PATTERN.forEach((line, pr) => [...line].forEach((bit, pc) => {
@@ -127,6 +131,7 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
         const col = logo.col + pc * logo.scale + sx, row = logo.row + pr * logo.scale + sy;
         if (col < 0 || col >= cols || row < 0 || row >= rows) continue;
         logoFam[row * cols + col] = pc <= 4 ? 1 : 2;
+        logoEdge[row * cols + col] = (sx === 0 ? 1 : 0) | (sy === 0 ? 2 : 0) | (sx === logo.scale - 1 ? 4 : 0) | (sy === logo.scale - 1 ? 8 : 0);
         letterCells.push([col, row]);
       }
     }));
@@ -138,6 +143,14 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
       for (const [lc, lr] of letterCells) best = Math.min(best, Math.hypot(col - lc, row - lr));
       logoDist[row * cols + col] = best;
     }
+
+    const gap = Math.max(1, Math.round(S * 0.05));
+    const solid = (col: number, row: number, edge: number) => {
+      const x = Math.round(col * cell * dpr), y = Math.round(row * cell * dpr);
+      const x2 = Math.round((col + 1) * cell * dpr), y2 = Math.round((row + 1) * cell * dpr);
+      const l = edge & 1 ? gap : 0, t = edge & 2 ? gap : 0, r = edge & 4 ? gap : 0, b = edge & 8 ? gap : 0;
+      ctx.fillRect(x + l, y + t, x2 - x - l - r, y2 - y - t - b);
+    };
 
     const trail = new Float32Array(N);
     const scatter = new Float32Array(N);
@@ -181,12 +194,13 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
 
       ctx.fillStyle = oxx.void;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = oxx.paper; // for the wordmark blocks
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
           const i = row * cols + col;
           const ld = logoDist[i];
-          let level = 0, fam = 0, red = false;
+          let level = 0, fam = 0, red = false, block = false;
 
           if (ld <= QUIET) {
             // Wordmark zone. Each cell has its own threshold, so cells break and
@@ -197,7 +211,8 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
             if (lf) {
               const th = 0.25 + 0.4 * hash(col, row, 21);
               if (sc > th + 0.35) level = hash(col, row, tick) < 0.5 ? 2 : 3; // broken into / +
-              else { level = TOP; fam = sc > th ? 2 - lf : lf - 1; }           // O↔X flip
+              else if (sc > th) { level = TOP; fam = 2 - lf; }                  // flipped to the other letter's glyph
+              else block = true;                                                // at rest: a solid block
               red = sc > 0.85;
             } else if (sc > 0.15 && hash(col, row, 24) < 1 - ld / (QUIET + 1)) {
               const th = 0.2 + 0.5 * hash(col, row, 23);                      // debris spilling between letters
@@ -235,7 +250,8 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
             fam = noise3(col * 0.09 + 50, row * 0.09, t * 0.03) + hash(col, row, 3) * 0.35 > 0.72 ? 1 : 0;
           }
 
-          if (level <= 0 || hash(col, row, 7) > intro * 1.15) continue; // staggered reveal
+          if ((level <= 0 && !block) || hash(col, row, 7) > intro * 1.15) continue; // staggered reveal
+          if (block) { solid(col, row, logoEdge[i]); continue; }
           ctx.drawImage(sprites[red ? 1 : 0][level][fam], Math.round(col * cell * dpr), Math.round(row * cell * dpr));
         }
       }
