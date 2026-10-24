@@ -100,8 +100,19 @@ export function Shell() {
   return (
     <Ctx.Provider value={value}>
       <div className="os">
-        <header className={`os-header ${home ? 'over' : ''}`}>
-          <Link className="brand" to="/" aria-label="OXX OS home">OXX<span>OS</span></Link>
+        {/* data-glyph-quiet: the hero's glyph field leaves no pointer trail under the header */}
+        <header className={`os-header ${home ? 'over' : ''}`} data-glyph-quiet>
+          <Link className="brand" to="/" aria-label="OXX OS home">
+            {home ? (
+              <img src="/brand/oxx-dark.svg" alt="OXX" width={72} height={30} />
+            ) : (
+              <picture>
+                <source srcSet="/brand/oxx-dark.svg" media="(prefers-color-scheme: dark)" />
+                <img src="/brand/oxx-light.svg" alt="OXX" width={72} height={30} />
+              </picture>
+            )}
+            <span>OS</span>
+          </Link>
           <nav className="os-nav" aria-label="Main navigation">
             <NavLink to="/engine">Engine</NavLink>
             <NavLink to="/field">Field</NavLink>
@@ -130,7 +141,8 @@ export function Shell() {
         </dialog>
         <div className={`toast ${toastMsg ? 'show' : ''}`} role="status">{toastMsg}</div>
       </div>
-      <ScrollRestoration />
+      {/* Keyed by path: every fresh page load shares the key 'default', which would carry scroll across pages. */}
+      <ScrollRestoration getKey={loc => loc.pathname} />
     </Ctx.Provider>
   );
 }

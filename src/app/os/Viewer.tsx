@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { DEFAULT_PARAMS, type EngineId, type Kind, type Params } from './data';
 import { model, project, type Vec3 } from './geometry';
-import { os } from '../tokens';
 
 const SPATIAL = { yaw: -0.53, pitch: 0.15 };
 const clampPitch = (p: number) => Math.max(-1.3, Math.min(1.3, p));
@@ -50,13 +49,16 @@ export function Viewer({
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     ctx.clearRect(0, 0, w, h);
     const { kind, params, disabled, additions, interactive } = input.current;
+    // Colors come from the theme variables in os.css, so the canvas follows light/dark mode.
+    const css = getComputedStyle(wrap);
+    const color = (name: string) => css.getPropertyValue(name).trim();
     const { yaw, pitch, ortho } = cam.current;
     const data = model(kind, params, disabled, additions);
     const pt = (p: Vec3) => project(p, w, h, yaw, pitch, ortho);
 
     // Quiet registration marks keep the canvas legible without a UI grid.
     if (interactive) {
-      ctx.strokeStyle = os.mark;
+      ctx.strokeStyle = color('--os-mark');
       ctx.lineWidth = 0.6;
       for (const [x, y] of [[w * 0.5, h * 0.5], [28, 28], [w - 28, h - 28]]) {
         ctx.beginPath();
@@ -71,11 +73,11 @@ export function Viewer({
     for (const l of lines) {
       ctx.beginPath();
       l.pts.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])));
-      ctx.strokeStyle = l.soft ? 'rgba(41,75,220,.19)' : 'rgba(41,75,220,.85)';
+      ctx.strokeStyle = color(l.soft ? '--os-geo-soft' : '--os-geo');
       ctx.lineWidth = (interactive ? 1.25 : 0.95) * l.weight;
       ctx.stroke();
     }
-    ctx.fillStyle = os.muted;
+    ctx.fillStyle = color('--os-muted');
     ctx.font = '8px ui-monospace, monospace';
     ctx.textAlign = 'center';
     for (const l of data.labels) { const p = pt(l.at); ctx.fillText(l.text, p[0], p[1]); }
@@ -104,7 +106,9 @@ export function Viewer({
   useEffect(() => {
     const ro = new ResizeObserver(schedule);
     ro.observe(wrapRef.current!);
-    return () => { ro.disconnect(); cancelAnimationFrame(frame.current); frame.current = 0; };
+    const scheme = window.matchMedia('(prefers-color-scheme: dark)');
+    scheme.addEventListener('change', schedule);
+    return () => { ro.disconnect(); scheme.removeEventListener('change', schedule); cancelAnimationFrame(frame.current); frame.current = 0; };
   }, [schedule]);
 
   useEffect(() => {

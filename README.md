@@ -30,7 +30,9 @@ Old Lab / Projects / Framework URLs redirect permanently (see `vercel.json`).
 - `src/app/os/` — the engine: `data.ts` (principles, cases, seven steps), `geometry.ts` (line models + projection), `Viewer.tsx` (canvas), `Shell.tsx` (header, footer, dialogs, engine state).
 - `src/app/pages/` — one file per page. `GlyphHero.tsx` + `components/GlyphField.tsx` are the landing canvas.
 - `src/styles/os.css` — OXX OS styles (in the `components` layer, so Tailwind utilities still win).
-- `public/` — served as-is (`og-image.png`, `robots.txt`, `sitemap.xml`, `favicon.svg`, `CNAME`).
+- `public/` — served as-is (`brand/oxx-light.svg` + `brand/oxx-dark.svg` logos, `og-image.png`, `robots.txt`, `sitemap.xml`, `favicon.svg`, `CNAME`).
+
+Light/dark theme follows the device (`prefers-color-scheme`); the dark values are the `@media` block at the top of `os.css`. The glyph hero is dark in both.
 
 To publish another case, add it to `CASES` in `src/app/os/data.ts` (and to `public/sitemap.xml`).
 

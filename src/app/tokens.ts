@@ -9,11 +9,10 @@ export const oxx = {
   body: "'DM Sans', sans-serif",
 } as const;
 
-// OXX OS: white paper, near-black ink, one blue for live geometry and actions.
+// OXX OS light-theme colors for exported files (SVG downloads). On-screen canvases
+// read the themed --os-* variables from os.css instead, so they follow dark mode.
 export const os = {
   ink: '#1c1c1c',
   muted: '#8a8a8a',
-  line: '#e4e4e4',
   blue: '#294bdc',
-  mark: '#d8d8d8',
 } as const;

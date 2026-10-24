@@ -158,6 +158,8 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
 
     let last: [number, number] | null = null;
     const onPointer = (e: PointerEvent) => {
+      // UI that overlays the field (the header) keeps its labels clear of the trail
+      if (e.target instanceof Element && e.target.closest('[data-glyph-quiet]')) { last = null; return; }
       const rect = canvas.getBoundingClientRect();
       const p: [number, number] = [(e.clientX - rect.left) / cell, (e.clientY - rect.top) / cell];
       // stamp along the segment so fast strokes stay continuous
