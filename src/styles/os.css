@@ -66,11 +66,10 @@
   .os-header { height: 88px; display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; padding: 0 4%; border-bottom: 1px solid var(--os-line); background: var(--os-paper); }
   .os-header.over { position: absolute; inset: 0 0 auto; z-index: 10; background: transparent; border-color: rgb(255 255 255 / 0.1); color: #fff; }
   .brand { font-size: 31px; font-weight: 800; letter-spacing: -0.09em; display: inline-flex; align-items: center; width: max-content; }
-  .brand img { display: block; height: 30px; width: auto; }
-  .brand span { font: 10px var(--os-mono); letter-spacing: 0; border: 1px solid var(--os-line); padding: 4px; margin: 4px 0 0 12px; }
-  .over .brand span { border-color: rgb(255 255 255 / 0.25); }
+  .brand img { display: block; height: 22px; width: auto; }
+  .brand span { font: 9px var(--os-mono); letter-spacing: 0; border: 1px solid var(--os-line); padding: 3px 4px; margin: 0 0 0 10px; }
   /* Over the glyph hero, labels sit on void blocks so field cells never run through the text. */
-  .over :is(.brand, .os-nav a, .text-button) { background: var(--color-void); box-shadow: 0 0 0 8px var(--color-void); }
+  .over :is(.os-nav a, .text-button) { background: var(--color-void); box-shadow: 0 0 0 8px var(--color-void); }
   .os-nav { display: flex; justify-content: center; gap: 35px; }
   .os-nav a { font-size: 13px; padding: 10px 0; border-bottom: 1px solid transparent; }
   .os-nav a.active { border-color: currentColor; }

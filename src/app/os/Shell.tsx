@@ -120,17 +120,16 @@ export function Shell() {
       <div className="os">
         {/* data-glyph-quiet: the hero's glyph field leaves no pointer trail under the header */}
         <header className={`os-header ${home ? 'over' : ''}`} data-glyph-quiet>
-          <Link className="brand" to="/" aria-label="OXX OS home">
-            {home ? (
-              <img src="/brand/oxx-dark.svg" alt="OXX" width={72} height={30} />
-            ) : (
+          {/* The landing already shows the big wordmark, so the logo appears only on inner pages. */}
+          {home ? <span /> : (
+            <Link className="brand" to="/" aria-label="OXX OS home">
               <picture>
                 <source srcSet="/brand/oxx-dark.svg" media="(prefers-color-scheme: dark)" />
-                <img src="/brand/oxx-light.svg" alt="OXX" width={72} height={30} />
+                <img src="/brand/oxx-light.svg" alt="OXX" width={53} height={22} />
               </picture>
-            )}
-            <span>OS</span>
-          </Link>
+              <span>OS</span>
+            </Link>
+          )}
           <nav className="os-nav" aria-label="Main navigation">
             <Link to="/engine" className={section === 'engine' ? 'active' : ''}>Engine</Link>
             <Link to="/field" className={section === 'field' ? 'active' : ''}>Field</Link>
