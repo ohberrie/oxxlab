@@ -140,8 +140,8 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
       logoDist[row * cols + col] = best;
     }
 
-    // One block per cell, sized like the ◎ / ✖ glyphs (11/16 of a cell) so it sits on the same grid.
-    const blockInset = Math.round(S * 2.5 / 16), blockSize = S - 2 * blockInset;
+    // One block per cell on the glyph grid, with a thin gap (1/8 of a cell) between neighbours.
+    const blockInset = Math.max(1, Math.round(S / 16)), blockSize = S - 2 * blockInset;
     const solid = (col: number, row: number) => {
       ctx.fillRect(Math.round(col * cell * dpr) + blockInset, Math.round(row * cell * dpr) + blockInset, blockSize, blockSize);
     };
