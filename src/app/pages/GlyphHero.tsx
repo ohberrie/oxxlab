@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { GlyphField, computeGrid, FieldMode, Grid, LogoPlacement } from '../components/GlyphField';
+import { StudyPair } from '../os/StudyPair';
 import { useOs } from '../os/Shell';
 
 // Each section of OXX OS drives one behavior of the glyph field. "How OXX thinks" is a dialog, not a page.
 const SECTIONS: { to?: string; num: string; name: string; desc: string; mode: FieldMode }[] = [
   { to: '/engine', num: '01', name: 'Engine', desc: 'Form finding: change a variable, keep the principle', mode: 'dense' },
-  { to: '/field', num: '02', name: 'Field', desc: 'Where the rules come from', mode: 'modular' },
-  { to: '/tools', num: '03', name: 'Tools', desc: 'From form to parts', mode: 'layer' },
+  { to: '/cases', num: '02', name: 'Cases', desc: 'Intent → formal choice → built → extraction', mode: 'modular' },
+  { to: '/tools', num: '03', name: 'Make / Utilities', desc: 'From form to parts · fabrication tools', mode: 'layer' },
   { num: '04', name: 'How OXX thinks', desc: 'Practice → extraction → engine → new practice', mode: 'select' },
 ];
 
@@ -95,7 +96,8 @@ export function GlyphHero() {
   const box = (r: Rect) => ({ left: r.col * grid.cell, top: r.row * grid.cell, width: r.w * grid.cell, height: r.h * grid.cell });
 
   return (
-    <section className="relative w-full overflow-hidden bg-void" style={{ height: grid.height }} aria-label="OXX OS">
+    <>
+    <section className="relative w-full overflow-hidden bg-void" style={{ height: grid.height }} aria-label="OXX OS" data-field-mode={mode}>
       <style>{SLAB_CSS}</style>
       <GlyphField grid={grid} logo={layout.logo} mode={mode} />
 
@@ -140,5 +142,7 @@ export function GlyphHero() {
       </nav>
 
     </section>
+    <StudyPair landing />
+    </>
   );
 }
