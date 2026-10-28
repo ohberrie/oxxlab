@@ -1,13 +1,9 @@
 import { createBrowserRouter } from 'react-router';
-import { EnginePage } from './components/EnginePage';
 import { LabLandingPage } from './components/LabLandingPage';
 
 // The landing ships in the main bundle; every other page is split into its own chunk.
 export const router = createBrowserRouter([
-  { path: '/', Component: EnginePage },
-  { path: '/engine', Component: EnginePage },
-  { path: '/cases', Component: EnginePage },
-  { path: '/legacy', Component: LabLandingPage },
+  { path: '/', Component: LabLandingPage },
   { path: '/about', lazy: () => import('./components/AboutPage').then((m) => ({ Component: m.AboutPage })) },
   { path: '/lab', Component: LabLandingPage },
   { path: '/lab/gallery', lazy: () => import('./components/LabPage').then((m) => ({ Component: m.LabPage })) },
