@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router';
+import { Link, Navigate, useParams } from 'react-router';
 import { ENGINES, caseKind, caseLogicPath, caseSteps, getCase, type Case, type Kind } from '../os/data';
 import { Tag } from '../os/Shell';
 import { Viewer } from '../os/Viewer';
@@ -13,6 +13,7 @@ export function CasePage() {
       </section>
     );
   }
+  if (c.id === '09' || c.id === '10') return <Navigate to={`/cases/${c.id}`} replace />;
   const kind = caseKind(c);
   const logic = caseLogicPath(c);
   const spine = c.engine === 'spine';

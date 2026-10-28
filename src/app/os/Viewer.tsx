@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { DEFAULT_PARAMS, type EngineId, type Kind, type Params } from './data';
-import { model, project, type Vec3 } from './geometry';
+import { model, project, type Vec3, type Line, type Label } from './geometry';
 
 const SPATIAL = { yaw: -0.53, pitch: 0.15 };
 const clampPitch = (p: number) => Math.max(-1.3, Math.min(1.3, p));
 
 interface ViewerProps {
   kind: Kind;
+  geometry?: { lines: Line[]; labels: Label[] };
+  description?: string;
   params?: Params;
   disabled?: ReadonlySet<string>;
   additions?: readonly EngineId[];
@@ -22,7 +24,7 @@ interface ViewerProps {
 
 // A canvas line projection: redraws only when its inputs, size or camera change.
 export function Viewer({
-  kind, params = DEFAULT_PARAMS, disabled, additions, interactive = true,
+  kind, geometry, description, params = DEFAULT_PARAMS, disabled, additions, interactive = true,
   dock, caption = 'FORM STUDY', subtitle = 'One principle. Many possibilities.', className = '', angle, onAngle,
 }: ViewerProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -30,8 +32,8 @@ export function Viewer({
   const flat = kind === 'flatten';
   const cam = useRef({ yaw: flat ? 0 : angle?.yaw ?? SPATIAL.yaw, pitch: flat ? 0 : angle?.pitch ?? SPATIAL.pitch, ortho: flat });
   const target = useRef<{ yaw: number; pitch: number } | null>(null);
-  const input = useRef({ kind, params, disabled, additions, interactive, onAngle });
-  input.current = { kind, params, disabled, additions, interactive, onAngle };
+  const input = useRef({ kind, geometry, params, disabled, additions, interactive, onAngle });
+  input.current = { kind, geometry, params, disabled, additions, interactive, onAngle };
   const frame = useRef(0);
   const [camera, setCamera] = useState<'front' | 'spatial'>('spatial');
 
@@ -48,13 +50,21 @@ export function Viewer({
     const ctx = canvas.getContext('2d')!;
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     ctx.clearRect(0, 0, w, h);
-    const { kind, params, disabled, additions, interactive } = input.current;
+    const { kind, geometry, params, disabled, additions, interactive } = input.current;
     // Colors come from the theme variables in os.css, so the canvas follows light/dark mode.
     const css = getComputedStyle(wrap);
     const color = (name: string) => css.getPropertyValue(name).trim();
     const { yaw, pitch, ortho } = cam.current;
-    const data = model(kind, params, disabled, additions);
-    const pt = (p: Vec3) => project(p, w, h, yaw, pitch, ortho);
+    const data = geometry ?? model(kind, params, disabled, additions);
+    // Fit the whole 3D study, with enough breathing room for the viewer controls.
+    const points = geometry?.lines.flatMap(l => l.pts);
+    let center: Vec3 = [0,0,0], fit = 1;
+    if (points?.length) {
+      center = [0,1,2].map(k => (Math.min(...points.map(p=>p[k])) + Math.max(...points.map(p=>p[k]))) / 2) as Vec3;
+      const radius = Math.max(...points.map(p => Math.hypot(p[0]-center[0],p[1]-center[1],p[2]-center[2])));
+      fit = Math.min(1, 240 / Math.max(radius, 1));
+    }
+    const pt = (p: Vec3) => project([(p[0]-center[0])*fit,(p[1]-center[1])*fit,(p[2]-center[2])*fit], w, h, yaw, pitch, ortho);
 
     // Quiet registration marks keep the canvas legible without a UI grid.
     if (interactive) {
@@ -171,15 +181,15 @@ export function Viewer({
         ref={canvasRef}
         role="img"
         tabIndex={interactive ? 0 : -1}
-        aria-label={interactive ? `Interactive ${kind} geometry. Drag to orbit; use arrow keys to rotate.` : `${kind} geometry study`}
+        aria-label={description ?? (interactive ? `Interactive ${kind} geometry. Drag to orbit; use arrow keys to rotate.` : `${kind} geometry study`)}
       />
       {dock && (
         <>
           <div className="viewer-label">{caption}<b>{subtitle}</b></div>
           <div className="view-dock">
             <div className="segmented">
-              <button className={camera === 'front' ? 'active' : ''} onClick={() => setView('front')}>2D / FRONT</button>
-              <button className={camera === 'spatial' ? 'active' : ''} onClick={() => setView('spatial')}>3D / SPATIAL</button>
+              <button aria-pressed={camera === 'front'} className={camera === 'front' ? 'active' : ''} onClick={() => setView('front')}>2D / FRONT</button>
+              <button aria-pressed={camera === 'spatial'} className={camera === 'spatial' ? 'active' : ''} onClick={() => setView('spatial')}>3D / SPATIAL</button>
             </div>
             <span className="gesture">DRAG TO ORBIT · SHIFT + SCROLL TO TURN</span>
           </div>

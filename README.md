@@ -16,7 +16,10 @@ Layout, copy and navigation follow the OXX OS v2 prototype; only the landing dif
 
 | Route | Page |
 |-------|------|
-| `/` | Glyph landing (canvas O/X field); slabs lead to Engine, Field, Tools and the "How OXX thinks" dialog |
+| `/` | Glyph landing (canvas O/X field); slabs lead to Engine, Cases, Make utilities and the "How OXX thinks" dialog |
+| `/engine/layering` (`?preset=09` or `10`) | Shared Sequential Layering workspace; 2D/3D, ordered variations, comparison, JSON export |
+| `/cases`, `/cases/:id` | Focused izna/YEONJUN readings: Intent → Formal Choice → Built → Extraction |
+| `/utilities/make.html` | Original panel flattening utility, preserved with its script |
 | `/engine/:principle` | Form finding: profile, count, rotation, depth; bypass operations; connect principles |
 | `/engine/:principle/compose` | Same engine with the brief → three strategies test ground (local rules, no AI) |
 | `/field` (`?type=`, `?view=atlas`) | Field cases as a grid or atlas table (02–06 are placeholders) |
@@ -34,7 +37,7 @@ Old Lab / Projects / Framework URLs redirect permanently (see `vercel.json`).
 - `src/styles/os.css` — OXX OS styles (in the `components` layer, so Tailwind utilities still win).
 - `public/` — served as-is (`brand/oxx-light.svg` + `brand/oxx-dark.svg` logos, `og-image.png`, `robots.txt`, `sitemap.xml`, `favicon.svg`, `CNAME`).
 
-Light/dark theme follows the device (`prefers-color-scheme`); the dark values are the `@media` block at the top of `os.css`. The glyph hero is dark in both.
+Research pages use a white canvas. The original glyph hero stays dark; its layout and four hover modes are preserved.
 
 To fill in a case, edit `CASES` / `caseSteps` in `src/app/os/data.ts` (drop `placeholder`, add it to `public/sitemap.xml`).
 
@@ -50,3 +53,9 @@ To fill in a case, edit `CASES` / `caseSteps` in `src/app/os/data.ts` (drop `pla
 | accent | `#FF1E00` | glyph hero trail only |
 
 CSS variables live in `src/styles/os.css`, canvas/SVG values in `src/app/tokens.ts`, Tailwind tokens in `src/styles/theme.css`.
+
+## Sequential Layering study
+
+`src/app/os/layering.ts` separates the base strategy from ordered operators with enabled state, region and strength. Fold uses a rigid hinge on the current profile plane. The composition can be exported as versioned JSON. Case readings are research interpretations, not measured stage reconstructions; missing photography and dimensions are identified in Built. Existing archive, legacy engines and MAKE exports remain available.
+
+Run `node tests/layering.test.mjs` for geometry, ordering, scope, hinge and serialization checks, followed by typecheck/build.
