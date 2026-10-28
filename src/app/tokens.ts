@@ -1,12 +1,18 @@
-// OXX design tokens for inline styles and SVG attributes.
-// Keep in sync with src/styles/theme.css (Tailwind utilities).
+// OXX design tokens for inline styles, canvas and SVG.
+// Keep in sync with src/styles/theme.css (Tailwind utilities) and the --os-* variables in src/styles/os.css.
 export const oxx = {
   ink: '#141414',
-  paper: '#f8f8fd',
+  paper: '#ffffff',
   void: '#0a0a0a',
   accent: '#FF1E00',
-  studio: '#FF4D00',
-  mist: '#e8e8ed',
   mono: "'JetBrains Mono', monospace",
   body: "'DM Sans', sans-serif",
+} as const;
+
+// OXX OS light-theme colors for exported files (SVG downloads). On-screen canvases
+// read the themed --os-* variables from os.css instead, so they follow dark mode.
+export const os = {
+  ink: '#1c1c1c',
+  muted: '#8a8a8a',
+  blue: '#294bdc',
 } as const;

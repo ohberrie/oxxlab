@@ -5,11 +5,12 @@ import { OXX_PATTERN } from '../oxxPattern';
 // A full-screen grid of O/X glyph cells driven by a density field.
 // Density (0–1) picks a glyph from a 5-step ladder: · / + then o ◎ (O family)
 // or x ✖ (X family). The active lab system (mode) and a pointer trail shape the
-// field. The OXX wordmark sits in a quiet zone; the pointer scatters it (O↔X flip,
-// letters break into / + debris) and it reassembles as the disturbance fades.
+// field. The OXX wordmark sits in a quiet zone as solid cell-sized blocks; the pointer
+// scatters it (blocks flip to the other letter's glyph or break into / + debris) and it
+// reassembles into solid blocks as the disturbance fades.
 
-export type FieldMode = 'field' | 'selection-logic' | 'dense-field' | 'modular-fill' | 'layer-stack';
-const MODES: FieldMode[] = ['field', 'selection-logic', 'dense-field', 'modular-fill', 'layer-stack'];
+export type FieldMode = 'field' | 'select' | 'dense' | 'modular' | 'layer';
+const MODES: FieldMode[] = ['field', 'select', 'dense', 'modular', 'layer'];
 
 export interface Grid { cols: number; rows: number; cell: number; width: number; height: number }
 export interface LogoPlacement { col: number; row: number; scale: number }
@@ -139,6 +140,12 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
       logoDist[row * cols + col] = best;
     }
 
+    // One block per cell on the glyph grid, with a thin gap (1/8 of a cell) between neighbours.
+    const blockInset = Math.max(1, Math.round(S / 16)), blockSize = S - 2 * blockInset;
+    const solid = (col: number, row: number) => {
+      ctx.fillRect(Math.round(col * cell * dpr) + blockInset, Math.round(row * cell * dpr) + blockInset, blockSize, blockSize);
+    };
+
     const trail = new Float32Array(N);
     const scatter = new Float32Array(N);
     const weights = MODES.map(m => (m === modeRef.current ? 1 : 0));
@@ -158,6 +165,8 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
 
     let last: [number, number] | null = null;
     const onPointer = (e: PointerEvent) => {
+      // UI that overlays the field (the header) keeps its labels clear of the trail
+      if (e.target instanceof Element && e.target.closest('[data-glyph-quiet]')) { last = null; return; }
       const rect = canvas.getBoundingClientRect();
       const p: [number, number] = [(e.clientX - rect.left) / cell, (e.clientY - rect.top) / cell];
       // stamp along the segment so fast strokes stay continuous
@@ -179,12 +188,13 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
 
       ctx.fillStyle = oxx.void;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = oxx.paper; // for the wordmark blocks
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
           const i = row * cols + col;
           const ld = logoDist[i];
-          let level = 0, fam = 0, red = false;
+          let level = 0, fam = 0, red = false, block = false;
 
           if (ld <= QUIET) {
             // Wordmark zone. Each cell has its own threshold, so cells break and
@@ -195,7 +205,8 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
             if (lf) {
               const th = 0.25 + 0.4 * hash(col, row, 21);
               if (sc > th + 0.35) level = hash(col, row, tick) < 0.5 ? 2 : 3; // broken into / +
-              else { level = TOP; fam = sc > th ? 2 - lf : lf - 1; }           // O↔X flip
+              else if (sc > th) { level = TOP; fam = 2 - lf; }                  // flipped to the other letter's glyph
+              else block = true;                                                // at rest: a solid block
               red = sc > 0.85;
             } else if (sc > 0.15 && hash(col, row, 24) < 1 - ld / (QUIET + 1)) {
               const th = 0.2 + 0.5 * hash(col, row, 23);                      // debris spilling between letters
@@ -233,7 +244,8 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
             fam = noise3(col * 0.09 + 50, row * 0.09, t * 0.03) + hash(col, row, 3) * 0.35 > 0.72 ? 1 : 0;
           }
 
-          if (level <= 0 || hash(col, row, 7) > intro * 1.15) continue; // staggered reveal
+          if ((level <= 0 && !block) || hash(col, row, 7) > intro * 1.15) continue; // staggered reveal
+          if (block) { solid(col, row); continue; }
           ctx.drawImage(sprites[red ? 1 : 0][level][fam], Math.round(col * cell * dpr), Math.round(row * cell * dpr));
         }
       }

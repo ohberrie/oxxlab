@@ -2,7 +2,62 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
+  "redirects": [
+    {
+      "source": "/lab",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/lab/cases/:path*",
+      "destination": "/field",
+      "permanent": true
+    },
+    {
+      "source": "/lab/cases",
+      "destination": "/field",
+      "permanent": true
+    },
+    {
+      "source": "/lab/:path*",
+      "destination": "/engine",
+      "permanent": true
+    },
+    {
+      "source": "/projects/:path*",
+      "destination": "/field",
+      "permanent": true
+    },
+    {
+      "source": "/projects",
+      "destination": "/field",
+      "permanent": true
+    },
+    {
+      "source": "/framework",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/notes",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/about",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/shop",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
