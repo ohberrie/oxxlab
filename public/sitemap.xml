@@ -128,4 +128,6 @@
     <loc>https://www.oxxlab.com/projects/shaper/logic</loc>
     <priority>0.6</priority>
   </url>
+  <url><loc>https://www.oxxlab.com/engine</loc></url>
+  <url><loc>https://www.oxxlab.com/cases</loc></url>
 </urlset>

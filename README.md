@@ -33,3 +33,14 @@ Defined twice and kept in sync:
 
 Fonts are loaded once from Google Fonts in `index.html` (variable weights).
 When adding a page, add it to `public/sitemap.xml` too.
+
+## OXX OS v0.2 — Sequential Layering prototype
+
+The root route now provides ENGINE; `/cases?preset=09` and `?preset=10` link the izna and YEONJUN principle studies to the same engine. `/legacy` retains the prior landing; every previous route and dataset remains in place.
+
+- `src/app/engine/model.ts`: shared 3D ribbon geometry, sequential layer placement, ordered Scale/Rotation/Axis/Fold operations with per-operation weight and front/back/all scope.
+- The SVG viewport projects actual 3D points orthographically; orbit supports pointer drag and left/right keys. 2D is a front projection, not fabrication output.
+- JSON export records the dominant strategy, ordered operators, weights, regions and values. It is not CAD export.
+- `/utilities/make.html`: existing panel-flatten simulation copied without code changes from `ohberrie/oxx_os` main at `9ba339ca821ab44c51318bc6d1198d54d95e3caa`. The source repository and all original functionality remain untouched. This utility is a demo; it has no upload/export pipeline.
+- izna and YEONJUN presets illustrate the principles supplied in the project brief. They are not measured reconstructions. Actual stage photography, fabrication dimensions and verified project captions were not available in this checkout; Built explicitly states this gap.
+- Validation: `npm run typecheck`, `node tests/engine.test.mjs`, `npm run build`, plus browser interaction checks.
