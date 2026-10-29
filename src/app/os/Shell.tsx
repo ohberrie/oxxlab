@@ -53,8 +53,8 @@ const STATUS_BODY = (
 const NOTES_BODY = (
   <>
     <p>This is a local interaction prototype for OXX’s research direction. Geometry is schematic; original stage photographs and project files have not been supplied.</p>
-    <p>Field 09 and 08 follow the supplied narrative. Other cases are provisional; 02–06 are corpus placeholders. Artist, date and collaboration credits remain unfilled. No fake built photographs are used.</p>
-    <p>Engine studies are newly written implementations. AI strategy exploration and reference extraction are explicitly simulated. No prompts, briefs or files leave this browser.</p>
+    <p>Field 09 and 08 follow the supplied narrative. Other cases are provisional; 03–06 and 11–12 await confirmed identities; 01–02 are held. Artist, date and collaboration credits remain unfilled. No fake built photographs are used.</p>
+    <p>Engine studies are newly written implementations. Brief-based strategy suggestions and reference extraction use illustrative local rules. No prompts, briefs or files leave this browser.</p>
     <p>Form studies can be saved as JSON. Fabrication samples can be downloaded as SVG and JavaScript. They are not manufacturing-ready outputs.</p>
   </>
 );
@@ -68,7 +68,7 @@ const METHOD_BODY = (
     <h3>Two kinds of reusable knowledge</h3>
     <p><b>Form finding</b> expresses spatial relationships: convergence, crossing, propagation, displacement.<br /><b>Make</b> translates selected form into constructible and identifiable parts.</p>
     <h3>Evidence stays attached</h3>
-    <p>Every principle links to its source case. Seven steps trace Given, Move, Design Space, Formal System, Judgment, Realization and Extraction. Reconstructed alternatives are marked as such.</p>
+    <p>Every principle links to its source case. Four scenes trace Intent, Formal Choice, Realization and Extraction. Reconstructed alternatives are marked as such.</p>
     <h3>A strategy engine in development</h3>
     <p>The test ground illustrates how a brief might lead to different compatible combinations. A future AI assistant could propose, explain and organize those strategies. The current demo uses local rules and does not perform AI inference, automatic structural validation or an objective assessment of design quality.</p>
   </>
@@ -132,10 +132,10 @@ export function Shell() {
           )}
           <nav className="os-nav" aria-label="Main navigation">
             <Link to="/engine" className={section === 'engine' ? 'active' : ''}>Engine</Link>
-            <Link to="/field" className={section === 'field' ? 'active' : ''}>Field</Link>
+            <Link to="/field" className={section === 'field' ? 'active' : ''}>Cases</Link>
           </nav>
           <div className="header-end">
-            <Link className="text-button" to="/tools">Tools <span>↗</span></Link>
+            <button className="text-button" onClick={() => openDialog('method')}>About ↗</button>
           </div>
         </header>
         <main className="os-main"><Outlet /></main>

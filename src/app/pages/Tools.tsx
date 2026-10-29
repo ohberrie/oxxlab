@@ -28,7 +28,7 @@ interface ArchiveItem {
 
 // The Make archive: each utility is catalogued like a library record, linked to its source case.
 const ITEMS: ArchiveItem[] = [
-  { id: 'T-01', title: 'Adaptive Spine Array', type: 'Make / engine', kind: 'spine', summary: 'Sample a path, orient each rib, and adapt its local scale.', input: 'Curved path + rib rule', output: 'Oriented, identifiable ribs', format: 'Interactive' },
+  { id: 'T-01', title: 'Adaptive Spine Array', type: 'MAKE / supplementary utility', kind: 'spine', summary: 'Sample a path, orient each rib, and adapt its local scale.', input: 'Curved path + rib rule', output: 'Oriented, identifiable ribs', format: 'Interactive' },
   { id: 'T-02', title: 'Flatten + Label', type: 'Make / fabrication utility', kind: 'flatten', summary: 'Retain part identity while moving from spatial ribs to a flat drawing.', input: 'Rib profiles + part IDs', output: 'Labelled SVG study + sample source', format: 'SVG · JS' },
 ];
 
@@ -52,12 +52,12 @@ export function ToolsPage() {
     <section className="page archive">
       <Link className="back" to="/engine">← ENGINE</Link>
       <div className="page-heading">
-        <div><span className="eyebrow">Tools / make / archive</span><h1>From form<br />to parts.</h1></div>
+        <div><span className="eyebrow">Engine utilities / MAKE</span><h1>From form<br />to parts.</h1></div>
         <p>Utilities translate spatial intent into fabrication information. Their origin remains connected to the field.</p>
       </div>
 
       <div className="archive-toolbar">
-        <span className="mono">{ITEMS.length} records · origin Field 08 · sorted by ID</span>
+        <span className="mono">{ITEMS.length} records · origin Case 08 · sorted by ID</span>
         <div className="segmented">
           <Link to="/tools" replace className={index ? '' : 'active'}>CARDS</Link>
           <Link to="?view=index" replace className={index ? 'active' : ''}>INDEX</Link>
@@ -76,7 +76,7 @@ export function ToolsPage() {
                   <td className="mono">{item.type}</td>
                   <td>{item.input} → {item.output}</td>
                   <td className="mono">{item.format}</td>
-                  <td><Link to="/field/08">Field 08 ↗</Link></td>
+                  <td><Link to="/field/08">Case 08 ↗</Link></td>
                   <td><div className="archive-actions">{actions(item)}</div></td>
                 </tr>
               ))}
@@ -100,7 +100,7 @@ export function ToolsPage() {
                 <dt>In</dt><dd>{item.input}</dd>
                 <dt>Out</dt><dd>{item.output}</dd>
                 <dt>Format</dt><dd>{item.format}</dd>
-                <dt>Origin</dt><dd><Link to="/field/08">Field 08 ↗</Link></dd>
+                <dt>Origin</dt><dd><Link to="/field/08">Case 08 ↗</Link></dd>
               </dl>
               <div className="archive-actions">{actions(item)}</div>
             </article>

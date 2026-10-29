@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router';
+import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router';
 import { ENGINES, ENGINE_IDS, getCase, isEngineId, strategyPlan, type EngineId, type Params, type Profile } from '../os/data';
 import { saveFile } from '../os/geometry';
 import { Tag, useOs } from '../os/Shell';
@@ -8,6 +8,7 @@ import { Viewer } from '../os/Viewer';
 export function EnginePage() {
   const { principle, mode } = useParams();
   const go = useNavigate();
+  const [search] = useSearchParams();
   // The engine and its compose state share one route, so switching keeps the scroll position.
   const navigate = (to: string, opts?: { replace?: boolean }) => go(to, { ...opts, preventScrollReset: true });
   const { engine: st, setEngine, resetEngine, angle, toast, showDialog, closeDialog } = useOs();
@@ -19,7 +20,16 @@ export function EnginePage() {
     if (compose) composeRef.current?.scrollIntoView({ block: 'start' });
   }, [compose]);
 
-  if (!isEngineId(principle) || (mode && !compose)) return <Navigate to="/engine/convergence" replace />;
+  const preset = search.get('preset');
+  useEffect(() => {
+    if (preset === '09' || preset === '10') {
+      setEngine({ params: { count: preset === '09' ? 10 : 8, rotation: preset === '09' ? 35 : 0, depth: 180, profile: preset === '09' ? 'triangle' : 'square', scale: preset === '09' ? 0.65 : 0.5, fold: preset === '10' ? 65 : 0, domain: preset === '10' ? 'planes' : 'axis' }, additions: preset === '10' ? ['layering'] : [], disabled: new Set(), selected: -1 });
+    }
+  }, [preset, setEngine]);
+
+  if (!isEngineId(principle) || (mode && !compose)) return <Navigate to="/engine/layering" replace />;
+  const legacy: Partial<Record<EngineId, EngineId>> = { convergence: 'layering', crossing: 'line', radial: 'layering', offset: 'enclosure' };
+  if (legacy[principle]) return <Navigate to={`/engine/${legacy[principle]}`} replace />;
   const id = principle;
   const e = ENGINES[id];
   const p = st.params;
@@ -33,17 +43,17 @@ export function EnginePage() {
     setEngine({ disabled, selected: -1 });
   };
   const pickEngine = (next: EngineId) => {
-    setEngine({ additions: [], disabled: new Set() });
+    setEngine({ additions: [], disabled: new Set(), params: { ...p, scale: next === 'perspective' ? 0.65 : 0.35, fold: 0 } });
     navigate(`/engine/${next}${compose ? '/compose' : ''}`);
   };
   const addPrinciple = (k: EngineId) => {
     setEngine({ additions: [...st.additions, k], selected: -1 });
     closeDialog();
-    if (!compose) navigate(`${base}/compose`);
+
   };
   const openAdd = () => {
     const options = ENGINE_IDS.filter(k => k !== id && !st.additions.includes(k));
-    showDialog('Connect a principle', (
+    showDialog('Combine a supporting strategy', (
       <>
         <p>Keep the current study and add a compatible spatial operation. The connection changes the geometry in the same canvas.</p>
         {options.length ? options.map(k => (
@@ -87,20 +97,21 @@ export function EnginePage() {
     bodyRef.current?.scrollIntoView({ block: 'start' });
     toast(`Strategy ${String.fromCharCode(65 + i)} loaded into the engine`);
   };
-  const source = getCase(e.source)!;
+  const source = getCase(e.source);
 
   return (
     <section className="workspace">
       <div className="workspace-heading">
-        <h1>Engine<span className="muted"> / {compose ? 'Compose' : 'Explore'}</span></h1>
+        <h1>Engine<span className="muted"> / Test ground</span></h1>
         <div className="engine-select">
-          <select value={id} onChange={ev => pickEngine(ev.target.value as EngineId)} aria-label="Choose a formal principle">
+          <select value={id} onChange={ev => pickEngine(ev.target.value as EngineId)} aria-label="Choose a dominant formal strategy">
             {ENGINE_IDS.map(k => <option key={k} value={k}>{ENGINES[k].name}</option>)}
           </select>
           <Tag status={e.status} title="Demo engine reconstructed from the source narrative" />
         </div>
       </div>
 
+      <div className="study-intro"><p>Select a strategy. Transform its rhythm. Combine and judge the result.</p><div className="preset-links"><span className="mono">SAMPLE STUDIES</span><Link to="/engine/layering?preset=09">09 / izna ↗</Link><Link to="/engine/enclosure?preset=10">10 / Yeonjun ↗</Link></div></div>
       <div className="engine-body" ref={bodyRef}>
         <Viewer
           kind={e.kind}
@@ -111,22 +122,22 @@ export function EnginePage() {
           dock
           angle={angle.current}
           onAngle={(yaw, pitch) => { angle.current = { yaw, pitch }; }}
-          caption={composed ? 'COMPOSED FORM STUDY' : `FORM FINDING / ${e.source}`}
+          caption={composed ? 'COMPOSED FORM STUDY' : e.source ? `SCHEMATIC STUDY / CASE ${e.source}` : 'CANDIDATE STRATEGY / SCHEMATIC'}
           subtitle={composed ? [e.name, ...st.additions.map(k => ENGINES[k].name)].join(' + ') : 'Change a variable. Keep the principle.'}
         />
         <aside className="control-panel">
           <div className="control-description">
-            <span className="eyebrow">Form finding</span>
+            <span className="eyebrow">Dominant strategy</span>
             <h2>{e.name}</h2>
             <p>{e.description}</p>
           </div>
-          <label className="profile-field">Input profile
+          {id !== 'line' && id !== 'division' && <label className="profile-field">Input profile
             <select className="profile" value={p.profile} onChange={ev => setParam('profile', ev.target.value as Profile)}>
               <option value="triangle">Triangle</option>
               <option value="circle">Circle</option>
               <option value="square">Square</option>
             </select>
-          </label>
+          </label>}
           <label>Count <output>{p.count}</output>
             <input type="range" min={3} max={22} value={p.count} onChange={ev => setParam('count', +ev.target.value)} />
           </label>
@@ -136,25 +147,33 @@ export function EnginePage() {
           <label>{e.labels[1]} <output>{p.depth}</output>
             <input type="range" min={0} max={240} value={p.depth} onChange={ev => setParam('depth', +ev.target.value)} />
           </label>
-          <Link className="source" to={`/field/${e.source}`}><span>ORIGIN / FIELD {e.source}</span>{source.name} ↗</Link>
+          <label>Scale progression <output>{(p.scale ?? 0).toFixed(2)}</output><input aria-label="Scale progression" type="range" min="0" max="0.85" step="0.01" value={p.scale ?? 0} onChange={ev => setParam('scale', +ev.target.value)} /></label>
+          <label>Fold ° <output>{p.fold ?? 0}</output><input aria-label="Fold" type="range" min="0" max="90" value={p.fold ?? 0} onChange={ev => setParam('fold', +ev.target.value)} /></label>
+          {source && <Link className="source" to={`/field/${e.source}`}><span>OBSERVED IN / CASE {e.source}</span>{source.name} ↗</Link>}
+
         </aside>
       </div>
 
+      <details className="composition-panel"><summary>Strategy composition <span className="muted">Order · hierarchy · domain +</span></summary>
+      <p>The base strategy defines the field. Supporting strategies transform it in the order shown; domain expansion and folding resolve the final geometry. Base switches bypass individual operations.</p>
+      <label>Application domain <select value={p.domain ?? 'axis'} onChange={ev => setParam('domain', ev.target.value as Params['domain'])}><option value="axis">Single depth axis</option><option value="planes">Multiple enclosure planes</option></select></label>
       <div className="node-strip" aria-label="Formal operations">
         {e.nodes.map((n, i) => (
           <span key={n} style={{ display: 'contents' }}>
-            {i > 0 && <span className="connector">→</span>}
+            {i > 0 && <span className="connector">·</span>}
             <button className={`node ${st.disabled.has(n) ? '' : 'active'}`} aria-pressed={!st.disabled.has(n)} onClick={() => toggleNode(n)}>{n}</button>
           </span>
         ))}
+        <span className="mono">SUPPORTING SEQUENCE</span>
         {st.additions.map(k => (
           <span key={k} style={{ display: 'contents' }}>
             <span className="connector">→</span>
+            <button className="node" disabled={st.additions.indexOf(k) === 0} aria-label={`Move ${ENGINES[k].name} earlier`} onClick={() => { const a = [...st.additions]; const i = a.indexOf(k); [a[i-1], a[i]] = [a[i], a[i-1]]; setEngine({ additions: a }); }}>←</button>
             <button className="node active" title={`Remove ${ENGINES[k].name}`} onClick={() => setEngine({ additions: st.additions.filter(a => a !== k), selected: -1 })}>{ENGINES[k].name} ×</button>
           </span>
         ))}
         <span className="connector">→</span>
-        <button className="node add" onClick={openAdd}>+ Add principle</button>
+        <button className="node add" onClick={openAdd}>+ Combine strategy</button>
         <div className="strip-actions">
           <button onClick={() => navigate(compose ? base : `${base}/compose`)}>{compose ? 'Close test ground' : 'Explore strategies ↗'}</button>
           <button onClick={resetEngine}>Reset</button>
@@ -165,16 +184,18 @@ export function EnginePage() {
         {composed && 'Connected principles transform the same geometry. '}
         Click an operation to bypass it. View controls rotate the camera; the depth slider changes the geometry.
         {composed && (
-          <><br />Connected origins: {st.additions.map((k, i) => (
-            <span key={k}>{i > 0 && ' / '}<Link className="blue" to={`/field/${ENGINES[k].source}`}>Field {ENGINES[k].source} ↗</Link></span>
+          <><br />Connected origins: {st.additions.filter(k => ENGINES[k].source).map((k, i) => (
+            <span key={k}>{i > 0 && ' / '}<Link className="blue" to={`/field/${ENGINES[k].source}`}>Case {ENGINES[k].source} ↗</Link></span>
           ))}</>
         )}
       </div>
 
+      </details>
+      <div className="study-footer"><span className="mono">SCHEMATIC RESEARCH MODEL / NOT ORIGINAL STAGE GEOMETRY</span><Link to="/tools">Utilities / MAKE ↗</Link></div>
       {compose && (
         <section className="compose" ref={composeRef}>
           <div>
-            <span className="eyebrow">Test ground / AI flow demo</span>
+            <span className="eyebrow">Possible directions / local rules</span>
             <h2>Brief → strategies.</h2>
             <p>Describe a spatial intention. Compare different combinations, then continue with one.</p>
             <textarea aria-label="Design brief" value={st.brief} onChange={ev => setEngine({ brief: ev.target.value })} />

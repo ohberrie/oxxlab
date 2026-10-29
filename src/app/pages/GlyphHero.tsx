@@ -4,7 +4,7 @@ import { GlyphField, computeGrid, type FieldMode, type Grid, type LogoPlacement 
 import { useOs } from '../os/Shell';
 
 const PATHS: { to: string; num: string; name: string; eyebrow: string; desc: string; mode: FieldMode }[] = [
-  { to: '/engine/convergence', num: '01', name: 'Engine', eyebrow: 'EXPERIMENT / COMPOSE', desc: 'Select a spatial strategy. Transform it. Combine it with another.', mode: 'dense' },
+  { to: '/engine/layering', num: '01', name: 'Engine', eyebrow: 'EXPERIMENT / COMPOSE', desc: 'Select a spatial strategy. Transform it. Combine it with another.', mode: 'dense' },
   { to: '/field', num: '02', name: 'Cases', eyebrow: 'OBSERVE / EXTRACT', desc: 'See how formal decisions emerge from real spatial work.', mode: 'modular' },
 ];
 interface Rect { col: number; row: number; w: number; h: number }
