@@ -47,10 +47,12 @@ export interface Case {
   identityNote?: string;
   verified: boolean;
   placeholder?: boolean;
+  held?: boolean;
 }
 
 // 03–10 follow the user's supplied sequence. Working labels are not official credits.
 export const CASES: Case[] = [
+  ...['01','02'].map(id => ({ id, name: 'Mapping held', engine: 'layering' as const, type: 'Form finding' as const, status: 'CANDIDATE' as const, summary: 'Mapping held; intent and source identity await confirmation.', verified: false, placeholder: true, held: true })),
   { id: '03', name: 'ALD1', song: 'Freak Alarm', engine: 'enclosure', type: 'Form finding', status: 'CANDIDATE', summary: 'Cube Space / enclosure — candidate dominant strategy.', verified: false },
   { id: '04', name: 'IVE', song: 'BLACKHOLE', engine: 'perspective', type: 'Form finding', status: 'CANDIDATE', summary: 'Perspective convergence + plane variation / Division (provisional).', verified: false },
   { id: '05', name: 'Enclosure / Exhibition', workingTitle: 'ALL(H)OURS stage · enclosure / slave-auction / exhibition', identityNote: 'ALL(H)OURS is a working stage reference. Official artist credit and song title remain unconfirmed.', engine: 'enclosure', type: 'Form finding', status: 'CANDIDATE', summary: 'Closure and the exhibition relationship, read through spatial enclosure.', verified: false },
@@ -66,6 +68,23 @@ export const UNNUMBERED_READINGS = [
   ['MODYSSEY', 'Depth B + width / mass variation'],
   ['MEOVV', 'Cube Space / enclosure'],
 ];
+// Editorial card titles describe intent; artist references remain secondary metadata.
+const CASE_PRESENTATION: Record<string, { keyword: string; artist: string }> = {
+  '01': { keyword: 'Intent pending', artist: 'Artist pending · mapping held' },
+  '02': { keyword: 'Intent pending', artist: 'Artist pending · mapping held' },
+  '03': { keyword: 'Freak Alarm', artist: 'ALD1 · Freak Alarm' },
+  '04': { keyword: 'Blackhole', artist: 'IVE · BLACKHOLE' },
+  '05': { keyword: 'Enclosure / Exhibition', artist: 'ALL(H)OURS · working reference / credits pending' },
+  '06': { keyword: 'Basketball / Love', artist: 'KickFlip · song title pending' },
+  '07': { keyword: 'Time Loop / Clock', artist: 'Park Jihoon · working reference / credits pending' },
+  '08': { keyword: 'Bone / Snake', artist: 'Taeyong · working reference / credits pending' },
+  '09': { keyword: 'Repetition / Movement', artist: 'izna · Metronome' },
+  '10': { keyword: 'Layered / Fold', artist: 'Yeonjun · working reference / credits pending' },
+  '11': { keyword: 'Intent pending', artist: 'Artist pending · analysis pending' },
+  '12': { keyword: 'Intent pending', artist: 'Artist pending · analysis pending' },
+};
+export const caseTitle = (c: Case) => `${c.id} — ${CASE_PRESENTATION[c.id].keyword}`;
+export const caseMetadata = (c: Case) => CASE_PRESENTATION[c.id].artist;
 export const getCase = (id: string | undefined) => CASES.find(c => c.id === id);
 export const caseKind = (c: Case): Kind => (c.engine === 'spine' ? 'spine' : ENGINES[c.engine].kind);
 export const caseLogicPath = (c: Case) => (c.placeholder ? '/field' : c.id === '09' || c.id === '10' ? `/engine/${c.engine}?preset=${c.id}` : c.engine === 'spine' ? '/tools' : `/engine/${c.engine}`);

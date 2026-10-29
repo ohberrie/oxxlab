@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from 'react-router';
-import { CASES, HELD_CASES, UNNUMBERED_READINGS, caseKind, type CaseType } from '../os/data';
+import { CASES, HELD_CASES, UNNUMBERED_READINGS, caseTitle, caseMetadata, caseKind, type CaseType } from '../os/data';
 import { Viewer } from '../os/Viewer';
 
 const FILTERS: ('All' | CaseType)[] = ['All', 'Form finding', 'Fabrication'];
@@ -40,7 +40,7 @@ export function FieldPage() {
             <tbody>
               {cases.map(c => (
                 <tr key={c.id}>
-                  <td><Link to={`/field/${c.id}`}>{c.id} / {c.name} ↗</Link></td>
+                  <td><Link to={`/field/${c.id}`}>{caseTitle(c)} ↗</Link><small className="case-card-meta">{caseMetadata(c)}</small></td>
                   <td>{c.placeholder ? 'Unassigned' : c.summary}</td>
                   <td>{c.placeholder ? 'Source index pending' : 'Narrative / schematic'}</td>
                   <td>{c.placeholder ? 'Pending' : <Link to={`/engine/${c.engine}${c.id === '09' || c.id === '10' ? `?preset=${c.id}` : ''}`}>OPEN STUDY ↗</Link>}</td>
@@ -53,12 +53,12 @@ export function FieldPage() {
         <div className="field-grid">
           {cases.map(c => (
             <Link key={c.id} className="field-card" to={`/field/${c.id}`}>
-              {c.placeholder ? <div className="pending-card mono">{c.id} / SOURCE INDEX PENDING</div> : <Viewer kind={caseKind(c)} interactive={false} params={THUMB} angle={{ yaw: -0.5, pitch: 0.15 }} />}
+              {c.placeholder ? <div className="pending-card mono">{c.held ? 'MAPPING HELD' : 'ANALYSIS PENDING'}</div> : <Viewer kind={caseKind(c)} interactive={false} params={THUMB} angle={{ yaw: -0.5, pitch: 0.15 }} />}
               <div className="card-info">
                 <div>
-                  <span className="mono">Case {c.id} / {c.type}{c.placeholder && ' / Placeholder'}</span>
-                  <h2>{c.name}</h2><span className="mono">{c.song ?? c.workingTitle ?? 'Source index pending'}</span>
-                  <span className="mono">{c.verified ? 'Narrative-based study' : 'Provisional reading'}</span>
+                  <span className="mono">{c.held ? 'Mapping held' : c.placeholder ? 'Analysis pending' : 'Intent / formal study'}</span>
+                  <h2>{caseTitle(c)}</h2>
+                  <span className="case-card-meta">{caseMetadata(c)}</span>
                 </div>
                 <span>↗</span>
               </div>
@@ -66,8 +66,8 @@ export function FieldPage() {
           ))}
         </div>
       )}
-      <div className="mapping-notes"><span className="eyebrow">Emerging vocabulary / numbering unconfirmed</span>{UNNUMBERED_READINGS.map(([artist, reading]) => <p key={artist}><b>{artist}</b> / {reading}</p>)}<p>Held outside the corpus: {HELD_CASES.map(id => <Link key={id} to={`/field/${id}`}>Case {id} ↗ </Link>)}</p></div>
-      <p className="field-note">03–12 form the research corpus. 11–12 analysis remains pending. 03–10 follow the supplied source order. Working stage references are distinguished from official credits.<br />All geometry is schematic; original photographs and project records are still needed.</p>
+      <div className="mapping-notes"><span className="eyebrow">Emerging vocabulary / numbering unconfirmed</span>{UNNUMBERED_READINGS.map(([artist, reading]) => <p key={artist}><b>{artist}</b> / {reading}</p>)}<p>Mapping held: {HELD_CASES.map(id => <Link key={id} to={`/field/${id}`}>Case {id} ↗ </Link>)}</p></div>
+      <p className="field-note">01–12 are shown in source order; 01–02 remain held. 03–12 form the research corpus. 11–12 analysis remains pending. 03–10 follow the supplied source order. Working stage references are distinguished from official credits.<br />All geometry is schematic; original photographs and project records are still needed.</p>
     </section>
   );
 }
