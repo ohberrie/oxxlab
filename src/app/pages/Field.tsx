@@ -1,6 +1,5 @@
 import { Link, useSearchParams } from 'react-router';
-import { CASES, caseKind, caseLogicPath, type CaseType } from '../os/data';
-import { layeringModel, presetStudy } from '../os/layering';
+import { CASES, caseKind, type CaseType } from '../os/data';
 import { Viewer } from '../os/Viewer';
 
 const FILTERS: ('All' | CaseType)[] = ['All', 'Form finding', 'Fabrication'];
@@ -46,7 +45,7 @@ export function FieldPage() {
                   <td>{c.type === 'Fabrication' ? <span className="dot" aria-label="primary route" /> : '—'}</td>
                   <td>{c.engine === 'convergence' || c.engine === 'offset' ? <span className="dot" aria-label="depth lens" /> : '—'}</td>
                   <td><span className="dot" aria-label="repetition lens" /></td>
-                  <td><Link to={caseLogicPath(c)}>{c.placeholder ? 'CANDIDATE' : 'OPEN LOGIC'} ↗</Link></td>
+                  <td><Link to={c.engine === 'spine' ? '/tools' : `/engine/${c.engine}`}>{c.placeholder ? 'CANDIDATE' : 'OPEN LOGIC'} ↗</Link></td>
                 </tr>
               ))}
             </tbody>
@@ -56,7 +55,7 @@ export function FieldPage() {
         <div className="field-grid">
           {cases.map(c => (
             <Link key={c.id} className="field-card" to={`/field/${c.id}`}>
-              <Viewer geometry={c.id === '09' || c.id === '10' ? layeringModel(presetStudy(c.id)) : undefined} kind={caseKind(c)} interactive={false} params={THUMB} angle={{ yaw: -0.5, pitch: 0.15 }} />
+              <Viewer kind={caseKind(c)} interactive={false} params={THUMB} angle={{ yaw: -0.5, pitch: 0.15 }} />
               <div className="card-info">
                 <div>
                   <span className="mono">Field {c.id} / {c.type}{c.placeholder && ' / Placeholder'}</span>
