@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router';
 import { CASE_READING, CASE_STRATEGY, HELD_CASES, caseTitle, caseMetadata, caseLogicPath, getCase } from '../os/data';
 import { CaseDiagram } from '../os/CaseDiagram';
+import { CaseMedia } from '../os/CaseMedia';
 
 const CHAPTERS = ['Intent', 'Formal Choice', 'Realization / Built', 'Extraction'] as const;
 
@@ -35,7 +36,7 @@ export function CasePage() {
         <p className="case-project-summary">{c.summary}</p>
         <span className="eyebrow">BASED ON PROJECT NARRATIVE / VISUAL SCHEMATIC</span>
       </div>
-      <CaseDiagram id={c.id} large />
+      <CaseMedia id={c.id} large />
     </div>
     <div className="case-formal-index">
       <div><small>DOMINANT STRATEGY</small><strong>{s.dominant}</strong></div>
@@ -68,7 +69,7 @@ export function CasePage() {
             <div className="case-choice-caption">Identified through the specific project; further combinatorial behavior belongs in Engine.</div>
           </div>}
           {i === 2 && <div className="case-built-placeholder">
-            <span className="eyebrow">SOURCE ASSET / RESERVED</span>
+            <span className="eyebrow">SOURCE IMAGE / PENDING</span>
             <div className="case-photo-corners" aria-hidden="true"/>
             <strong>Built photograph<br/>or production drawing</strong>
             <span>Not substituted by a rendered simulation.</span>
