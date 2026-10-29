@@ -8,7 +8,7 @@ export function FieldPage() {
   const [search] = useSearchParams();
   const type = FILTERS.find(f => f === search.get('type')) ?? 'All';
   const atlas = search.get('view') === 'atlas';
-  const cases = CASES.filter(c => type === 'All' || c.type === type);
+  const cases = CASES.filter(c => type === 'All' || c.type === type || (type === 'Fabrication' && c.id === '08'));
   const href = (patch: Record<string, string | null>) => {
     const next = new URLSearchParams(search);
     for (const [k, v] of Object.entries(patch)) if (v === null) next.delete(k); else next.set(k, v);
