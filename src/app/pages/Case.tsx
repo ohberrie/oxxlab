@@ -1,129 +1,87 @@
 import { Link, useParams } from 'react-router';
-import { ENGINES, caseKind, caseLogicPath, caseSteps, getCase, type Case, type Kind } from '../os/data';
-import { Tag } from '../os/Shell';
-import { Viewer } from '../os/Viewer';
+import { CASE_READING, CASE_STRATEGY, HELD_CASES, caseTitle, caseMetadata, caseLogicPath, getCase } from '../os/data';
+import { CaseDiagram } from '../os/CaseDiagram';
+import { CaseMedia } from '../os/CaseMedia';
+
+const CHAPTERS = ['Intent', 'Formal Choice', 'Realization / Built', 'Extraction'] as const;
 
 export function CasePage() {
-  const c = getCase(useParams().id);
-  if (!c) {
-    return (
-      <section className="page">
-        <h1>Case not found.</h1>
-        <p style={{ marginTop: 20 }}><Link className="blue" to="/field">Return to Field ↗</Link></p>
-      </section>
-    );
-  }
-  const kind = caseKind(c);
-  const logic = caseLogicPath(c);
-  const spine = c.engine === 'spine';
+  const { id } = useParams();
+  const c = getCase(id);
+  if (!c) return <section className="page"><Link className="back" to="/field">← CASES</Link><h1>Case not found.</h1></section>;
+  if (c.held) return <section className="page case-held-detail">
+    <Link className="back" to="/field">← CASES</Link>
+    <span className="eyebrow">CASE {c.id} / MAPPING HELD</span>
+    <h1>{caseTitle(c)}</h1>
+    <p>{caseMetadata(c)}</p>
+    <div className="case-held-notice">
+      <span className="eyebrow">ARCHIVE / NOT IN THE CURRENT FORMAL CORPUS</span>
+      <p>These early stage-design projects remain in the archive, but have deliberately not been assigned a dominant formal strategy. The current OXX extraction begins with Case 03.</p>
+    </div>
+    <Link to="/field">← Return to Cases</Link>
+  </section>;
 
-  return (
-    <section className="page">
-      <Link className="back" to="/field">← FIELD</Link>
-      <div className="case-header">
-        <div>
-          <span className="eyebrow">Field {c.id} / {c.type}</span>
-          <h1>{c.name}</h1>
-          <p>{c.summary}</p>
-        </div>
-        <div className="metadata">
-          ARTIST — / SONG {c.song ?? '—'}<br />
-          DATE — / ROLE &amp; COLLABORATOR CREDITS —<br />
-          {c.verified ? 'RECONSTRUCTED FROM SUPPLIED NARRATIVE' : 'PROVISIONAL ANALYSIS / SOURCE RECORDS NEEDED'}
-        </div>
-      </div>
-      <div className="case-visual">
-        <div className="evidence-slot">
-          <span className="placeholder-shape" aria-hidden="true" />
-          <div><strong>Built work belongs here.</strong>PHOTOGRAPH / DRAWING SLOT<br />Original project assets have not been supplied.</div>
-        </div>
-        <Viewer kind={kind} dock caption="GOVERNING PRINCIPLE" subtitle="Schematic reconstruction" />
-      </div>
-      <div className="case-jump">
-        <span>Built work → Formal principle → Reusable logic</span>
-        <Link className="blue" to={logic}>{spine ? 'Open fabrication tool' : 'Open extracted engine'} ↗</Link>
-      </div>
+  const r = CASE_READING[c.id];
+  const s = CASE_STRATEGY[c.id];
+  const provisional = c.id === '11' || c.id === '12';
+  const paragraphs = [r.intent, r.choice, r.realization, r.extraction];
 
-      <div className="case-analysis">
-        {caseSteps(c).map(([title, conclusion, detail], i) => (
-          <details key={title} className="step" open={i === 1}>
-            <summary>
-              <span className="step-number">0{i + 1}</span>
-              <span className="step-title">{title}</span>
-              <span className="step-conclusion">{conclusion}</span>
-              <span className="plus">+</span>
-            </summary>
-            <div className="step-body">
-              <p>{detail}</p>
-              <StepVisual c={c} step={i} kind={kind} />
-            </div>
-          </details>
-        ))}
+  return <section className="page case-research">
+    <Link className="back" to="/field">← CASES / ALL PROJECTS</Link>
+    <div className="case-project-top">
+      <div className="case-project-heading">
+        <span className="eyebrow">CASE {c.id} / {provisional ? 'PROVISIONAL FORMAL READING' : 'FORMAL RESEARCH'}</span>
+        <h1>{caseTitle(c)}</h1>
+        <p className="case-project-artist">{caseMetadata(c)}</p>
+        <p className="case-project-summary">{c.summary}</p>
+        <span className="eyebrow">BASED ON PROJECT NARRATIVE / VISUAL SCHEMATIC</span>
       </div>
+      <CaseMedia id={c.id} large />
+    </div>
+    <div className="case-formal-index">
+      <div><small>DOMINANT STRATEGY</small><strong>{s.dominant}</strong></div>
+      <div><small>VARIATION / COMPOSITION</small><strong>{s.variation}</strong></div>
+      <div><small>RESEARCH STATE</small><strong>{provisional ? 'HYPOTHESIS / TO BE VERIFIED' : c.status === 'BUILT' ? 'FORM + FABRICATION' : c.status === 'USED' ? 'USED / RETROSPECTIVE EXTRACTION' : 'RETROSPECTIVE READING'}</strong></div>
+    </div>
 
-      <div className="extraction-link">
-        <div>
-          <span className="mono">{spine ? 'Make / production logic' : 'Form / reusable principle'}</span>
-          <h2>{spine ? 'Adaptive array → Flatten + Label' : ENGINES[c.engine as keyof typeof ENGINES].name}</h2>
-          <span style={{ fontSize: 12 }}>Return this decision to the next design.</span>
+    <div className="case-analysis case-analysis-research">
+      {CHAPTERS.map((title, i) => <article key={title} className="case-scene case-scene-research">
+        <div className="case-scene-text">
+          <span className="eyebrow">0{i+1} / {title.toUpperCase()}</span>
+          <h2>{i === 0 ? 'What was the spatial intention?' : i === 1 ? 'What organized the form?' : i === 2 ? 'What happened in reality?' : 'What can be reused?'}</h2>
+          <p>{paragraphs[i]}</p>
+          {i === 2 && <details className="case-constraints">
+            <summary>Design conditions / Base rules <span>+</span></summary>
+            <p>{r.condition}</p>
+            <p>Physical constraints are documented here as part of realization; the Engine remains a separate formal exploration environment.</p>
+            {c.id === '08' && <Link className="blue" to="/tools">Supporting MAKE utility / flatten + label ↗</Link>}
+          </details>}
+          {i === 3 && <p className="case-caution">{provisional ? 'This is a candidate logic, not an algorithm known to have been used in the original project.' : 'Engine geometry is a new schematic abstraction, not a reconstruction of the original CAD files.'}</p>}
+          {i === 3 && <Link className="btn" to={caseLogicPath(c)}>Explore formal strategy in Engine <span>↗</span></Link>}
         </div>
-        <Link className="btn" to={logic}>Test the logic <span>↗</span></Link>
-      </div>
-    </section>
-  );
-}
-
-function StepVisual({ c, step, kind }: { c: Case; step: number; kind: Kind }) {
-  const chips = (items: string[]) => <div className="chips">{items.map(x => <span key={x}>{x}</span>)}</div>;
-  switch (step) {
-    case 0: return chips(['Director intent', 'Performer zone', 'Camera', 'Production time']);
-    case 1: return (
-      <div className="node-strip">
-        <span className="node">Intent</span><span className="connector">→</span>
-        <span className="node active">{c.engine === 'spine' ? 'Adaptive continuity' : 'Spatial relationship'}</span><span className="connector">→</span>
-        <span className="node">Formal strategy</span>
-      </div>
-    );
-    case 2:
-    case 4: {
-      const names = step === 2 ? ['Aligned', 'Progressive · illustrated choice', 'Displaced'] : ['Low intensity', 'Balanced · illustrated choice', 'High intensity'];
-      return (
-        <>
-          <span className="mono">{step === 2 ? 'Reconstructed design space' : 'Illustrative judgment comparison'}</span>
-          <div className="options">
-            {names.map((name, n) => (
-              <div key={name} className={`option ${n === 1 ? 'selected' : ''}`}>
-                <Viewer kind={kind} interactive={false} params={{ count: 8, rotation: n * 33 + 8, depth: n * 75 + 35, profile: 'triangle' }} />
-                <div>{name}</div>
-              </div>
-            ))}
-          </div>
-        </>
-      );
-    }
-    case 3: {
-      const labels = c.engine === 'spine' ? ['Continuous path', 'Adaptive rib sequence', 'Individual component'] : ENGINES[c.engine].scale;
-      return (
-        <div className="scale-diagram">
-          {labels.map((l, n) => (
-            <div key={l}>
-              <Viewer kind={kind} interactive={false} params={{ count: [12, 5, 2][n], rotation: 35, depth: [180, 80, 10][n], profile: 'triangle' }} />
-              <p>{l}</p>
-            </div>
-          ))}
+        <div className="case-scene-visual">
+          {i === 0 && <div className="case-concept-index"><span className="eyebrow">THE BRIEF IS NOT THE FORM</span><span className="case-concept-large">{c.song ?? c.workingTitle ?? c.name}</span><span>Intent / spatial requirements / directing context</span></div>}
+          {i === 1 && <div className="case-choice-visual">
+            <span className="eyebrow">GOVERNING RELATIONSHIP / RETROSPECTIVE READING</span>
+            <div className="case-choice-node"><small>BASE STRATEGY</small><b>{s.dominant}</b></div>
+            <div className="case-choice-plus">+</div>
+            <div className="case-choice-node"><small>VARIATION</small><b>{s.variation}</b></div>
+            <div className="case-choice-caption">Identified through the specific project; further combinatorial behavior belongs in Engine.</div>
+          </div>}
+          {i === 2 && <div className="case-built-placeholder">
+            <span className="eyebrow">SOURCE IMAGE / PENDING</span>
+            <div className="case-photo-corners" aria-hidden="true"/>
+            <strong>Built photograph<br/>or production drawing</strong>
+            <span>Not substituted by a rendered simulation.</span>
+          </div>}
+          {i === 3 && <div className="case-extraction-preview">
+            <CaseDiagram id={c.id} large />
+            <span>CASE {c.id} → {c.engine.toUpperCase()} ENGINE <span>↗</span></span>
+          </div>}
         </div>
-      );
-    }
-    case 5: return chips(['Intended form', 'Production translation', 'Built result', 'Divergence record']);
-    case 6: return (
-      <div className="chips">
-        {c.placeholder
-          ? <span className="mono">Candidate / source check needed</span>
-          : <Tag status={c.engine === 'spine' ? 'BUILT' : 'EXTRACTED'} title={c.note ?? 'Provisional extraction'} />}
-        {c.id === '09' && <Tag status="USED" title="Source design-stage logic described in the narrative" />}
-        <Link className="text-button blue" to={caseLogicPath(c)}>Open logic ↗</Link>
-      </div>
-    );
-    default: return null;
-  }
+      </article>)}
+    </div>
+    <p className="field-note">Case diagrams are new analytical illustrations based on project descriptions, not photographs or original stage geometry. The source brief and built documentation should be attached as distinct records. Alternative strategies generated later by Engine must not be presented as historical production choices.</p>
+    <div className="study-footer"><Link to="/field">← All cases</Link><Link to={caseLogicPath(c)}>Explore in Engine ↗</Link></div>
+  </section>;
 }

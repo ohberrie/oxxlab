@@ -23,17 +23,33 @@ export function model(kind: Kind, p: Params, disabled: ReadonlySet<string> = new
   const closed = (pts: Vec3[]) => [...pts, pts[0]];
   let count = p.count;
 
-  if (kind === 'converge') {
+  if (kind === 'division') {
+    const n = on('Repeat') ? count : 1;
+    for (let i = 0; i < n; i++) {
+      const x = -180 + 360 * Math.pow(i / n, 0.5 + p.rotation / 100);
+      const next = -180 + 360 * Math.pow((i + 1) / n, 0.5 + p.rotation / 100);
+      const z = on('Divide') ? (i % 2 ? 1 : -1) * p.depth / 4 : 0;
+      add([[x,-140,z],[next-3,-140,z],[next-3,140,z],[x,140,z],[x,-140,z]],i);
+    }
+  } else if (kind === 'enclosure') {
+    const n = on('Repeat') ? count : 1;
+    for(let i=0;i<n;i++) {
+      const t=i/Math.max(n-1,1), r=170*(1-t*(p.scale ?? 0.55)), z=on('Depth')?(t-0.5)*p.depth:0;
+      const frame=profile(r,z,on('Rotate')?t*p.rotation*Math.PI/180:0);
+      add(closed(frame),i);
+      if(p.domain !== 'axis') add([[-r,r,z],[-r,r,z+r*1.5],[r,r,z+r*1.5],[r,r,z]],i);
+    }
+  } else if (kind === 'converge' || kind === 'layer' || kind === 'perspective') {
     if (!on('Repeat')) count = 1;
     let prev: Vec3[] | null = null;
     for (let i = 0; i < count; i++) {
       const t = i / Math.max(count - 1, 1);
-      const r = on('Scale') ? 175 * (1 - 0.65 * t) : 175;
-      const rot = on('Rotate') ? (t * p.rotation * Math.PI) / 100 : 0;
+      const r = on('Scale') ? 175 * (1 - (p.scale ?? (kind === 'layer' ? 0 : 0.65)) * (kind === 'perspective' ? 0.4 + p.rotation / 100 : 1) * t) : 175;
+      const rot = kind !== 'perspective' && on('Rotate') ? (t * p.rotation * Math.PI) / 100 : 0;
       const z = on('Depth') ? (t - 0.5) * p.depth * 1.8 : 0;
       const pts = profile(r, z, rot);
       add(closed(pts), i, i === 0 ? 1.5 : 1);
-      if (prev && p.profile !== 'circle') for (let j = 0; j < pts.length; j++) add([prev[j], pts[j]], i, 0.55, true);
+      if (prev && (kind === 'perspective' || kind === 'converge') && p.profile !== 'circle') for (let j = 0; j < pts.length; j++) add([prev[j], pts[j]], i, 0.55, true);
       prev = pts;
     }
   } else if (kind === 'offset') {
@@ -67,10 +83,11 @@ export function model(kind: Kind, p: Params, disabled: ReadonlySet<string> = new
       }
     }
   } else if (kind === 'spine') {
+    if (!on('Repeat')) count = 1;
     const path: Vec3[] = [];
     for (let i = 0; i < count; i++) {
       const t = i / Math.max(1, count - 1);
-      const x = (t - 0.5) * 430, z = Math.sin(t * Math.PI * 2) * p.rotation * 1.2, y = Math.sin(t * Math.PI) * 15;
+      const x = (t - 0.5) * 430, z = Math.sin(t * Math.PI * 2) * (on('Curve') ? p.rotation : 0) * 1.2, y = Math.sin(t * Math.PI) * 15;
       const r = 25 + (40 + p.depth / 6) * Math.sin(Math.PI * t);
       const angle = Math.atan((Math.cos(t * Math.PI * 2) * p.rotation * 1.2 * Math.PI * 2) / 430);
       path.push([x, y, z]);
@@ -92,9 +109,17 @@ export function model(kind: Kind, p: Params, disabled: ReadonlySet<string> = new
   // Connected principles are spatial transforms applied in their displayed order.
   for (const principle of additions) {
     const maxGroup = Math.max(...lines.map(l => l.g), 1);
-    if (principle === 'offset') {
+    if (principle === 'division') {
+      lines.forEach(l => { l.pts = l.pts.map(([x,y,z]) => [x + (l.g % 2 ? 1 : -1)*p.rotation, y, z]); });
+    } else if (principle === 'enclosure') {
+      lines.push(...lines.map(l => ({...l, pts:l.pts.map(([x,y,z]):Vec3=>[x,z+130,y])})));
+    } else if (principle === 'line') {
+      lines.forEach(l => { l.pts=l.pts.map(([x,y,z])=>[x+Math.sin(z/90)*p.rotation,y,z]); });
+    } else if (principle === 'layering') {
+      lines.push(...lines.map(l=>({...l,pts:l.pts.map(([x,y,z]):Vec3=>[x,y,z+p.depth*0.5])})));
+    } else if (principle === 'offset') {
       lines.forEach(l => { l.pts = l.pts.map(([x, y, z]) => [x + (l.g / maxGroup - 0.5) * p.rotation * 1.4, y, z]); });
-    } else if (principle === 'convergence') {
+    } else if (principle === 'convergence' || principle === 'perspective') {
       lines.forEach(l => { const t = l.g / maxGroup, f = 1 - 0.5 * t; l.pts = l.pts.map(([x, y, z]) => [x * f, y * f, z + (t - 0.5) * p.depth]); });
     } else if (principle === 'radial') {
       lines.forEach(l => {
@@ -104,6 +129,16 @@ export function model(kind: Kind, p: Params, disabled: ReadonlySet<string> = new
     } else if (principle === 'crossing') {
       lines.push(...lines.map(l => ({ ...l, pts: l.pts.map(([x, y, z]): Vec3 => [-y, x, z + 70]), soft: true })));
     }
+  }
+  if (kind === 'spine' || kind === 'division') {
+    lines.forEach(l=>{const f=1-(p.scale ?? 0)*l.g/Math.max(count-1,1)*0.7;l.pts=l.pts.map(([x,y,z])=>[x,y*f,z]);});
+  }
+  if (p.domain === 'planes' && kind !== 'enclosure') {
+    lines.push(...lines.map(l=>({...l,pts:l.pts.map(([x,y,z]):Vec3=>[x,z,y])})));
+  }
+  if (on('Fold') && p.fold) {
+    const a=p.fold*Math.PI/180;
+    lines.forEach(l=>{l.pts=l.pts.map(([x,y,z])=> y>0 ? [x,y*Math.cos(a)-z*Math.sin(a),y*Math.sin(a)+z*Math.cos(a)] : [x,y,z]);});
   }
   return { lines, labels };
 }

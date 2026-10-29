@@ -9,7 +9,7 @@ export const router = createBrowserRouter([
     HydrateFallback: () => null,
     children: [
       { path: '/', Component: GlyphHero },
-      { path: '/engine', loader: () => redirect('/engine/convergence') },
+      { path: '/engine', loader: () => redirect('/engine/layering') },
       { path: '/engine/:principle/:mode?', lazy: () => import('./pages/Engine').then(m => ({ Component: m.EnginePage })) },
       { path: '/field', lazy: () => import('./pages/Field').then(m => ({ Component: m.FieldPage })) },
       { path: '/field/:id', lazy: () => import('./pages/Case').then(m => ({ Component: m.CasePage })) },

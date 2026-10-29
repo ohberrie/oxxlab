@@ -1,52 +1,42 @@
-# oxxlab.com — OXX OS
+# OXX / Formal strategy test ground
 
-A form engine: formal decisions extracted from built work, returned as engines for new design.
-Vite + React + react-router + Tailwind v4, deployed on Vercel.
+Vite + React. The black O/X landing and hover canvas are preserved. Primary navigation is Engine / Cases; MAKE is a supplementary utility.
+
+## Run locally
 
 ```sh
-npm i
-npm run dev        # local dev server
-npm run typecheck  # tsc --noEmit
-npm run build      # -> dist/
+npm install
+npm run dev -- --host 127.0.0.1
 ```
 
-## Pages
+Open the Local URL printed by Vite (it chooses the next port if 5173 is occupied).
 
-Layout, copy and navigation follow the OXX OS v2 prototype; only the landing differs.
+- `/engine/layering?preset=09` — izna schematic study
+- `/engine/enclosure?preset=10` — Yeonjun schematic study
+- `/field` — cases 03–12, grid and atlas
+- `/field/09`, `/field/10` — Intent → Formal Choice → Realization / Built → Extraction
+- `/tools` — supplementary MAKE samples
 
-| Route | Page |
-|-------|------|
-| `/` | Glyph landing (canvas O/X field); slabs lead to Engine, Field, Tools and the "How OXX thinks" dialog |
-| `/engine/:principle` | Form finding: profile, count, rotation, depth; bypass operations; connect principles |
-| `/engine/:principle/compose` | Same engine with the brief → three strategies test ground (local rules, no AI) |
-| `/field` (`?type=`, `?view=atlas`) | Field cases as a grid or atlas table (02–06 are placeholders) |
-| `/field/:id` | One case, read through the seven steps |
-| `/tools` | Make utilities; "Adjust the array" opens the rib/flat-parts dialog |
+## Engine model
 
-"How OXX thinks", "Prototype notes" and "Logic status" are dialogs. Unknown paths redirect to `/`.
-Old Lab / Projects / Framework URLs redirect permanently (see `vercel.json`).
+Depth A / Sequential Layering, Depth B / Perspective Convergence, Line, Division, and Cube Space / Enclosure are emerging strategy candidates. The base establishes geometry; supporting strategies apply in displayed order. Move-left controls reorder supporting strategies. Domain expansion and folding resolve the final geometry. Base switches bypass individual operations. The canvas supports front orthographic and orbitable perspective views, including keyboard arrows.
 
-## Structure
+Samples are new schematic interpretations, not recovered stage geometry. Brief suggestions use local keyword rules, with no AI service. JSON export records parameters, bypasses and supporting order. MAKE SVG/JS downloads remain schematic and are not fabrication-ready.
 
-- `src/app/routes.ts` — routes. Home is in the main bundle; the other pages are lazy chunks.
-- `src/app/os/` — the engine: `data.ts` (principles, cases, seven steps), `geometry.ts` (line models + projection), `Viewer.tsx` (canvas), `Shell.tsx` (header, footer, dialogs, engine state).
-- `src/app/pages/` — one file per page. `GlyphHero.tsx` (landing) + `components/GlyphField.tsx` (its canvas).
-- `src/styles/os.css` — OXX OS styles (in the `components` layer, so Tailwind utilities still win).
-- `public/` — served as-is (`brand/oxx-light.svg` + `brand/oxx-dark.svg` logos, `og-image.png`, `robots.txt`, `sitemap.xml`, `favicon.svg`, `CNAME`).
+## Evidence and mapping
 
-Light/dark theme follows the device (`prefers-color-scheme`); the dark values are the `@media` block at the top of `os.css`. The glyph hero is dark in both.
+The supplied ordered list maps 03–10 to: ALD1 — Freak Alarm; IVE — BLACKHOLE; Enclosure / Exhibition (ALL(H)OURS stage reference); KickFlip — Basketball / Love stage; Time Loop / Clock (Park Jihoon stage reference); Bone / Snake (Taeyong stage reference); izna — Metronome; Layered / Fold (Yeonjun stage reference). Working descriptors and provisional artist references are explicitly distinguished from confirmed official credits. 11–12 await identity/analysis, and 01–02 remain held. Formal strategy readings are provisional where source records are incomplete. MODYSSEY and MEOVV remain unnumbered vocabulary references.
 
-To fill in a case, edit `CASES` / `caseSteps` in `src/app/os/data.ts` (drop `placeholder`, add it to `public/sitemap.xml`).
+Original photos, drawings, dates and credits have not been supplied. Empty built-record slots are explicit. Historical alternatives and fabricated performance metrics are not shown as project evidence. Seven-step research notes remain behind disclosure inside the four-scene case presentation.
 
-## Design tokens
+## Validation
 
-| Token | Value | Where |
-|-------|-------|-------|
-| paper | `#ffffff` | `--os-paper`, `bg-paper` |
-| ink | `#1c1c1c` | `--os-ink`, `os.ink` |
-| blue | `#294bdc` | `--os-blue`, `os.blue`, `bg-blue` — live geometry and actions |
-| line | `#e4e4e4` | `--os-line`, `os.line` |
-| void | `#0a0a0a` | `bg-void` — glyph hero only |
-| accent | `#FF1E00` | glyph hero trail only |
+```sh
+npm run typecheck
+node tests/geometry.mjs
+npm run build
+```
 
-CSS variables live in `src/styles/os.css`, canvas/SVG values in `src/app/tokens.ts`, Tailwind tokens in `src/styles/theme.css`.
+Geometry checks cover five generators, finite projection, parameter changes, bypasses, domain, fold and order-dependent composition. Desktop/mobile browser checks cover landing navigation, samples, composition disclosure/add/reorder, local suggestions and case pages.
+
+Work remains on `prototype/formal-strategy-engine-v03`; main is not changed. A draft PR is the review artifact. No production deployment is performed by this workflow.
