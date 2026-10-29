@@ -25,7 +25,7 @@ Samples are new schematic interpretations, not recovered stage geometry. Brief s
 
 ## Evidence and mapping
 
-Confirmed numbered identities in the supplied reference: 07 Park Jihoon, 08 Taeyong, 09 izna, 10 Yeonjun. Cases 01–02 are held without strategy assignment. The 03–12 corpus is present, but 03–06 and 11–12 remain unassigned pending the source index; 11–12 analysis is unfinished. Known artist/strategy readings without confirmed numbers are listed separately rather than attached to invented case numbers.
+The supplied ordered list maps 03–10 to: ALD1 — Freak Alarm; IVE — BLACKHOLE; Enclosure / Exhibition (ALL(H)OURS stage reference); KickFlip — Basketball / Love stage; Time Loop / Clock (Park Jihoon stage reference); Bone / Snake (Taeyong stage reference); izna — Metronome; Layered / Fold (Yeonjun stage reference). Working descriptors and provisional artist references are explicitly distinguished from confirmed official credits. 11–12 await identity/analysis, and 01–02 remain held. Formal strategy readings are provisional where source records are incomplete. MODYSSEY and MEOVV remain unnumbered vocabulary references.
 
 Original photos, drawings, dates and credits have not been supplied. Empty built-record slots are explicit. Historical alternatives and fabricated performance metrics are not shown as project evidence. Seven-step research notes remain behind disclosure inside the four-scene case presentation.
 

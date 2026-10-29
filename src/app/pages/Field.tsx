@@ -57,7 +57,7 @@ export function FieldPage() {
               <div className="card-info">
                 <div>
                   <span className="mono">Case {c.id} / {c.type}{c.placeholder && ' / Placeholder'}</span>
-                  <h2>{c.name}</h2>
+                  <h2>{c.name}</h2><span className="mono">{c.song ?? c.workingTitle ?? 'Source index pending'}</span>
                   <span className="mono">{c.verified ? 'Narrative-based study' : 'Provisional reading'}</span>
                 </div>
                 <span>↗</span>
@@ -67,7 +67,7 @@ export function FieldPage() {
         </div>
       )}
       <div className="mapping-notes"><span className="eyebrow">Emerging vocabulary / numbering unconfirmed</span>{UNNUMBERED_READINGS.map(([artist, reading]) => <p key={artist}><b>{artist}</b> / {reading}</p>)}<p>Held outside the corpus: {HELD_CASES.map(id => <Link key={id} to={`/field/${id}`}>Case {id} ↗ </Link>)}</p></div>
-      <p className="field-note">03–12 form the research corpus. 11–12 analysis remains pending. Unconfirmed numbered identities remain unassigned.<br />All geometry is schematic; original photographs and project records are still needed.</p>
+      <p className="field-note">03–12 form the research corpus. 11–12 analysis remains pending. 03–10 follow the supplied source order. Working stage references are distinguished from official credits.<br />All geometry is schematic; original photographs and project records are still needed.</p>
     </section>
   );
 }

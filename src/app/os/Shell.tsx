@@ -53,7 +53,7 @@ const STATUS_BODY = (
 const NOTES_BODY = (
   <>
     <p>This is a local interaction prototype for OXX’s research direction. Geometry is schematic; original stage photographs and project files have not been supplied.</p>
-    <p>Field 09 and 08 follow the supplied narrative. Other cases are provisional; 03–06 and 11–12 await confirmed identities; 01–02 are held. Artist, date and collaboration credits remain unfilled. No fake built photographs are used.</p>
+    <p>Field 09 and 08 follow the supplied narrative. Other cases are provisional; 03–10 follow the supplied source order, with working references distinguished from official credits; 11–12 await analysis and 01–02 are held. Artist, date and collaboration credits remain unfilled. No fake built photographs are used.</p>
     <p>Engine studies are newly written implementations. Brief-based strategy suggestions and reference extraction use illustrative local rules. No prompts, briefs or files leave this browser.</p>
     <p>Form studies can be saved as JSON. Fabrication samples can be downloaded as SVG and JavaScript. They are not manufacturing-ready outputs.</p>
   </>

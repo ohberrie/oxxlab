@@ -21,9 +21,9 @@ export interface Engine {
 
 export const ENGINES: Record<EngineId, Engine> = {
   layering: { name: 'Depth A / Sequential Layering', kind: 'layer', source: '09', status: 'EXTRACTED', description: 'Repeat one profile through depth. Rotation and scale turn a sequence into spatial rhythm.', nodes: ['Repeat', 'Rotate', 'Scale', 'Depth'], labels: ['Progressive rotation', 'Layer depth'], scale: ['Spatial field', 'Layer sequence', 'Profile'] },
-  perspective: { name: 'Depth B / Perspective Convergence', kind: 'perspective', source: '', status: 'CANDIDATE', description: 'Connect planes toward a shared vanishing point. A candidate reading of IVE and MODYSSEY.', nodes: ['Repeat', 'Scale', 'Depth'], labels: ['Convergence', 'Depth'], scale: ['Focus', 'Plane', 'Edge'] },
+  perspective: { name: 'Depth B / Perspective Convergence', kind: 'perspective', source: '04', status: 'CANDIDATE', description: 'Connect planes toward a shared vanishing point. A candidate reading of IVE and MODYSSEY.', nodes: ['Repeat', 'Scale', 'Depth'], labels: ['Convergence', 'Depth'], scale: ['Focus', 'Plane', 'Edge'] },
   line: { name: 'Line / Trajectory', kind: 'spine', source: '08', status: 'EXTRACTED', description: 'Let a continuous path organize repeated elements. Curvature connects local parts to a whole.', nodes: ['Repeat', 'Curve'], labels: ['Curvature', 'Amplitude'], scale: ['Path', 'Sequence', 'Element'] },
-  division: { name: 'Division / Fragmentation', kind: 'division', source: '', status: 'CANDIDATE', description: 'Subdivide a boundary into unequal fields. An emerging strategy, also usable as a supporting operation.', nodes: ['Repeat', 'Divide'], labels: ['Division bias', 'Separation'], scale: ['Boundary', 'Field', 'Fragment'] },
+  division: { name: 'Division / Fragmentation', kind: 'division', source: '04', status: 'CANDIDATE', description: 'Subdivide a boundary into unequal fields. An emerging strategy, also usable as a supporting operation.', nodes: ['Repeat', 'Divide'], labels: ['Division bias', 'Separation'], scale: ['Boundary', 'Field', 'Fragment'] },
   enclosure: { name: 'Cube Space / Enclosure', kind: 'enclosure', source: '10', status: 'EXTRACTED', description: 'Define a spatial boundary, layer across its planes, then fold the relationship between floor and elevation.', nodes: ['Repeat', 'Rotate', 'Depth', 'Fold'], labels: ['Axis rotation', 'Boundary depth'], scale: ['Enclosure', 'Plane', 'Boundary'] },
   convergence: { name: 'Progressive Convergence', kind: 'converge', source: '09', status: 'EXTRACTED', description: 'A repeated profile contracts and rotates through depth, drawing attention toward a shared focus.', nodes: ['Repeat', 'Scale', 'Rotate', 'Depth'], labels: ['Rotation', 'Depth'], scale: ['Spatial direction', 'Frame sequence', 'Profile transformation'] },
   crossing: { name: 'Hierarchical Crossing', kind: 'cross', source: '01', status: 'EXTRACTED', description: 'Crossing fields establish a dominant direction. Change their density and angle to shift the hierarchy.', nodes: ['Distribute', 'Cross', 'Weight'], labels: ['Crossing angle', 'Separation'], scale: ['Crossing fields', 'Distributed intersections', 'Line-crossing motif'] },
@@ -43,26 +43,28 @@ export interface Case {
   summary: string;
   note?: string;
   song?: string;
+  workingTitle?: string;
+  identityNote?: string;
   verified: boolean;
   placeholder?: boolean;
 }
 
-// Only numbered identities supported by the supplied conversation are assigned.
-// Artist vocabulary without a confirmed case number must not become an invented mapping.
+// 03–10 follow the user's supplied sequence. Working labels are not official credits.
 export const CASES: Case[] = [
-  ...['03','04','05','06'].map(id => ({ id, name: 'Mapping pending', engine: 'layering' as const, type: 'Form finding' as const, status: 'CANDIDATE' as const, summary: 'Case identity and dominant strategy await the source index.', verified: false, placeholder: true })),
-  { id: '07', name: 'Park Jihoon', engine: 'layering', type: 'Form finding', status: 'EXTRACTED', summary: 'Sequential layering + radial / axis variation.', verified: false },
-  { id: '08', name: 'Taeyong', engine: 'line', type: 'Form finding', status: 'EXTRACTED', summary: 'Sequential layering + curvature / line dynamics. Fabrication is a supporting workflow.', verified: true },
-  { id: '09', name: 'izna', engine: 'layering', type: 'Form finding', status: 'USED', summary: 'Sequential layering + progressive rotation and scale.', song: 'Metronome', verified: true },
-  { id: '10', name: 'Yeonjun', engine: 'enclosure', type: 'Form finding', status: 'EXTRACTED', summary: 'Enclosure → layering across multiple planes → folding / axis reorientation.', verified: false },
+  { id: '03', name: 'ALD1', song: 'Freak Alarm', engine: 'enclosure', type: 'Form finding', status: 'CANDIDATE', summary: 'Cube Space / enclosure — candidate dominant strategy.', verified: false },
+  { id: '04', name: 'IVE', song: 'BLACKHOLE', engine: 'perspective', type: 'Form finding', status: 'CANDIDATE', summary: 'Perspective convergence + plane variation / Division (provisional).', verified: false },
+  { id: '05', name: 'Enclosure / Exhibition', workingTitle: 'ALL(H)OURS stage · enclosure / slave-auction / exhibition', identityNote: 'ALL(H)OURS is a working stage reference. Official artist credit and song title remain unconfirmed.', engine: 'enclosure', type: 'Form finding', status: 'CANDIDATE', summary: 'Closure and the exhibition relationship, read through spatial enclosure.', verified: false },
+  { id: '06', name: 'KickFlip', workingTitle: 'Basketball / Love stage', identityNote: 'Basketball / Love are working descriptors; the official song title is unconfirmed.', engine: 'line', type: 'Form finding', status: 'CANDIDATE', summary: 'Line / trajectory — candidate dominant strategy.', verified: false },
+  { id: '07', name: 'Time Loop / Clock', workingTitle: 'Park Jihoon stage', identityNote: 'Park Jihoon is the working stage reference. Official artist credit and song title remain unconfirmed.', engine: 'layering', type: 'Form finding', status: 'EXTRACTED', summary: 'Sequential layering + radial / axis variation.', verified: false },
+  { id: '08', name: 'Bone / Snake', workingTitle: 'Taeyong stage', identityNote: 'Taeyong is the working stage reference. Official artist credit and song title remain unconfirmed.', engine: 'line', type: 'Form finding', status: 'EXTRACTED', summary: 'Bone, spine and portal; upper snake-spine rigging. Sequential layering + curvature / line dynamics.', verified: true },
+  { id: '09', name: 'izna', song: 'Metronome', workingTitle: 'Progressive Convergence', engine: 'layering', type: 'Form finding', status: 'USED', summary: 'Repeated triangular frames + progressive rotation and scale.', verified: true },
+  { id: '10', name: 'Layered / Fold', workingTitle: 'Yeonjun stage', identityNote: 'Yeonjun is the working stage reference. Official artist credit and song title remain unconfirmed.', engine: 'enclosure', type: 'Form finding', status: 'EXTRACTED', summary: 'Orthogonal and diagonal frames; folding between frames and the floor plane.', verified: false },
   ...['11','12'].map(id => ({ id, name: 'Analysis pending', engine: 'layering' as const, type: 'Form finding' as const, status: 'CANDIDATE' as const, summary: 'Research corpus entry; identity and formal analysis await confirmation.', verified: false, placeholder: true })),
 ];
 export const HELD_CASES = ['01', '02'];
 export const UNNUMBERED_READINGS = [
-  ['IVE', 'Depth B + plane variation / Division (provisional)'],
   ['MODYSSEY', 'Depth B + width / mass variation'],
-  ['KickFlip', 'Line / trajectory'],
-  ['ALD1 · ALL(H)OURS · MEOVV', 'Cube Space / enclosure'],
+  ['MEOVV', 'Cube Space / enclosure'],
 ];
 export const getCase = (id: string | undefined) => CASES.find(c => c.id === id);
 export const caseKind = (c: Case): Kind => (c.engine === 'spine' ? 'spine' : ENGINES[c.engine].kind);
