@@ -108,10 +108,6 @@ export function ToolsPage() {
         </div>
       )}
 
-      <div className="archive-entry">
-        <div><span className="eyebrow">PRESERVED UTILITY / PANEL FLATTEN</span><p>The original panel and box flattening simulation remains available.</p></div>
-        <a href="/utilities/make.html">Open original utility ↗</a>
-      </div>
       <p className="field-note">
         Production workflow described in the supplied Stage 08 narrative. These are newly written schematic demos, not original fabrication files.<br />
         No joint design, material thickness, tolerance, toolpath or assembly validation. Downloaded files are study assets.

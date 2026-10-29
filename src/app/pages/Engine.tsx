@@ -92,7 +92,7 @@ export function EnginePage() {
   return (
     <section className="workspace">
       <div className="workspace-heading">
-        <h1><Link to="/engine/layering">Engine</Link><span className="muted"> / {compose ? 'Compose' : 'Explore'}</span></h1>
+        <h1>Engine<span className="muted"> / {compose ? 'Compose' : 'Explore'}</span></h1>
         <div className="engine-select">
           <select value={id} onChange={ev => pickEngine(ev.target.value as EngineId)} aria-label="Choose a formal principle">
             {ENGINE_IDS.map(k => <option key={k} value={k}>{ENGINES[k].name}</option>)}

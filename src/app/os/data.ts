@@ -44,11 +44,11 @@ export interface Case {
 
 // 02–06 are corpus placeholders, shown as CANDIDATE until source material is supplied.
 export const CASES: Case[] = [
-  { id: '09', name: 'izna / Rotational Progression', engine: 'convergence', type: 'Form finding', status: 'USED', note: 'Design-stage logic described in the supplied narrative.', summary: 'Translate repetition into a directional spatial sequence.', song: 'Metronome · supplied narrative', verified: true },
+  { id: '09', name: 'Progressive Convergence', engine: 'convergence', type: 'Form finding', status: 'USED', note: 'Design-stage logic described in the supplied narrative.', summary: 'Translate repetition into a directional spatial sequence.', song: 'Metronome · supplied narrative', verified: true },
   { id: '08', name: 'Adaptive Spine', engine: 'spine', type: 'Fabrication', status: 'BUILT', note: 'Production workflow described in the supplied narrative.', summary: 'Translate a continuous curve into adaptive, identifiable ribs.', verified: true },
   { id: '01', name: 'Hierarchical Crossing', engine: 'crossing', type: 'Form finding', status: 'EXTRACTED', summary: 'Make a hierarchy from crossing fields.', verified: false },
   { id: '07', name: 'Radial Propagation', engine: 'radial', type: 'Form finding', status: 'EXTRACTED', summary: 'Carry one gesture through a radial field.', verified: false },
-  { id: '10', name: 'YEONJUN / Folded Continuity', engine: 'offset', type: 'Form finding', status: 'EXTRACTED', summary: 'Connect floor and elevation through folding and axis reorientation.', verified: false },
+  { id: '10', name: 'Offset Frames', engine: 'offset', type: 'Form finding', status: 'EXTRACTED', summary: 'Establish tension through progressive displacement.', verified: false },
   { id: '02', name: 'Central Field', engine: 'radial', type: 'Form finding', status: 'CANDIDATE', summary: 'Working principle · confirm against source material.', verified: false, placeholder: true },
   { id: '03', name: 'Displaced Surface Field', engine: 'offset', type: 'Form finding', status: 'CANDIDATE', summary: 'Working principle · confirm against source material.', verified: false, placeholder: true },
   { id: '04', name: 'Layered Thresholds', engine: 'convergence', type: 'Form finding', status: 'CANDIDATE', summary: 'Working principle · confirm against source material.', verified: false, placeholder: true },
@@ -57,7 +57,7 @@ export const CASES: Case[] = [
 ];
 export const getCase = (id: string | undefined) => CASES.find(c => c.id === id);
 export const caseKind = (c: Case): Kind => (c.engine === 'spine' ? 'spine' : ENGINES[c.engine].kind);
-export const caseLogicPath = (c: Case) => c.id === '09' || c.id === '10' ? `/engine/layering?preset=${c.id}` : (c.engine === 'spine' ? '/tools' : `/engine/${c.engine}`);
+export const caseLogicPath = (c: Case) => (c.engine === 'spine' ? '/tools' : `/engine/${c.engine}`);
 
 export type StepRow = [title: string, conclusion: string, detail: string];
 

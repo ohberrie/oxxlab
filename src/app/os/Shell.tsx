@@ -1,6 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type MutableRefObject, type ReactNode } from 'react';
 import { Link, Outlet, ScrollRestoration, useLocation } from 'react-router';
-import { presetStudy, type LayerStudy } from './layering';
 import { DEFAULT_PARAMS, STATUS_DEFS, type EngineId, type Params, type Proposal } from './data';
 
 // Engine settings survive navigation, so a study can be checked against its field case and resumed.
@@ -23,8 +22,6 @@ const INITIAL: EngineState = {
 
 type DialogId = 'status' | 'notes' | 'method';
 interface OsContext {
-  study: LayerStudy;
-  setStudy: (study: LayerStudy) => void;
   engine: EngineState;
   setEngine: (patch: Partial<EngineState>) => void;
   resetEngine: () => void;
@@ -56,7 +53,7 @@ const STATUS_BODY = (
 const NOTES_BODY = (
   <>
     <p>This is a local interaction prototype for OXX’s research direction. Geometry is schematic; original stage photographs and project files have not been supplied.</p>
-    <p>Cases 09 (izna) and 10 (YEONJUN) compare rotation/scale with folding/axis reorientation. Their shared Sequential Layering model is an exploratory hypothesis, not a measured reconstruction. Field 08 follows the supplied production narrative. Other cases are provisional; 02–06 are corpus placeholders. Artist, date and collaboration credits remain unfilled. No fake built photographs are used.</p>
+    <p>Field 09 and 08 follow the supplied narrative. Other cases are provisional; 02–06 are corpus placeholders. Artist, date and collaboration credits remain unfilled. No fake built photographs are used.</p>
     <p>Engine studies are newly written implementations. AI strategy exploration and reference extraction are explicitly simulated. No prompts, briefs or files leave this browser.</p>
     <p>Form studies can be saved as JSON. Fabrication samples can be downloaded as SVG and JavaScript. They are not manufacturing-ready outputs.</p>
   </>
@@ -71,7 +68,7 @@ const METHOD_BODY = (
     <h3>Two kinds of reusable knowledge</h3>
     <p><b>Form finding</b> expresses spatial relationships: convergence, crossing, propagation, displacement.<br /><b>Make</b> translates selected form into constructible and identifiable parts.</p>
     <h3>Evidence stays attached</h3>
-    <p>Every principle links to its source case. The featured cases trace Intent → Formal Choice → Built → Extraction. Deeper research records remain in the field archive. Reconstructed alternatives are marked as such.</p>
+    <p>Every principle links to its source case. Seven steps trace Given, Move, Design Space, Formal System, Judgment, Realization and Extraction. Reconstructed alternatives are marked as such.</p>
     <h3>A strategy engine in development</h3>
     <p>The test ground illustrates how a brief might lead to different compatible combinations. A future AI assistant could propose, explain and organize those strategies. The current demo uses local rules and does not perform AI inference, automatic structural validation or an objective assessment of design quality.</p>
   </>
@@ -81,9 +78,8 @@ export function Shell() {
   const { pathname } = useLocation();
   const home = pathname === '/';
   // Tools belong to the engine side of the site, as in the v2 prototype.
-  const section = (pathname.startsWith('/field') || pathname.startsWith('/cases')) ? 'field' : pathname.startsWith('/engine') || pathname.startsWith('/tools') ? 'engine' : '';
+  const section = pathname.startsWith('/field') ? 'field' : pathname.startsWith('/engine') || pathname.startsWith('/tools') ? 'engine' : '';
   const [engine, setEngineState] = useState(INITIAL);
-  const [study, setStudy] = useState<LayerStudy>(() => presetStudy('09'));
   const angle = useRef({ yaw: -0.53, pitch: 0.15 });
   const [dialog, setDialog] = useState<{ title: string; body: ReactNode } | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -115,8 +111,8 @@ export function Shell() {
   useEffect(() => { dialogRef.current?.close(); }, [pathname]);
 
   const value = useMemo(
-    () => ({ study, setStudy, engine, setEngine, resetEngine, angle, toast, openDialog, showDialog, closeDialog }),
-    [study, engine, setEngine, resetEngine, toast, openDialog, showDialog, closeDialog],
+    () => ({ engine, setEngine, resetEngine, angle, toast, openDialog, showDialog, closeDialog }),
+    [engine, setEngine, resetEngine, toast, openDialog, showDialog, closeDialog],
   );
 
   return (
@@ -128,6 +124,7 @@ export function Shell() {
           {home ? <span /> : (
             <Link className="brand" to="/" aria-label="OXX OS home">
               <picture>
+                <source srcSet="/brand/oxx-dark.svg" media="(prefers-color-scheme: dark)" />
                 <img src="/brand/oxx-light.svg" alt="OXX" width={53} height={22} />
               </picture>
               <span>OS</span>
@@ -135,7 +132,7 @@ export function Shell() {
           )}
           <nav className="os-nav" aria-label="Main navigation">
             <Link to="/engine" className={section === 'engine' ? 'active' : ''}>Engine</Link>
-            <Link to="/cases" className={section === 'field' ? 'active' : ''}>Cases</Link>
+            <Link to="/field" className={section === 'field' ? 'active' : ''}>Field</Link>
           </nav>
           <div className="header-end">
             <Link className="text-button" to="/tools">Tools <span>↗</span></Link>
