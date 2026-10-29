@@ -51,40 +51,130 @@ export interface Case {
 }
 
 // 03–10 follow the user's supplied sequence. Working labels are not official credits.
+// Cases 01 and 02 remain in the archive, but are intentionally excluded from
+// extracted formal-strategy mapping: they were early stage-design work.
 export const CASES: Case[] = [
-  ...['01','02'].map(id => ({ id, name: 'Mapping held', engine: 'layering' as const, type: 'Form finding' as const, status: 'CANDIDATE' as const, summary: 'Mapping held; intent and source identity await confirmation.', verified: false, placeholder: true, held: true })),
-  { id: '03', name: 'ALD1', song: 'Freak Alarm', engine: 'enclosure', type: 'Form finding', status: 'CANDIDATE', summary: 'Cube Space / enclosure — candidate dominant strategy.', verified: false },
-  { id: '04', name: 'IVE', song: 'BLACKHOLE', engine: 'perspective', type: 'Form finding', status: 'CANDIDATE', summary: 'Perspective convergence + plane variation / Division (provisional).', verified: false },
-  { id: '05', name: 'Enclosure / Exhibition', workingTitle: 'ALL(H)OURS stage · enclosure / slave-auction / exhibition', identityNote: 'ALL(H)OURS is a working stage reference. Official artist credit and song title remain unconfirmed.', engine: 'enclosure', type: 'Form finding', status: 'CANDIDATE', summary: 'Closure and the exhibition relationship, read through spatial enclosure.', verified: false },
-  { id: '06', name: 'KickFlip', workingTitle: 'Basketball / Love stage', identityNote: 'Basketball / Love are working descriptors; the official song title is unconfirmed.', engine: 'line', type: 'Form finding', status: 'CANDIDATE', summary: 'Line / trajectory — candidate dominant strategy.', verified: false },
-  { id: '07', name: 'Time Loop / Clock', workingTitle: 'Park Jihoon stage', identityNote: 'Park Jihoon is the working stage reference. Official artist credit and song title remain unconfirmed.', engine: 'layering', type: 'Form finding', status: 'EXTRACTED', summary: 'Sequential layering + radial / axis variation.', verified: false },
-  { id: '08', name: 'Bone / Snake', workingTitle: 'Taeyong stage', identityNote: 'Taeyong is the working stage reference. Official artist credit and song title remain unconfirmed.', engine: 'line', type: 'Form finding', status: 'EXTRACTED', summary: 'Bone, spine and portal; upper snake-spine rigging. Sequential layering + curvature / line dynamics.', verified: true },
-  { id: '09', name: 'izna', song: 'Metronome', workingTitle: 'Progressive Convergence', engine: 'layering', type: 'Form finding', status: 'USED', summary: 'Repeated triangular frames + progressive rotation and scale.', verified: true },
-  { id: '10', name: 'Layered / Fold', workingTitle: 'Yeonjun stage', identityNote: 'Yeonjun is the working stage reference. Official artist credit and song title remain unconfirmed.', engine: 'enclosure', type: 'Form finding', status: 'EXTRACTED', summary: 'Orthogonal and diagonal frames; folding between frames and the floor plane.', verified: false },
-  ...['11','12'].map(id => ({ id, name: 'Analysis pending', engine: 'layering' as const, type: 'Form finding' as const, status: 'CANDIDATE' as const, summary: 'Research corpus entry; identity and formal analysis await confirmation.', verified: false, placeholder: true })),
+  { id: '01', name: 'MONSTA X', song: 'N THE FRONT / 10th Anniversary', engine: 'layering', type: 'Form finding', status: 'CANDIDATE', summary: 'Early stage work. Formal mapping deliberately held.', verified: false, placeholder: true, held: true },
+  { id: '02', name: 'BABYMONSTER', song: 'WE GO UP', engine: 'layering', type: 'Form finding', status: 'CANDIDATE', summary: 'Early stage work. Formal mapping deliberately held.', verified: false, placeholder: true, held: true },
+  { id: '03', name: 'ALD1', song: 'Freak Alarm', engine: 'enclosure', type: 'Form finding', status: 'CANDIDATE', summary: 'Fragmented room + enclosure. Displaced rectangular panels and object fields.', verified: false },
+  { id: '04', name: 'IVE', song: 'BLACKHOLE', engine: 'perspective', type: 'Form finding', status: 'CANDIDATE', summary: 'Layered depth + directional convergence; selective plane subdivision.', verified: false },
+  { id: '05', name: 'ALL(H)OURS', workingTitle: 'Enclosure / Exhibition', identityNote: 'Song title remains unconfirmed.', engine: 'enclosure', type: 'Form finding', status: 'CANDIDATE', summary: 'Low ceiling, gridded confinement and a minimally rotated rectangular spatial boundary.', verified: false },
+  { id: '06', name: 'KickFlip', workingTitle: 'Basketball / Love', identityNote: 'Working stage descriptor; song title remains unconfirmed.', engine: 'line', type: 'Form finding', status: 'CANDIDATE', summary: 'Line continuity and curved connections across separate performance-set zones.', verified: false },
+  { id: '07', name: 'Park Jihoon', workingTitle: 'Time Loop / Clock', identityNote: 'Song title remains unconfirmed.', engine: 'layering', type: 'Form finding', status: 'EXTRACTED', summary: 'Concentric repeated arches with radial and axial variation.', verified: false },
+  { id: '08', name: 'Taeyong', workingTitle: 'Bone / Snake', identityNote: 'Song title remains unconfirmed.', engine: 'line', type: 'Fabrication', status: 'BUILT', summary: 'Curvature-guided adaptive spine rib array; separate monumental portal in the built stage.', verified: true },
+  { id: '09', name: 'izna', song: 'Metronome', engine: 'layering', type: 'Form finding', status: 'USED', summary: 'Sequential triangular frames + progressive scale, rotation and depth.', verified: true },
+  { id: '10', name: 'Yeonjun', workingTitle: 'Layered / Fold', identityNote: 'Song title remains unconfirmed.', engine: 'enclosure', type: 'Form finding', status: 'EXTRACTED', summary: 'Enclosure + layered rectangular frames across multiple planes; intended floor–wall folding.', verified: false },
+  { id: '11', name: 'MEOVV', song: 'GO HARD', engine: 'enclosure', type: 'Form finding', status: 'CANDIDATE', summary: 'Fractured cuboid enclosure and damaged club interior; fragmentation is an emerging formal reading.', verified: false },
+  { id: '12', name: 'MODYSSEY', workingTitle: 'Suspended Frame / Enclosure', identityNote: 'Project title and full production records pending.', engine: 'perspective', type: 'Form finding', status: 'CANDIDATE', summary: 'Suspended thick rectangular masses framing an open center; perspective/width reading provisional.', verified: false },
 ];
 export const HELD_CASES = ['01', '02'];
-export const UNNUMBERED_READINGS = [
-  ['MODYSSEY', 'Depth B + width / mass variation'],
-  ['MEOVV', 'Cube Space / enclosure'],
-];
-// Editorial card titles describe intent; artist references remain secondary metadata.
+// Editorial titles lead with the project itself, not a generic engine preset.
 const CASE_PRESENTATION: Record<string, { keyword: string; artist: string }> = {
-  '01': { keyword: 'Intent pending', artist: 'Artist pending · mapping held' },
-  '02': { keyword: 'Intent pending', artist: 'Artist pending · mapping held' },
-  '03': { keyword: 'Freak Alarm', artist: 'ALD1 · Freak Alarm' },
-  '04': { keyword: 'Blackhole', artist: 'IVE · BLACKHOLE' },
-  '05': { keyword: 'Enclosure / Exhibition', artist: 'ALL(H)OURS · working reference / credits pending' },
-  '06': { keyword: 'Basketball / Love', artist: 'KickFlip · song title pending' },
-  '07': { keyword: 'Time Loop / Clock', artist: 'Park Jihoon · working reference / credits pending' },
-  '08': { keyword: 'Bone / Snake', artist: 'Taeyong · working reference / credits pending' },
-  '09': { keyword: 'Repetition / Movement', artist: 'izna · Metronome' },
-  '10': { keyword: 'Layered / Fold', artist: 'Yeonjun · working reference / credits pending' },
-  '11': { keyword: 'Intent pending', artist: 'Artist pending · analysis pending' },
-  '12': { keyword: 'Intent pending', artist: 'Artist pending · analysis pending' },
+  '01': { keyword: 'N THE FRONT', artist: 'MONSTA X · 10th Anniversary · mapping held' },
+  '02': { keyword: 'WE GO UP', artist: 'BABYMONSTER · mapping held' },
+  '03': { keyword: 'Freak Alarm', artist: 'ALD1' },
+  '04': { keyword: 'BLACKHOLE', artist: 'IVE' },
+  '05': { keyword: 'Enclosure / Exhibition', artist: 'ALL(H)OURS · title pending' },
+  '06': { keyword: 'Basketball / Love', artist: 'KickFlip · title pending' },
+  '07': { keyword: 'Time Loop / Clock', artist: 'Park Jihoon · title pending' },
+  '08': { keyword: 'Bone / Snake', artist: 'Taeyong · title pending' },
+  '09': { keyword: 'Metronome', artist: 'izna' },
+  '10': { keyword: 'Layered / Fold', artist: 'Yeonjun · title pending' },
+  '11': { keyword: 'GO HARD', artist: 'MEOVV' },
+  '12': { keyword: 'Suspended Frame', artist: 'MODYSSEY · project title pending' },
 };
-export const caseTitle = (c: Case) => `${c.id} — ${CASE_PRESENTATION[c.id].keyword}`;
+export const caseTitle = (c: Case) => CASE_PRESENTATION[c.id].keyword;
 export const caseMetadata = (c: Case) => CASE_PRESENTATION[c.id].artist;
+
+export const CASE_STRATEGY: Record<string, { dominant: string; variation: string }> = {
+  '01': { dominant: 'MAPPING HELD', variation: 'EARLY PRACTICE' },
+  '02': { dominant: 'MAPPING HELD', variation: 'EARLY PRACTICE' },
+  '03': { dominant: 'SPATIAL ENCLOSURE', variation: 'SURFACE DIVISION + DISPLACEMENT' },
+  '04': { dominant: 'DEPTH / CONVERGENCE', variation: 'LAYERED PLANES + DIVISION' },
+  '05': { dominant: 'SPATIAL ENCLOSURE', variation: 'COMPRESSION + GRID' },
+  '06': { dominant: 'LINE / CONTINUITY', variation: 'CURVED LINKS + ZONING' },
+  '07': { dominant: 'SEQUENTIAL LAYERING', variation: 'RADIAL / AXIS VARIATION' },
+  '08': { dominant: 'PATH-GUIDED ARRAY', variation: 'CURVATURE + ADAPTIVE RIBS' },
+  '09': { dominant: 'SEQUENTIAL LAYERING', variation: 'ROTATION + SCALE PROGRESSION' },
+  '10': { dominant: 'SPATIAL ENCLOSURE', variation: 'MULTI-PLANE LAYERING + FOLD' },
+  '11': { dominant: 'DISRUPTED ENCLOSURE', variation: 'FRACTURE + COLLAPSE / STUDY' },
+  '12': { dominant: 'SUSPENDED ENCLOSURE', variation: 'THICKNESS / WIDTH / STUDY' },
+};
+
+// Historical observations and current OXX reconstruction are deliberately
+// separated; none of these captions invent an original procedural algorithm.
+export const CASE_READING: Record<string, { intent: string; choice: string; realization: string; extraction: string; condition: string }> = {
+  '03': {
+    intent: 'An uncanny, fragmented escape-room environment: ordinary objects and rectangular surfaces are displaced from their expected positions.',
+    choice: 'A cubical room containing irregular subdivisions, protruding panels and displaced object fields. The proposed randomized placement system was not implemented at the time.',
+    realization: 'The original directing references favored a densely populated monochrome room. Exact built geometry, object placements and fabrication records still require documentation.',
+    extraction: 'Reconstruct an enclosure whose surfaces are subdivided and displaced; classify the randomized placement as retrospective rather than used-at-production.',
+    condition: 'The enclosed room, door-related direction and the framing needs of performers constrain where dense components can sit.',
+  },
+  '04': {
+    intent: 'BLACKHOLE: create a strong sensation of depth in a broadcast stage.',
+    choice: 'Receding LED/truss planes and framed thresholds were composed to establish axial depth, with localized division as a secondary reading.',
+    realization: 'Production revisions simplified the composition toward LED surfaces, reducing the initially intended layered depth.',
+    extraction: 'Test convergence and layered-planar thresholds, then ask when added LED surfaces flatten rather than intensify the perceived depth.',
+    condition: 'The camera image, lighting, available LED surfaces and the director’s revisions significantly affect the perceived depth.',
+  },
+  '05': {
+    intent: 'A constricted, auction/exhibition-like room with a low-ceiling sense of enclosure.',
+    choice: 'A mostly orthogonal cube-space vocabulary: overhead grids, vertical bars and display elements communicate confinement without dramatic rotation.',
+    realization: 'Budget and camera feedback affected scenic density; removed elements were partially reintroduced to fill tighter shots.',
+    extraction: 'Enclosure + ceiling compression + grid can be tested as the dominant spatial relationship; display elements are supporting details.',
+    condition: 'Camera close-ups, budget reductions and the density of side zones altered what could be removed.',
+  },
+  '06': {
+    intent: 'A playful basketball/love-themed stage containing multiple recognizable performance zones.',
+    choice: 'Curved arch and lighting lines connect otherwise disjoint scenic zones, creating a legible continuous gesture.',
+    realization: 'An earlier stacked-hoop computational concept was rejected. The built black-and-pink set followed a more literal, detailed brief with line-based connections.',
+    extraction: 'Study how a governing trajectory can connect zones and remain legible amid additional literal props.',
+    condition: 'Director-defined zones, available space and many scene-specific props made the hierarchy difficult to maintain.',
+  },
+  '07': {
+    intent: 'Time loop and clock imagery, articulated through a repeating spatial sequence.',
+    choice: 'Concentric/repeated arches and radial-axis variation create a temporal rhythm translated into physical depth.',
+    realization: 'A procedural radial/flow-like floor proposal was not selected. Some overhead curved structures visible in event images belong to the existing stage infrastructure, not this design.',
+    extraction: 'Compare concentric arch spacing, radial distribution and changing axis relationships without attributing host-stage structures to the designer.',
+    condition: 'Existing venue/stage infrastructure and the director’s revisions must be separated from the custom scenic geometry.',
+  },
+  '08': {
+    intent: 'Snake/bone imagery translated into a suspended vertebral sequence.',
+    choice: 'Adaptive rib modules follow a curved path, changing orientation and local geometry. A monumental rear portal is a separate visual system.',
+    realization: 'Grasshopper-driven rib variation and flattening supported fabrication. The built stage emphasized the portal more strongly; floor vertebrae were a later direction.',
+    extraction: 'Curvature-guided array and geometry-to-flat-part identification become reusable studies and MAKE utilities.',
+    condition: 'Suspension, module construction, drawing preparation, installation and client decisions affected final hierarchy.',
+  },
+  '09': {
+    intent: 'Metronome, rhythm and repetition in a system/electrical-heavy stage with minimal literal scenery.',
+    choice: 'Repeated triangular frames progressively change scale and rotation through depth, creating a strong center convergence.',
+    realization: 'The built stage retained the dominant triangular frame sequence and system-lighting rhythm. Rigging and alignment were important production constraints.',
+    extraction: 'Sequential Layering + progressive scale/rotation/depth. Explore the same relationship with different profiles in Engine.',
+    condition: 'Camera framing and the practical precision of rigging several large frames shaped the realized depth sequence.',
+  },
+  '10': {
+    intent: 'A minimal, layered rectilinear spatial environment.',
+    choice: 'An enclosed set of planes is organized by sequential layering across floor and elevation, with an intended positive/negative folding relation.',
+    realization: 'The more oblique folded proposal was simplified in the built version. The original floor/frame correspondence was not fully realized.',
+    extraction: 'Compose Spatial Enclosure + Sequential Layering + Fold; test whether one planar grammar can continue across different axes.',
+    condition: 'Budget, approval speed and requested scenic density constrained the final angle, depth and detail.',
+  },
+  '11': {
+    intent: 'A damaged or collapsing club environment.',
+    choice: 'Read the stage through a fractured cubical enclosure: broken walls, discontinuous building edges and exposed systems.',
+    realization: 'The shared built-view reference depicts shattered concrete-like walls and stage structures. A specific procedural fragmentation system has not been documented.',
+    extraction: 'Provisional study: subdivide, displace and break an enclosing volume. Do not label this reconstruction as an algorithm used at production.',
+    condition: 'Physical fragmentation, support structure and theatrical staging are practical concerns; original detailed fabrication notes are pending.',
+  },
+  '12': {
+    intent: 'A visually enclosed stage organized around large suspended rectangular masses.',
+    choice: 'Thick rectilinear overhead frames and a central opening establish mass, direction and compressed spatial volume. Convergence is still a hypothesis.',
+    realization: 'A shared image documents the large suspended form. Exact source brief, mounting details and what was changed during realization are still pending.',
+    extraction: 'Provisional study: compare thickness, frame spacing and aperture ratio; verify whether Perspective Convergence is really dominant.',
+    condition: 'Rigging geometry, safe overhead clearance and module thickness need documentation before being treated as actual constraints.',
+  },
+};
 export const getCase = (id: string | undefined) => CASES.find(c => c.id === id);
 export const caseKind = (c: Case): Kind => (c.engine === 'spine' ? 'spine' : ENGINES[c.engine].kind);
 export const caseLogicPath = (c: Case) => (c.placeholder ? '/field' : c.id === '09' || c.id === '10' ? `/engine/${c.engine}?preset=${c.id}` : c.engine === 'spine' ? '/tools' : `/engine/${c.engine}`);
