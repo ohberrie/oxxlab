@@ -9,8 +9,8 @@ import { OXX_PATTERN } from '../oxxPattern';
 // scatters it (blocks flip to the other letter's glyph or break into / + debris) and it
 // reassembles into solid blocks as the disturbance fades.
 // Panels (the entry cards) are cut out of the field on cell boundaries; the active
-// panel fills with the same solid blocks as the wordmark, sweeping in from the left,
-// then fuses into one plate so its text stays legible. Rects in `clear` are only kept empty.
+// panel fills cell by cell, sweeping in from the left, with no gaps between cells so it
+// reads as one plate. Rects in `clear` are only kept empty.
 
 export type FieldMode = 'field' | 'select' | 'dense' | 'modular' | 'layer';
 const MODES: FieldMode[] = ['field', 'select', 'dense', 'modular', 'layer'];
@@ -20,7 +20,7 @@ export interface LogoPlacement { col: number; row: number; scale: number }
 export interface Rect { col: number; row: number; w: number; h: number }
 
 export function computeGrid(width: number, height: number): Grid {
-  const cell = Math.max(12, Math.min(18, Math.round(width / 90)));
+  const cell = Math.max(10, Math.min(15, Math.round(width / 110)));
   return { cell, cols: Math.ceil(width / cell), rows: Math.ceil(height / cell), width, height };
 }
 
@@ -155,6 +155,10 @@ export function GlyphField({ grid, logo, mode, panels = [], clear = [], active =
     const solid = (col: number, row: number) => {
       ctx.fillRect(Math.round(col * cell * dpr) + blockInset, Math.round(row * cell * dpr) + blockInset, blockSize, blockSize);
     };
+    const full = (col: number, row: number) => {
+      const x = Math.round(col * cell * dpr), y = Math.round(row * cell * dpr);
+      ctx.fillRect(x, y, Math.round((col + 1) * cell * dpr) - x, Math.round((row + 1) * cell * dpr) - y);
+    };
 
     // panel[i]: index of the panel covering the cell, -2 for its one-cell margin, -1 for open field.
     // sweep[i]: the fill level at which that panel cell turns solid.
@@ -221,7 +225,6 @@ export function GlyphField({ grid, logo, mode, panels = [], clear = [], active =
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = oxx.paper; // for the wordmark blocks
 
-      const fused = panels.map((_, k) => fills[k] > 0.97);
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
           const i = row * cols + col;
@@ -229,7 +232,7 @@ export function GlyphField({ grid, logo, mode, panels = [], clear = [], active =
           const pk = panel[i];
           if (pk !== -1) {
             trail[i] = 0;
-            if (pk >= 0 && !fused[pk] && fills[pk] > sweep[i]) solid(col, row);
+            if (pk >= 0 && fills[pk] > sweep[i]) full(col, row);
             continue;
           }
           let level = 0, fam = 0, red = false, block = false;
@@ -287,9 +290,6 @@ export function GlyphField({ grid, logo, mode, panels = [], clear = [], active =
           ctx.drawImage(sprites[red ? 1 : 0][level][fam], Math.round(col * cell * dpr), Math.round(row * cell * dpr));
         }
       }
-      panels.forEach((r, k) => {
-        if (fused[k]) ctx.fillRect(Math.round(r.col * cell * dpr), Math.round(r.row * cell * dpr), Math.round(r.w * cell * dpr), Math.round(r.h * cell * dpr));
-      });
     };
 
     let raf = 0, prev = 0;
