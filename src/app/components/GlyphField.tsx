@@ -8,9 +8,10 @@ import { OXX_PATTERN } from '../oxxPattern';
 // field. The OXX wordmark sits in a quiet zone as solid cell-sized blocks; the pointer
 // scatters it (blocks flip to the other letter's glyph or break into / + debris) and it
 // reassembles into solid blocks as the disturbance fades.
-// Panels (the entry cards) are cut out of the field on cell boundaries; the active
-// panel fills cell by cell, sweeping in from the left, with no gaps between cells so it
-// reads as one plate. Rects in `clear` are only kept empty.
+// The wordmark can sit on a plate (a slightly lighter rect the field stays out of), with a
+// hairline rule running behind it. Panels (the entry cards) are hidden at rest; the active
+// one replaces the field cell by cell, sweeping outward from the wordmark, with no gaps
+// between cells so it reads as one sheet. Rects in `clear` are kept empty of field glyphs.
 
 export type FieldMode = 'field' | 'select' | 'dense' | 'modular' | 'layer';
 const MODES: FieldMode[] = ['field', 'select', 'dense', 'modular', 'layer'];
@@ -106,8 +107,11 @@ const SCATTER_DECAY = 0.955; // ~2s for a scattered letter to fully reassemble
 
 const PANEL_EASE = 0.3;
 
-export function GlyphField({ grid, logo, mode, panels = [], clear = [], active = -1 }: {
-  grid: Grid; logo: LogoPlacement; mode: FieldMode; panels?: Rect[]; clear?: Rect[]; active?: number;
+export interface Rule { row: number; col0: number; col1: number }
+const PLATE = '#131313';
+
+export function GlyphField({ grid, logo, mode, panels = [], clear = [], plate, rule, active = -1 }: {
+  grid: Grid; logo: LogoPlacement; mode: FieldMode; panels?: Rect[]; clear?: Rect[]; plate?: Rect; rule?: Rule; active?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const modeRef = useRef(mode);
@@ -160,21 +164,26 @@ export function GlyphField({ grid, logo, mode, panels = [], clear = [], active =
       ctx.fillRect(x, y, Math.round((col + 1) * cell * dpr) - x, Math.round((row + 1) * cell * dpr) - y);
     };
 
-    // panel[i]: index of the panel covering the cell, -2 for its one-cell margin, -1 for open field.
-    // sweep[i]: the fill level at which that panel cell turns solid.
+    // panel[i]: index of the panel covering the cell, or -1. sweep[i]: the fill level at which
+    // that cell turns solid, rising away from the wordmark. quiet[i]: no field glyphs here.
     const panel = new Int8Array(N).fill(-1);
     const sweep = new Float32Array(N);
-    [...panels, ...clear].forEach((r, n) => {
-      const k = n < panels.length ? n : -2;
-      for (let row = r.row - 1; row <= r.row + r.h; row++) for (let col = r.col - 1; col <= r.col + r.w; col++) {
-        if (col < 0 || col >= cols || row < 0 || row >= rows) continue;
-        const i = row * cols + col;
-        const inside = col >= r.col && col < r.col + r.w && row >= r.row && row < r.row + r.h;
-        if (inside && k === -2) panel[i] = -2;
-        else if (inside) { panel[i] = k; sweep[i] = 0.04 + 0.72 * ((col - r.col) / r.w) + 0.2 * hash(col, row, 31); }
-        else if (panel[i] === -1) panel[i] = -2;
+    const quiet = new Uint8Array(N);
+    const each = (r: Rect, pad: number, fn: (i: number, col: number, row: number) => void) => {
+      for (let row = r.row - pad; row < r.row + r.h + pad; row++) for (let col = r.col - pad; col < r.col + r.w + pad; col++) {
+        if (col >= 0 && col < cols && row >= 0 && row < rows) fn(row * cols + col, col, row);
       }
+    };
+    panels.forEach((r, k) => {
+      const outward = r.col + r.w / 2 < cols / 2; // left of centre: sweep from its right edge
+      each(r, 0, (i, col, row) => {
+        const x = (col - r.col + 0.5) / r.w;
+        panel[i] = k;
+        sweep[i] = 0.04 + 0.72 * (outward ? 1 - x : x) + 0.2 * hash(col, row, 31);
+      });
     });
+    clear.forEach(r => each(r, 1, i => { quiet[i] = 1; }));
+    if (plate) each(plate, 1, i => { quiet[i] = 1; });
     const fills = new Float32Array(panels.length);
 
     const trail = new Float32Array(N);
@@ -223,18 +232,28 @@ export function GlyphField({ grid, logo, mode, panels = [], clear = [], active =
 
       ctx.fillStyle = oxx.void;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = oxx.paper; // for the wordmark blocks
+      const px = (v: number) => Math.round(v * cell * dpr);
+      if (rule) {
+        ctx.fillStyle = 'rgba(255,255,255,0.16)';
+        ctx.fillRect(px(rule.col0), px(rule.row + 0.5), px(rule.col1) - px(rule.col0), Math.max(1, Math.round(dpr)));
+      }
+      if (plate) {
+        ctx.fillStyle = PLATE;
+        ctx.fillRect(px(plate.col), px(plate.row), px(plate.col + plate.w) - px(plate.col), px(plate.row + plate.h) - px(plate.row));
+        if (rule) { // the rule shows faintly through the plate, behind the letters
+          ctx.fillStyle = 'rgba(255,255,255,0.08)';
+          ctx.fillRect(px(plate.col), px(rule.row + 0.5), px(plate.col + plate.w) - px(plate.col), Math.max(1, Math.round(dpr)));
+        }
+      }
+      ctx.fillStyle = oxx.paper; // for the wordmark and panel blocks
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
           const i = row * cols + col;
           const ld = logoDist[i];
           const pk = panel[i];
-          if (pk !== -1) {
-            trail[i] = 0;
-            if (pk >= 0 && fills[pk] > sweep[i]) full(col, row);
-            continue;
-          }
+          if (pk >= 0 && fills[pk] > sweep[i]) { trail[i] = 0; full(col, row); continue; }
+          if (quiet[i] && ld > QUIET) { trail[i] = 0; continue; }
           let level = 0, fam = 0, red = false, block = false;
 
           if (ld <= QUIET) {
@@ -258,7 +277,7 @@ export function GlyphField({ grid, logo, mode, panels = [], clear = [], active =
             const base = smoothstep(0.4, 0.72, n);
 
             let d = 0;
-            if (wField > 0.01) d += wField * base;
+            if (wField > 0.01) d += wField * base * 0.5; // at rest the field stays a faint texture
             if (wSelect > 0.01) d += wSelect * (base > 0.45 ? 0.7 : 0.1);
             if (wDense > 0.01) d += wDense * smoothstep(0.26, 0.56, n);
             if (wModular > 0.01) {
@@ -310,7 +329,7 @@ export function GlyphField({ grid, logo, mode, panels = [], clear = [], active =
       window.removeEventListener('pointermove', onPointer);
       window.removeEventListener('pointerout', onLeave);
     };
-  }, [grid, logo, panels, clear]);
+  }, [grid, logo, panels, clear, plate, rule]);
 
   return (
     <canvas

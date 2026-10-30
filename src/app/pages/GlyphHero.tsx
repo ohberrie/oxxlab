@@ -1,57 +1,74 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
-import { GlyphField, computeGrid, type FieldMode, type Grid, type LogoPlacement, type Rect } from '../components/GlyphField';
+import { GlyphField, computeGrid, type FieldMode, type Grid, type LogoPlacement, type Rect, type Rule } from '../components/GlyphField';
 
-const PATHS: { to: string; num: string; name: string; eyebrow: string; desc: string; mode: FieldMode }[] = [
-  { to: '/engine/layering', num: '01', name: 'Engine', eyebrow: 'EXPERIMENT / COMPOSE', desc: 'Select a spatial strategy. Transform it. Combine it with another.', mode: 'dense' },
-  { to: '/field', num: '02', name: 'Cases', eyebrow: 'OBSERVE / EXTRACT', desc: 'See how formal decisions emerge from real spatial work.', mode: 'modular' },
+// The two phrases are the two ways in: intention → form is the Engine, practice → possibility the Cases.
+const PATHS: { to: string; num: string; name: string; phrase: string; eyebrow: string; desc: string; mode: FieldMode }[] = [
+  { to: '/engine/layering', num: '01', name: 'Engine', phrase: 'From intention to form.', eyebrow: 'EXPERIMENT / COMPOSE', desc: 'Select a spatial strategy. Transform it. Combine it with another.', mode: 'dense' },
+  { to: '/field', num: '02', name: 'Cases', phrase: 'From practice to new possibilities.', eyebrow: 'OBSERVE / EXTRACT', desc: 'See how formal decisions emerge from real spatial work.', mode: 'modular' },
 ];
-interface Layout { grid: Grid; logo: LogoPlacement; cards: Rect[]; tagline: Rect; compact: boolean }
 
-// Wide: the wordmark + statement and the two entries form one block whose columns share
-// a top and bottom edge. Everything sits on glyph cells, so the cards are cut from the field.
+// Phrase type size, matched by the clamp() on the phrase; the longer phrase is about 15.2em wide.
+const phraseSize = (width: number) => Math.min(22, Math.max(15, width * 0.013));
+const PHRASE_EM = 15.2;
+
+interface Layout { grid: Grid; logo: LogoPlacement; plate: Rect; rule?: Rule; cards: Rect[]; labels: Rect[]; compact: boolean }
+
+// Wide: the wordmark sits centred on its plate, a rule runs through it, and each phrase waits at
+// one end of the rule inside the (hidden) card it opens. Compact: plate on top, cards stacked.
 function layoutHero(width: number, height: number): Layout {
   let grid = computeGrid(width, height);
   const { cols, rows, cell } = grid;
   const navRows = Math.ceil((width <= 650 ? 70 : 88) / cell);
   const scale = cols >= 150 ? 3 : cols >= 64 ? 2 : 1;
   const logoW = 17 * scale, logoH = 7 * scale;
-  const left = Math.max(3, Math.round(cols * 0.075));
-  const split = left + logoW + Math.max(6, Math.round(cols * 0.07));
-  const tagH = Math.ceil(104 / cell);
-  const blockH = logoH + 3 + tagH;
-  const cardH = Math.floor((blockH - 1) / 2);
-  const wide = cols - left - split >= Math.ceil(300 / cell) && cardH * cell >= 120 && rows - navRows >= blockH + 6;
-  if (wide) {
-    const top = navRows + Math.max(3, Math.floor((rows - navRows - blockH) / 2));
-    const w = Math.min(cols - left - split, Math.ceil(540 / cell));
-    // centre the whole block when the cards hit their width cap
-    const dx = Math.floor((cols - left - split - w) / 2);
-    const cards = [0, 1].map(i => ({ col: split + dx, row: top + i * (cardH + 1), w, h: cardH }));
-    return { grid, compact: false, logo: { col: left + dx, row: top, scale }, tagline: { col: left + dx, row: top + logoH + 3, w: split - left - 3, h: tagH }, cards };
+  const padTop = scale + 4, padBottom = 2 * scale;
+  const plateH = padTop + logoH + padBottom;
+  let plateW = logoW + 4 * scale;
+  const margin = Math.max(3, Math.round(cols * 0.04));
+  const room = Math.floor((cols - plateW - 2 * margin - 4) / 2); // per side, between margin and plate
+  const w = Math.min(Math.ceil(270 / cell), room);
+  const h = Math.ceil(270 / cell);
+  // Each phrase runs outward from its end of the rule; the longer one sets how far out the cards sit.
+  const reach = Math.max(w, Math.ceil((PHRASE_EM * phraseSize(width)) / cell) + 1);
+
+  if (w * cell >= 200 && reach <= room && rows - navRows >= Math.max(plateH, h) + 6) {
+    const mid = navRows + Math.floor((rows - navRows) / 2);
+    const logo = { col: Math.floor((cols - logoW) / 2), row: mid - Math.floor(logoH / 2), scale };
+    const plate = { col: logo.col - 2 * scale, row: logo.row - padTop, w: plateW, h: plateH };
+    const top = mid - Math.floor(h / 2);
+    const cards = [{ col: margin + reach - w, row: top, w, h }, { col: cols - margin - reach, row: top, w, h }];
+    // the band each phrase sits in is kept clear of glyphs, on cell boundaries
+    const band = { row: mid - Math.ceil(44 / cell), h: Math.ceil(44 / cell) + Math.ceil(48 / cell) + 1 };
+    // phrases can run past the card's outer edge, so the bands reach out to the page edge
+    const labels = [{ ...band, col: 1, w: margin + reach - 1 }, { ...band, col: cols - margin - reach, w: margin + reach - 1 }];
+    return { grid, compact: false, logo, plate, rule: { row: mid, col0: margin + reach, col1: cols - margin - reach }, cards, labels };
   }
-  const logo = { col: Math.max(3, Math.floor((cols - logoW) / 2)), row: navRows + 4, scale };
-  const tagline = { col: 3, row: logo.row + logoH + 4, w: cols - 6, h: Math.ceil(110 / cell) };
-  const h = Math.ceil(124 / cell);
-  const start = tagline.row + tagline.h + 3;
-  const cards = PATHS.map((_, i) => ({ col: 3, row: start + i * (h + 1), w: cols - 6, h }));
-  const needRows = cards[1].row + h + 5;
+
+  plateW = Math.min(cols - 4, logoW + 8 * scale); // room for the label on one line
+  const logo = { col: Math.floor((cols - logoW) / 2), row: navRows + padTop + 2, scale };
+  const plate = { col: Math.floor((cols - plateW) / 2), row: logo.row - padTop, w: plateW, h: plateH };
+  const ch = Math.ceil(150 / cell);
+  const start = plate.row + plateH + 4;
+  const cards = PATHS.map((_, i) => ({ col: 3, row: start + i * (ch + 2), w: cols - 6, h: ch }));
+  const needRows = cards[1].row + ch + 5;
   if (needRows > rows) grid = { ...grid, rows: needRows, height: needRows * cell };
-  return { grid, compact: true, logo, tagline, cards };
+  return { grid, compact: true, logo, plate, cards, labels: cards };
 }
 
-// Cards are outlines until active; then the canvas fills them with wordmark blocks and the text inverts.
+// At rest a card shows only its phrase on the rule; when active the canvas fills it with white
+// cells and the card's own content appears on top, in ink.
 const CSS = `
-@keyframes oxx-entry-in { from { clip-path: inset(0 100% 0 0) } to { clip-path: inset(0 0 0 0) } }
-.oxx-entry { animation: oxx-entry-in 620ms steps(10,end) both; color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.3);
-  transition: color 0s linear 90ms, box-shadow 0s linear 90ms; }
-.oxx-entry .entry-sub { color: rgba(255,255,255,.55); transition: color 0s linear 90ms; }
-.oxx-entry[data-active='true'] { color: #141414; box-shadow: inset 0 0 0 1px transparent; }
-.oxx-entry[data-active='true'] .entry-sub { color: rgba(20,20,20,.6); }
-.oxx-entry:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-.oxx-entry .entry-arrow { transition: transform 250ms steps(4,end); }
-.oxx-entry[data-active='true'] .entry-arrow { transform: translate(5px,-5px); }
-@media(prefers-reduced-motion:reduce){ .oxx-entry { animation: none } }
+.oxx-door { color: #fff; }
+.oxx-door .door-rest, .oxx-door .door-open { position: absolute; inset: 0; display: flex; flex-direction: column; }
+.oxx-door .door-rest { justify-content: center; white-space: nowrap; transition: opacity 0s linear 180ms; }
+.oxx-door .door-open { justify-content: space-between; padding: 16px 18px; color: #141414; opacity: 0; transition: opacity 0s linear 0s; }
+.oxx-door[data-active='true'] .door-rest { opacity: 0; transition-delay: 0s; }
+.oxx-door[data-active='true'] .door-open { opacity: 1; transition-delay: 160ms; }
+.oxx-door:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+@keyframes oxx-door-in { from { opacity: 0 } to { opacity: 1 } }
+.oxx-door .door-rest > * { animation: oxx-door-in 500ms steps(5,end) both; animation-delay: inherit; }
+@media(prefers-reduced-motion:reduce){ .oxx-door .door-rest > * { animation: none } }
 `;
 
 export function GlyphHero() {
@@ -63,6 +80,7 @@ export function GlyphHero() {
     window.addEventListener('resize', resize);
     return () => { clearTimeout(timer); window.removeEventListener('resize', resize); };
   }, []);
+  // Touch screens can't hover, so the cards open in turn.
   useEffect(() => {
     if (!window.matchMedia('(hover: none)').matches) return;
     const values: FieldMode[] = ['field', 'dense', 'modular']; let i = 0;
@@ -70,34 +88,45 @@ export function GlyphHero() {
     return () => clearInterval(timer);
   }, []);
   const layout = useMemo(() => layoutHero(size.w, size.h), [size]);
-  const { grid } = layout;
+  const { grid, compact } = layout;
   const box = (r: Rect) => ({ left: r.col * grid.cell, top: r.row * grid.cell, width: r.w * grid.cell, height: r.h * grid.cell });
   const active = PATHS.findIndex(p => p.mode === mode);
-  const clear = useMemo(() => [layout.tagline], [layout]);
+  const { plate, labels } = layout;
+
   return <section className="relative w-full overflow-hidden bg-void" style={{ height: grid.height }} aria-label="OXX / From intention to form">
     <style>{CSS}</style>
-    <GlyphField grid={grid} logo={layout.logo} mode={mode} panels={layout.cards} clear={clear} active={active} />
-    <div className="absolute flex flex-col items-start justify-end gap-3" style={box(layout.tagline)}>
-      <span className="font-mono text-[10px] tracking-[0.18em] text-white/45">OXX LAB / FORMAL REASONING SYSTEM</span>
-      <p className="font-body text-[clamp(19px,1.9vw,28px)] font-medium leading-[1.12] tracking-[-0.035em] text-white">
-        From intention to form.<br /><span className="text-white/40">From practice to new possibilities.</span>
-      </p>
-    </div>
+    <GlyphField grid={grid} logo={layout.logo} mode={mode} panels={layout.cards} clear={labels} plate={plate} rule={layout.rule} active={active} />
+    <span className="absolute flex items-center justify-center whitespace-nowrap font-mono text-[10px] tracking-[0.2em] text-white/45 max-md:text-[9px] max-md:tracking-[0.12em]"
+      style={{ ...box({ ...plate, h: plate.row >= 0 ? layout.logo.row - plate.row : 0 }) }}>
+      OXX LAB / FORMAL REASONING SYSTEM
+    </span>
     <nav aria-label="Explore OXX">
-      {PATHS.map((s, i) => <Link
-        key={s.num} to={s.to} data-active={active === i}
-        className="oxx-entry absolute flex flex-col justify-between px-5 py-4 text-left"
-        style={{ ...box(layout.cards[i]), animationDelay: `${420 + i * 165}ms` }}
-        onMouseEnter={() => setMode(s.mode)}
-        onMouseLeave={() => setMode('field')}
-        onFocus={() => setMode(s.mode)}
-        onBlur={() => setMode('field')}>
-        <span className="entry-sub flex items-center justify-between font-mono text-[10px] tracking-[.12em]"><span>{s.num} / {s.eyebrow}</span><span className="entry-arrow text-base">↗</span></span>
-        <span className="flex items-end justify-between gap-6 max-md:flex-col max-md:items-start max-md:gap-2">
-          <span className="block font-mono text-[clamp(26px,2.7vw,40px)] font-bold uppercase leading-[.9] tracking-[-.06em]">{s.name}</span>
-          <span className="entry-sub block max-w-[260px] font-body text-[12px] leading-[1.45]">{s.desc}</span>
-        </span>
-      </Link>)}
+      {PATHS.map((s, i) => {
+        const inner = !compact && i === 0; // phrases hug the ends of the rule
+        return <Link
+          key={s.num} to={s.to} data-active={active === i} aria-label={`${s.name}: ${s.desc}`}
+          className="oxx-door absolute"
+          style={{ ...box(layout.cards[i]), animationDelay: `${500 + i * 160}ms` }}
+          onMouseEnter={() => setMode(s.mode)}
+          onMouseLeave={() => setMode('field')}
+          onFocus={() => setMode(s.mode)}
+          onBlur={() => setMode('field')}>
+          <span className={`door-rest ${inner ? 'items-end text-right' : 'items-start'} ${compact ? 'px-1' : ''}`}>
+            {/* the phrase is centred on the rule; its label floats above it */}
+            <span className={`relative font-body text-[clamp(15px,1.3vw,22px)] font-medium leading-[1.15] tracking-[-0.03em] ${i === 0 ? 'text-white' : 'text-white/55'}`}>
+              <span className={`absolute bottom-full mb-2 font-mono text-[10px] font-normal tracking-[.14em] text-white/45 ${inner ? 'right-0' : 'left-0'}`}>{s.num} / {s.name.toUpperCase()} ↗</span>
+              {s.phrase}
+            </span>
+          </span>
+          <span className="door-open">
+            <span className="flex items-center justify-between font-mono text-[10px] tracking-[.12em] text-ink/55"><span>{s.num} / {s.eyebrow}</span><span className="text-base text-ink">↗</span></span>
+            <span>
+              <span className="block font-mono text-[clamp(28px,2.6vw,42px)] font-bold uppercase leading-[.9] tracking-[-.06em]">{s.name}</span>
+              <span className="mt-3 block max-w-[240px] font-body text-[12px] leading-[1.45] text-ink/60">{s.desc}</span>
+            </span>
+          </span>
+        </Link>;
+      })}
     </nav>
   </section>;
 }
