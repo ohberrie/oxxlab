@@ -8,12 +8,16 @@ import { OXX_PATTERN } from '../oxxPattern';
 // field. The OXX wordmark sits in a quiet zone as solid cell-sized blocks; the pointer
 // scatters it (blocks flip to the other letter's glyph or break into / + debris) and it
 // reassembles into solid blocks as the disturbance fades.
+// Panels (the entry cards) are cut out of the field on cell boundaries; the active
+// panel fills with the same solid blocks as the wordmark, sweeping in from the left,
+// then fuses into one plate so its text stays legible. Rects in `clear` are only kept empty.
 
 export type FieldMode = 'field' | 'select' | 'dense' | 'modular' | 'layer';
 const MODES: FieldMode[] = ['field', 'select', 'dense', 'modular', 'layer'];
 
 export interface Grid { cols: number; rows: number; cell: number; width: number; height: number }
 export interface LogoPlacement { col: number; row: number; scale: number }
+export interface Rect { col: number; row: number; w: number; h: number }
 
 export function computeGrid(width: number, height: number): Grid {
   const cell = Math.max(12, Math.min(18, Math.round(width / 90)));
@@ -100,10 +104,16 @@ const QUIET = 3;          // cells around the wordmark kept clear of the field
 const FADE = 9;           // the field fades back in between QUIET and FADE
 const SCATTER_DECAY = 0.955; // ~2s for a scattered letter to fully reassemble
 
-export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlacement; mode: FieldMode }) {
+const PANEL_EASE = 0.3;
+
+export function GlyphField({ grid, logo, mode, panels = [], clear = [], active = -1 }: {
+  grid: Grid; logo: LogoPlacement; mode: FieldMode; panels?: Rect[]; clear?: Rect[]; active?: number;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const modeRef = useRef(mode);
   modeRef.current = mode;
+  const activeRef = useRef(active);
+  activeRef.current = active;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -146,6 +156,23 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
       ctx.fillRect(Math.round(col * cell * dpr) + blockInset, Math.round(row * cell * dpr) + blockInset, blockSize, blockSize);
     };
 
+    // panel[i]: index of the panel covering the cell, -2 for its one-cell margin, -1 for open field.
+    // sweep[i]: the fill level at which that panel cell turns solid.
+    const panel = new Int8Array(N).fill(-1);
+    const sweep = new Float32Array(N);
+    [...panels, ...clear].forEach((r, n) => {
+      const k = n < panels.length ? n : -2;
+      for (let row = r.row - 1; row <= r.row + r.h; row++) for (let col = r.col - 1; col <= r.col + r.w; col++) {
+        if (col < 0 || col >= cols || row < 0 || row >= rows) continue;
+        const i = row * cols + col;
+        const inside = col >= r.col && col < r.col + r.w && row >= r.row && row < r.row + r.h;
+        if (inside && k === -2) panel[i] = -2;
+        else if (inside) { panel[i] = k; sweep[i] = 0.04 + 0.72 * ((col - r.col) / r.w) + 0.2 * hash(col, row, 31); }
+        else if (panel[i] === -1) panel[i] = -2;
+      }
+    });
+    const fills = new Float32Array(panels.length);
+
     const trail = new Float32Array(N);
     const scatter = new Float32Array(N);
     const weights = MODES.map(m => (m === modeRef.current ? 1 : 0));
@@ -185,15 +212,26 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
       const tick = Math.floor(t * 8);
       MODES.forEach((m, k) => { weights[k] += ((m === modeRef.current ? 1 : 0) - weights[k]) * 0.14; });
       const [wField, wSelect, wDense, wModular, wLayer] = weights;
+      fills.forEach((f, k) => {
+        const target = k === activeRef.current ? 1 : 0;
+        fills[k] = reduceMotion ? target : f + (target - f) * PANEL_EASE;
+      });
 
       ctx.fillStyle = oxx.void;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = oxx.paper; // for the wordmark blocks
 
+      const fused = panels.map((_, k) => fills[k] > 0.97);
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
           const i = row * cols + col;
           const ld = logoDist[i];
+          const pk = panel[i];
+          if (pk !== -1) {
+            trail[i] = 0;
+            if (pk >= 0 && !fused[pk] && fills[pk] > sweep[i]) solid(col, row);
+            continue;
+          }
           let level = 0, fam = 0, red = false, block = false;
 
           if (ld <= QUIET) {
@@ -249,6 +287,9 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
           ctx.drawImage(sprites[red ? 1 : 0][level][fam], Math.round(col * cell * dpr), Math.round(row * cell * dpr));
         }
       }
+      panels.forEach((r, k) => {
+        if (fused[k]) ctx.fillRect(Math.round(r.col * cell * dpr), Math.round(r.row * cell * dpr), Math.round(r.w * cell * dpr), Math.round(r.h * cell * dpr));
+      });
     };
 
     let raf = 0, prev = 0;
@@ -259,10 +300,8 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
       draw(now);
     };
 
-    if (reduceMotion) {
-      draw(performance.now());
-    } else {
-      raf = requestAnimationFrame(loop);
+    raf = requestAnimationFrame(loop); // reduced motion still redraws, so the active panel can fill
+    if (!reduceMotion) {
       window.addEventListener('pointermove', onPointer);
       window.addEventListener('pointerout', onLeave);
     }
@@ -271,7 +310,7 @@ export function GlyphField({ grid, logo, mode }: { grid: Grid; logo: LogoPlaceme
       window.removeEventListener('pointermove', onPointer);
       window.removeEventListener('pointerout', onLeave);
     };
-  }, [grid, logo]);
+  }, [grid, logo, panels, clear]);
 
   return (
     <canvas
