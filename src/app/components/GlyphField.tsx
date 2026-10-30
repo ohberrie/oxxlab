@@ -8,10 +8,11 @@ import { OXX_PATTERN } from '../oxxPattern';
 // field. The OXX wordmark sits in a quiet zone as solid cell-sized blocks; the pointer
 // scatters it (blocks flip to the other letter's glyph or break into / + debris) and it
 // reassembles into solid blocks as the disturbance fades.
-// The wordmark can sit on a plate (a slightly lighter rect the field stays out of), with a
-// hairline rule running behind it. Panels (the entry cards) are hidden at rest; the active
-// one replaces the field cell by cell, sweeping outward from the wordmark, with no gaps
-// between cells so it reads as one sheet. Rects in `clear` are kept empty of field glyphs.
+// A hairline rule can run behind the wordmark. Panels (the entry cards) are hidden at rest;
+// the active one replaces the field cell by cell, sweeping outward from the wordmark, with no
+// gaps between cells so it reads as one sheet, while its own field pattern (panelModes) spreads
+// out from it and the stretch of rule joining it to the wordmark lights up.
+// Rects in `clear` are kept empty of field glyphs.
 
 export type FieldMode = 'field' | 'select' | 'dense' | 'modular' | 'layer';
 const MODES: FieldMode[] = ['field', 'select', 'dense', 'modular', 'layer'];
@@ -108,10 +109,11 @@ const SCATTER_DECAY = 0.955; // ~2s for a scattered letter to fully reassemble
 const PANEL_EASE = 0.3;
 
 export interface Rule { row: number; col0: number; col1: number }
-const PLATE = '#131313';
+const FOCUS_EASE = 0.07; // the panel's pattern spreads over about a second
 
-export function GlyphField({ grid, logo, mode, panels = [], clear = [], plate, rule, active = -1 }: {
-  grid: Grid; logo: LogoPlacement; mode: FieldMode; panels?: Rect[]; clear?: Rect[]; plate?: Rect; rule?: Rule; active?: number;
+export function GlyphField({ grid, logo, mode, panels = [], panelModes = [], clear = [], rule, active = -1 }: {
+  grid: Grid; logo: LogoPlacement; mode: FieldMode; panels?: Rect[]; panelModes?: FieldMode[];
+  clear?: Rect[]; rule?: Rule; active?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const modeRef = useRef(mode);
@@ -183,7 +185,9 @@ export function GlyphField({ grid, logo, mode, panels = [], clear = [], plate, r
       });
     });
     clear.forEach(r => each(r, 1, i => { quiet[i] = 1; }));
-    if (plate) each(plate, 1, i => { quiet[i] = 1; });
+    const centres = panels.map(r => [r.col + r.w / 2, r.row + r.h / 2]);
+    const focus = new Float32Array(panels.length);
+    const spread = cols * 0.6;
     const fills = new Float32Array(panels.length);
 
     const trail = new Float32Array(N);
@@ -228,22 +232,27 @@ export function GlyphField({ grid, logo, mode, panels = [], clear = [], plate, r
       fills.forEach((f, k) => {
         const target = k === activeRef.current ? 1 : 0;
         fills[k] = reduceMotion ? target : f + (target - f) * PANEL_EASE;
+        focus[k] = reduceMotion ? target : focus[k] + (target - focus[k]) * FOCUS_EASE;
       });
 
       ctx.fillStyle = oxx.void;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       const px = (v: number) => Math.round(v * cell * dpr);
+      const hair = Math.max(1, Math.round(dpr));
       if (rule) {
+        const y = px(rule.row + 0.5);
         ctx.fillStyle = 'rgba(255,255,255,0.16)';
-        ctx.fillRect(px(rule.col0), px(rule.row + 0.5), px(rule.col1) - px(rule.col0), Math.max(1, Math.round(dpr)));
-      }
-      if (plate) {
-        ctx.fillStyle = PLATE;
-        ctx.fillRect(px(plate.col), px(plate.row), px(plate.col + plate.w) - px(plate.col), px(plate.row + plate.h) - px(plate.row));
-        if (rule) { // the rule shows faintly through the plate, behind the letters
-          ctx.fillStyle = 'rgba(255,255,255,0.08)';
-          ctx.fillRect(px(plate.col), px(rule.row + 0.5), px(plate.col + plate.w) - px(plate.col), Math.max(1, Math.round(dpr)));
-        }
+        ctx.fillRect(px(rule.col0), y, px(rule.col1) - px(rule.col0), hair);
+        ctx.fillRect(px(rule.col0), y - px(0.5), hair, px(1)); // drafting ticks at both ends
+        ctx.fillRect(px(rule.col1) - hair, y - px(0.5), hair, px(1));
+        // the stretch joining the active panel to the wordmark brightens with it
+        const logoEnd = logo.col + 17 * logo.scale;
+        panels.forEach((r, k) => {
+          if (fills[k] < 0.02) return;
+          const [x0, x1] = centres[k][0] < cols / 2 ? [rule.col0, logo.col] : [logoEnd, rule.col1];
+          ctx.fillStyle = `rgba(255,255,255,${0.7 * fills[k]})`;
+          ctx.fillRect(px(x0), y, px(x1) - px(x0), hair);
+        });
       }
       ctx.fillStyle = oxx.paper; // for the wordmark and panel blocks
 
@@ -276,19 +285,35 @@ export function GlyphField({ grid, logo, mode, panels = [], clear = [], plate, r
             const n = fbm(col * 0.05, row * 0.05, t * 0.05);
             const base = smoothstep(0.4, 0.72, n);
 
+            const pattern = (m: FieldMode) => {
+              switch (m) {
+                case 'field': return base * 0.5; // at rest the field stays a faint texture
+                case 'select': return base > 0.45 ? 0.7 : 0.1;
+                case 'dense': return smoothstep(0.26, 0.56, n);
+                case 'modular': {
+                  if (col % 5 === 4 || row % 3 === 2) return 0;
+                  return smoothstep(0.4, 0.62, fbm(Math.floor(col / 5) * 0.25, Math.floor(row / 3) * 0.15, t * 0.05));
+                }
+                case 'layer': {
+                  const band = Math.floor((row + t * 1.5) / 5);
+                  return 0.45 * base + [0.12, 0.42, 0.78][((band % 3) + 3) % 3] * 0.6;
+                }
+              }
+            };
             let d = 0;
-            if (wField > 0.01) d += wField * base * 0.5; // at rest the field stays a faint texture
-            if (wSelect > 0.01) d += wSelect * (base > 0.45 ? 0.7 : 0.1);
-            if (wDense > 0.01) d += wDense * smoothstep(0.26, 0.56, n);
-            if (wModular > 0.01) {
-              const edge = col % 5 === 4 || row % 3 === 2;
-              const m = fbm(Math.floor(col / 5) * 0.25, Math.floor(row / 3) * 0.15, t * 0.05);
-              d += wModular * (edge ? 0 : smoothstep(0.4, 0.62, m));
-            }
-            if (wLayer > 0.01) {
-              const band = Math.floor((row + t * 1.5) / 5);
-              d += wLayer * (0.45 * base + [0.12, 0.42, 0.78][((band % 3) + 3) % 3] * 0.6);
-            }
+            if (wField > 0.01) d += wField * pattern('field');
+            if (wSelect > 0.01) d += wSelect * pattern('select');
+            if (wDense > 0.01) d += wDense * pattern('dense');
+            if (wModular > 0.01) d += wModular * pattern('modular');
+            if (wLayer > 0.01) d += wLayer * pattern('layer');
+            // an active panel's pattern spreads out from it, ragged at the front
+            panelModes.forEach((m, k) => {
+              if (focus[k] < 0.01) return;
+              const dist = Math.hypot(col - centres[k][0], (row - centres[k][1]) * 1.4) + hash(col, row, 41) * 4;
+              const reach = spread * focus[k];
+              const f = 1 - smoothstep(reach * 0.55, reach, dist);
+              if (f > 0) d += (pattern(m) - d) * f;
+            });
             const near = ld < FADE;
             if (near) d *= smoothstep(QUIET, FADE, ld);
 
@@ -329,7 +354,7 @@ export function GlyphField({ grid, logo, mode, panels = [], clear = [], plate, r
       window.removeEventListener('pointermove', onPointer);
       window.removeEventListener('pointerout', onLeave);
     };
-  }, [grid, logo, panels, clear, plate, rule]);
+  }, [grid, logo, panels, panelModes, clear, rule]);
 
   return (
     <canvas
