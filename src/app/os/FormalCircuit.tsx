@@ -19,6 +19,7 @@ interface Props {
   onParam: (key: Key, value: number) => void;
   onProfile: (profile: Params['profile']) => void;
   onDomain: (domain: NonNullable<Params['domain']>) => void;
+  onAdoptVariant: (disabled: Set<string>, additions: EngineId[]) => void;
   onReset: () => void;
   onExport: () => void;
 }
@@ -53,7 +54,7 @@ function Glyph({name}:{name:string}) {
     <path d="M10 37H90M50 6V68"/>}
   </svg>;
 }
-export function FormalCircuit({engineId,params,disabled,additions,scrub,onScrub,onBase,onToggle,onAdd,onRemove,onMove,onParam,onProfile,onDomain,onReset,onExport}:Props) {
+export function FormalCircuit({engineId,params,disabled,additions,scrub,onScrub,onBase,onToggle,onAdd,onRemove,onMove,onParam,onProfile,onDomain,onAdoptVariant,onReset,onExport}:Props) {
   const [selected,setSelected]=useState('base');
   const [palette,setPalette]=useState<'add'|'replace'|null>(null);
   const [edge,setEdge]=useState<number|null>(null);
@@ -156,8 +157,8 @@ export function FormalCircuit({engineId,params,disabled,additions,scrub,onScrub,
       <div><small>After</small><Viewer kind={ENGINES[engineId].kind} params={params} disabled={next.disabled} additions={next.additions} interactive={false}/></div>
     </div>}
     {compare&&<div className="circuit-compare">
-      <div><span className="circuit-section-name">A / Current</span><Viewer kind={ENGINES[engineId].kind} params={params} disabled={disabled} additions={additions} interactive={false}/></div>
-      <div><span className="circuit-section-name">B / Variation</span><Viewer kind={ENGINES[engineId].kind} params={params} disabled={alternateOff} additions={alternateAdd} interactive={false}/></div>
+      <div><span className="circuit-section-name">A / Current</span><Viewer kind={ENGINES[engineId].kind} params={params} disabled={disabled} additions={additions} interactive={false}/><button className="circuit-choose" onClick={()=>setCompare(false)}>Keep A</button></div>
+      <div><span className="circuit-section-name">B / Variation</span><Viewer kind={ENGINES[engineId].kind} params={params} disabled={alternateOff} additions={alternateAdd} interactive={false}/><button className="circuit-choose" onClick={()=>{onAdoptVariant(alternateOff,alternateAdd);onScrub(null);setCompare(false);}}>Use B ↗</button></div>
     </div>}
     <details className="circuit-notes"><summary>About this study</summary><p>These are schematic, newly reconstructed forms—not the original stage CAD. Larger nodes organize the composition; smaller nodes transform or support it. Connections preview changes. The compare view disables one operation or the last supporting strategy.</p></details>
   </section>;
