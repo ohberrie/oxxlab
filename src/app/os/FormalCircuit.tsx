@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { ENGINES, ENGINE_IDS, type EngineId, type Params } from './data';
 import { Viewer } from './Viewer';
 
 type Key = 'count' | 'rotation' | 'depth' | 'scale' | 'fold';
+type Step = { id: string; name: string; role: 'base' | 'operation' | 'support'; operation?: string; engine?: EngineId };
 interface Props {
   engineId: EngineId;
   params: Params;
@@ -19,105 +20,131 @@ interface Props {
   onReset: () => void;
   onExport: () => void;
 }
-const SHORT: Record<string, string> = {
-  layering: 'Sequential Layering', perspective: 'Perspective Convergence', line: 'Line / Trajectory',
-  division: 'Division', enclosure: 'Spatial Enclosure',
+const NAMES: Record<string,string> = {
+  layering: 'Layering', perspective: 'Convergence', line: 'Trajectory',
+  division: 'Division', enclosure: 'Enclosure',
 };
-const PARAM: Record<string, { key: Key; label: string; min: number; max: number; step: number }> = {
-  base: { key: 'count', label: 'Count', min: 3, max: 22, step: 1 },
-  Repeat: { key: 'count', label: 'Count', min: 3, max: 22, step: 1 },
-  Rotate: { key: 'rotation', label: 'Rotation', min: 0, max: 100, step: 1 },
-  Curve: { key: 'rotation', label: 'Curvature', min: 0, max: 100, step: 1 },
-  Divide: { key: 'rotation', label: 'Division bias', min: 0, max: 100, step: 1 },
-  Scale: { key: 'scale', label: 'Scale progression', min: 0, max: .85, step: .01 },
-  Depth: { key: 'depth', label: 'Depth', min: 0, max: 240, step: 1 },
-  Fold: { key: 'fold', label: 'Fold angle', min: 0, max: 90, step: 1 },
-  layering: { key: 'depth', label: 'Depth', min: 0, max: 240, step: 1 },
-  perspective: { key: 'scale', label: 'Convergence', min: 0, max: .85, step: .01 },
-  line: { key: 'rotation', label: 'Flow', min: 0, max: 100, step: 1 },
-  division: { key: 'rotation', label: 'Split', min: 0, max: 100, step: 1 },
-  enclosure: { key: 'fold', label: 'Fold', min: 0, max: 90, step: 1 },
+const PARAM: Record<string,{key:Key;name:string;min:number;max:number;step:number}> = {
+  base: {key:'count',name:'Count',min:3,max:22,step:1},
+  Repeat: {key:'count',name:'Count',min:3,max:22,step:1},
+  Rotate: {key:'rotation',name:'Rotation',min:0,max:100,step:1},
+  Curve: {key:'rotation',name:'Curvature',min:0,max:100,step:1},
+  Divide: {key:'rotation',name:'Division',min:0,max:100,step:1},
+  Scale: {key:'scale',name:'Scale',min:0,max:.85,step:.01},
+  Depth: {key:'depth',name:'Depth',min:0,max:240,step:1},
+  Fold: {key:'fold',name:'Fold',min:0,max:90,step:1},
+  layering: {key:'depth',name:'Depth',min:0,max:240,step:1},
+  perspective: {key:'scale',name:'Convergence',min:0,max:.85,step:.01},
+  line: {key:'rotation',name:'Flow',min:0,max:100,step:1},
+  division: {key:'rotation',name:'Division',min:0,max:100,step:1},
+  enclosure: {key:'fold',name:'Fold',min:0,max:90,step:1},
 };
-function Glyph({ name }: { name: string }) {
-  const outline = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.3, strokeLinejoin: 'round' as const };
-  return <svg aria-hidden="true" className="circuit-glyph" viewBox="0 0 120 80">
-    <g {...outline}>
-      {name === 'layering' || name === 'Repeat' ? [0,1,2,3].map(i => <path key={i} d={'M '+(14+i*11)+' '+(66-i*5)+' L 60 '+(10+i*10)+' L '+(106-i*11)+' '+(66-i*5)+' Z'}/>) :
-      name === 'perspective' || name === 'Scale' ? [0,1,2,3].map(i => <rect key={i} x={8+i*12} y={8+i*8} width={104-i*24} height={64-i*16}/>) :
-      name === 'enclosure' || name === 'Fold' ? <><path d="M17 29 57 13 106 31 64 48Z M17 29V67L64 76V48 M106 31V67L64 76 M17 67L57 51L106 67"/><path d="M57 13V51" opacity=".45"/></> :
-      name === 'line' || name === 'Curve' ? <><path d="M8 67Q19 7 45 33T110 11"/><path d="M8 72Q24 25 51 44T110 25" opacity=".4"/></> :
-      name === 'division' || name === 'Divide' ? <><rect x="12" y="11" width="96" height="60"/><path d="M38 11V71M75 11V71M12 43H108M38 56H75"/></> :
-      name === 'Rotate' ? <><path d="M10 67L50 11L90 67Z"/><path d="M25 70L72 20L99 65Z" opacity=".55"/></> :
-      name === 'Depth' ? <><rect x="10" y="14" width="74" height="53"/><rect x="27" y="8" width="74" height="53"/><path d="M10 14 27 8 M84 14 101 8 M84 67 101 61 M10 67 27 61"/></> :
-      <path d="M12 40H108M60 11V69"/>}
-    </g>
+function Glyph({name}:{name:string}) {
+  return <svg className="circuit-glyph" viewBox="0 0 100 74" fill="none" stroke="currentColor" strokeWidth="1.15" aria-hidden="true" strokeLinejoin="round">
+    {name==='layering'||name==='Repeat' ? [0,1,2,3].map(i=><path key={i} d={'M '+(10+i*9)+' '+(62-i*5)+' L 50 '+(6+i*9)+' L '+(90-i*9)+' '+(62-i*5)+'Z'}/>) :
+    name==='perspective'||name==='Scale' ? [0,1,2,3].map(i=><rect key={i} x={5+i*11} y={5+i*8} width={90-i*22} height={64-i*16}/>) :
+    name==='enclosure'||name==='Fold' ? <><path d="M10 25 47 11 90 25 53 41Z M10 25V58L53 72V41 M90 25V58L53 72 M47 11V43" /></> :
+    name==='line'||name==='Curve' ? <><path d="M4 65Q15 5 42 30T97 12"/><path d="M7 70Q25 23 49 42T97 25" opacity=".45"/></> :
+    name==='division'||name==='Divide' ? <><rect x="8" y="8" width="84" height="57"/><path d="M31 8V65M63 8V65M8 37H92M31 50H63"/></> :
+    name==='Rotate' ? <><path d="M13 62L46 8L81 62Z"/><path d="M29 64L66 19L92 59Z" opacity=".55"/></> :
+    name==='Depth' ? <><rect x="8" y="17" width="66" height="47"/><rect x="25" y="8" width="66" height="47"/><path d="M8 17 25 8 M74 17 91 8 M74 64 91 55"/></> :
+    <path d="M10 37H90M50 6V68"/>}
   </svg>;
 }
-type Step = { id: string; label: string; role: 'governing' | 'operation' | 'support'; operation?: string; strategy?: EngineId };
-export function FormalCircuit({ engineId, params, disabled, additions, scrub, onScrub, onBase, onToggle, onAdd, onRemove, onMove, onParam, onReset, onExport }: Props) {
-  const [active, setActive] = useState('base');
-  const [palette, setPalette] = useState(false);
-  const [hover, setHover] = useState<number | null>(null);
-  const [compare, setCompare] = useState(false);
-  const baseOps = ENGINES[engineId].nodes;
-  const steps: Step[] = [
-    { id: 'base', label: SHORT[engineId] || ENGINES[engineId].name, role: 'governing', strategy: engineId },
-    ...baseOps.map(op => ({ id: 'op-'+op, label: op, role: 'operation' as const, operation: op })),
-    ...additions.map((id, i) => ({ id: 'support-'+id+'-'+i, label: SHORT[id] || ENGINES[id].name, role: 'support' as const, strategy: id })),
+export function FormalCircuit({engineId,params,disabled,additions,scrub,onScrub,onBase,onToggle,onAdd,onRemove,onMove,onParam,onReset,onExport}:Props) {
+  const [selected,setSelected]=useState('base');
+  const [palette,setPalette]=useState<'add'|'replace'|null>(null);
+  const [edge,setEdge]=useState<number|null>(null);
+  const [compare,setCompare]=useState(false);
+  const ops=ENGINES[engineId].nodes;
+  const steps:Step[]=[
+    {id:'base',name:NAMES[engineId],role:'base',engine:engineId},
+    ...ops.map(op=>({id:'op-'+op,name:op,role:'operation' as const,operation:op})),
+    ...additions.map(id=>({id:'support-'+id,name:NAMES[id],role:'support' as const,engine:id})),
   ];
-  const chosen = steps.find(s => s.id === active) || steps[0];
-  const setting = PARAM[chosen.operation || (chosen.role === 'governing' ? 'base' : chosen.strategy || '')] || PARAM.base;
-  const val = params[setting.key] ?? 0;
-  const slice = (index: number) => {
-    const baseAllowed = new Set(baseOps.slice(0, Math.min(index, baseOps.length)));
+  const node=steps.find(s=>s.id===selected)||steps[0];
+  const control=PARAM[node.operation||(node.role==='base'?'base':node.engine||'base')]||PARAM.base;
+  const val=params[control.key]??0;
+  const partial=(index:number)=>{
+    const active=new Set(ops.slice(0,Math.min(index,ops.length)));
     return {
-      disabled: new Set([...disabled, ...baseOps.filter(op => !baseAllowed.has(op))]),
-      additions: additions.slice(0, Math.max(0, index - baseOps.length)),
+      disabled:new Set([...disabled,...ops.filter(op=>!active.has(op))]),
+      additions:additions.slice(0,Math.max(0,index-ops.length)),
     };
   };
-  const before = useMemo(() => slice(Math.max(0, (hover ?? 0))), [hover, engineId, additions, disabled]);
-  const after = useMemo(() => slice(Math.max(0, (hover ?? 0) + 1)), [hover, engineId, additions, disabled]);
-  const branchDisabled = new Set(disabled);
-  if (additions.length === 0) {
-    const candidate = baseOps.find(op => op === 'Rotate' || op === 'Depth') || baseOps[baseOps.length-1];
-    if (candidate) branchDisabled.add(candidate);
+  const previous=partial(Math.max(0,edge??0)),next=partial(Math.max(0,(edge??0)+1));
+  const alternateOff=new Set(disabled);
+  if(!additions.length){
+    const op=ops.find(x=>x==='Rotate'||x==='Depth')||ops[ops.length-1];
+    if(op)alternateOff.add(op);
   }
-  const branchAdditions = additions.length ? additions.slice(0, -1) : additions;
-  const selectedIndex = scrub == null ? steps.length - 1 : Math.min(scrub, steps.length - 1);
-  return <section className="formal-circuit" aria-label="Formal strategy circuit">
+  const alternateAdd=additions.length?additions.slice(0,-1):additions;
+  const currentStep=scrub===null?steps.length-1:Math.min(scrub,steps.length-1);
+  return <section className="formal-circuit compact-circuit" aria-label="Formal composition">
     <div className="circuit-topline">
-      <div><span className="eyebrow">FORMAL CIRCUIT / COMPOSITION</span><h2>Build the relationship.</h2></div>
-      <div className="circuit-actions"><button onClick={() => setCompare(v=>!v)} aria-pressed={compare}>{compare ? 'Close comparison' : 'Branch & compare ↗'}</button><button onClick={onReset}>Reset</button><button onClick={onExport}>Save ↓</button></div>
+      <span className="circuit-section-name">Composition</span>
+      <div className="circuit-actions">
+        <button onClick={()=>setCompare(v=>!v)} aria-pressed={compare} title="Compare variations">{compare?'× Compare':'Compare'}</button>
+        <button onClick={onReset} title="Reset composition" aria-label="Reset composition">↺</button>
+        <button onClick={onExport} title="Save study" aria-label="Save study">↓</button>
+      </div>
     </div>
-    <p className="circuit-help">Larger node = governing strategy. Smaller nodes modify it. Select a node to change its parameters; scrub the connection to follow the form.</p>
-    <div className="circuit-flow" role="group" aria-label="Ordered strategy nodes">
-      {steps.map((node, i) => <div className="circuit-part" key={node.id}>
-        {i > 0 && <button className={'circuit-wire'+(hover === i-1?' is-hot':'')} aria-label={'Preview connection before '+node.label} onMouseEnter={()=>setHover(i-1)} onMouseLeave={()=>setHover(null)} onFocus={()=>setHover(i-1)} onBlur={()=>setHover(null)} onClick={()=>onScrub(i)}><span>→</span></button>}
-        <button className={'circuit-node '+node.role+(chosen.id===node.id?' is-selected':'')+((node.operation && disabled.has(node.operation))?' is-off':'')} onClick={()=>{setActive(node.id); onScrub(i);}} aria-pressed={chosen.id===node.id}>
-          <span className="circuit-node-meta">{node.role==='governing'?'GOVERNING':node.role==='support'?'SUPPORTING':'TRANSFORM'} / {String(i).padStart(2,'0')}</span>
-          <Glyph name={node.operation || node.strategy || 'layering'}/>
-          <strong>{node.label}</strong>
-          {node.operation && <span className="circuit-state">{disabled.has(node.operation)?'BYPASSED':'ACTIVE'}</span>}
+    <div className="circuit-flow" role="group" aria-label="Connected formal operations">
+      {steps.map((item,i)=><div className="circuit-part" key={item.id}>
+        {i>0&&<button className={'circuit-wire'+(edge===i-1?' is-hot':'')}
+          onPointerEnter={()=>setEdge(i-1)} onPointerLeave={()=>setEdge(null)}
+          onFocus={()=>setEdge(i-1)} onBlur={()=>setEdge(null)}
+          onClick={()=>onScrub(i)}
+          aria-label={'Preview the change before '+item.name} title="Before / after"><span>→</span></button>}
+        <button className={'circuit-node '+(item.role==='base'?'governing':item.role==='support'?'support':'operation')+(node.id===item.id?' is-selected':'')+(item.operation&&disabled.has(item.operation)?' is-off':'')}
+          aria-label={(item.role==='base'?'Governing: ':item.role==='support'?'Supporting: ':'Transform: ')+item.name}
+          aria-pressed={node.id===item.id} onClick={()=>{setSelected(item.id);onScrub(i);}}>
+          <Glyph name={item.operation||item.engine||''}/>
+          <strong>{item.name}</strong>
         </button>
       </div>)}
-      <div className="circuit-part">
-        <span className="circuit-wire is-static"><span>→</span></span>
-        <button className="circuit-add" onClick={()=>setPalette(v=>!v)} aria-expanded={palette}><span>+</span><small>ADD STRATEGY</small></button>
+      <div className="circuit-part"><span className="circuit-wire is-static"><span>→</span></span>
+        <button className="circuit-add" aria-label="Add a strategy" title="Add a strategy" onClick={()=>setPalette(p=>p==='add'?null:'add')}>+</button>
       </div>
     </div>
-    {palette && <div className="circuit-palette"><span className="eyebrow">CHOOSE A SUPPORTING STRATEGY</span><div className="circuit-palette-grid">{ENGINE_IDS.filter(k=>k!==engineId&&!additions.includes(k)).map(k=><button key={k} onClick={()=>{onAdd(k);setPalette(false);onScrub(null);setActive('support-'+k+'-'+additions.length);}}><Glyph name={k}/><span>{SHORT[k]}</span><b>+</b></button>)}{ENGINE_IDS.filter(k=>k!==engineId&&!additions.includes(k)).length===0&&<span>All five strategies are connected.</span>}</div></div>}
+    {palette&&<div className="circuit-palette">
+      <div className="circuit-palette-grid">
+        {ENGINE_IDS.filter(k=>palette==='replace'||(k!==engineId&&!additions.includes(k))).map(k=><button key={k} aria-label={(palette==='replace'?'Use as governing: ':'Add supporting: ')+NAMES[k]}
+          onClick={()=>{if(palette==='replace'){onBase(k);setSelected('base');}else{onAdd(k);setSelected('support-'+k);}onScrub(null);setPalette(null);}}>
+          <Glyph name={k}/><span>{NAMES[k]}</span></button>)}
+      </div>
+    </div>}
     <div className="circuit-inspector">
-      <div className="circuit-inspector-title"><span className="eyebrow">SELECTED / {chosen.role.toUpperCase()}</span><h3>{chosen.label}</h3></div>
-      <label>{setting.label} <output>{Number(val).toFixed(setting.step < 1 ? 2 : 0)}</output><input type="range" min={setting.min} max={setting.max} step={setting.step} value={val} onChange={e=>{onParam(setting.key,+e.target.value);onScrub(null)}}/></label>
+      <span className="circuit-active-name">{node.name}</span>
+      <label className="circuit-primary-slider"><span>{control.name}</span>
+        <input type="range" min={control.min} max={control.max} step={control.step} value={val}
+          onChange={e=>{onParam(control.key,+e.target.value);onScrub(null)}}/>
+        <output>{Number(val).toFixed(control.step<1?2:0)}</output>
+      </label>
       <div className="circuit-inspector-controls">
-        {chosen.role==='governing' && <label className="circuit-switch">Change governing strategy <select value={engineId} onChange={e=>{onBase(e.target.value as EngineId);setActive('base');onScrub(null)}}>{ENGINE_IDS.map(k=><option key={k} value={k}>{SHORT[k]}</option>)}</select></label>}
-        {chosen.operation && <button onClick={()=>onToggle(chosen.operation!)}>{disabled.has(chosen.operation)?'Enable operation':'Bypass operation'}</button>}
-        {chosen.role==='support' && chosen.strategy && <><button onClick={()=>onMove(chosen.strategy!,-1)} disabled={additions.indexOf(chosen.strategy)===0}>← Earlier</button><button onClick={()=>onMove(chosen.strategy!,1)} disabled={additions.indexOf(chosen.strategy)===additions.length-1}>Later →</button><button onClick={()=>{onRemove(chosen.strategy!);setActive('base');onScrub(null)}}>Remove ×</button></>}
+        {node.role==='base'&&<button onClick={()=>setPalette(p=>p==='replace'?null:'replace')} title="Change governing strategy">Replace ↗</button>}
+        {node.operation&&<button onClick={()=>onToggle(node.operation!)}>{disabled.has(node.operation)?'Enable':'Bypass'}</button>}
+        {node.role==='support'&&node.engine&&<>
+          <button onClick={()=>onMove(node.engine!,-1)} disabled={additions.indexOf(node.engine)===0} aria-label="Move left">←</button>
+          <button onClick={()=>onMove(node.engine!,1)} disabled={additions.indexOf(node.engine)===additions.length-1} aria-label="Move right">→</button>
+          <button onClick={()=>{onRemove(node.engine!);setSelected('base');onScrub(null)}} aria-label="Remove node">×</button>
+        </>}
       </div>
     </div>
-    <div className="circuit-scrubber"><div className="circuit-scrub-label"><span className="eyebrow">SCRUB THE LOGIC</span><strong>{scrub==null?'COMPLETE':('STEP '+(selectedIndex+1)+' / '+steps.length)}</strong></div><input type="range" aria-label="Scrub the logic" min="0" max={steps.length-1} value={selectedIndex} onChange={e=>onScrub(+e.target.value)}/><button onClick={()=>onScrub(null)}>Show complete →</button></div>
-    {hover!==null&&<div className="circuit-difference"><div><small>BEFORE / STAGE {hover+1}</small><Viewer kind={ENGINES[engineId].kind} params={params} disabled={before.disabled} additions={before.additions} interactive={false}/></div><span>→</span><div><small>AFTER / STAGE {hover+2}</small><Viewer kind={ENGINES[engineId].kind} params={params} disabled={after.disabled} additions={after.additions} interactive={false}/></div></div>}
-    {compare&&<div className="circuit-compare"><div><span className="eyebrow">BRANCH A / CURRENT COMPOSITION</span><Viewer kind={ENGINES[engineId].kind} params={params} disabled={disabled} additions={additions} interactive={false}/><small>{[SHORT[engineId],...additions.map(k=>SHORT[k])].join(' → ')}</small></div><div><span className="eyebrow">BRANCH B / ONE LESS OPERATION</span><Viewer kind={ENGINES[engineId].kind} params={params} disabled={branchDisabled} additions={branchAdditions} interactive={false}/><small>{additions.length?'Last supporting strategy bypassed':'One transformation bypassed'}</small></div></div>}
-    <p className="circuit-disclaimer">Experimental schematic geometry. This graph composes the existing OXX generators; it is not a reconstruction of historical CAD or a general-purpose geometry node system.</p>
+    <div className="circuit-scrubber">
+      <span className="circuit-section-name">Process</span>
+      <input type="range" aria-label="Scrub process" min={0} max={steps.length-1} value={currentStep} onChange={e=>onScrub(+e.target.value)}/>
+      <button onClick={()=>onScrub(null)} title="Show completed form">{scrub===null?'All':'Show all ↗'}</button>
+    </div>
+    {edge!==null&&<div className="circuit-difference" aria-label="Before and after">
+      <div><small>Before</small><Viewer kind={ENGINES[engineId].kind} params={params} disabled={previous.disabled} additions={previous.additions} interactive={false}/></div>
+      <span>→</span>
+      <div><small>After</small><Viewer kind={ENGINES[engineId].kind} params={params} disabled={next.disabled} additions={next.additions} interactive={false}/></div>
+    </div>}
+    {compare&&<div className="circuit-compare">
+      <div><span className="circuit-section-name">A / Current</span><Viewer kind={ENGINES[engineId].kind} params={params} disabled={disabled} additions={additions} interactive={false}/></div>
+      <div><span className="circuit-section-name">B / Variation</span><Viewer kind={ENGINES[engineId].kind} params={params} disabled={alternateOff} additions={alternateAdd} interactive={false}/></div>
+    </div>}
+    <details className="circuit-notes"><summary>About this study</summary><p>These are schematic, newly reconstructed forms—not the original stage CAD. Larger nodes organize the composition; smaller nodes transform or support it. Connections preview changes. The compare view disables one operation or the last supporting strategy.</p></details>
   </section>;
 }
