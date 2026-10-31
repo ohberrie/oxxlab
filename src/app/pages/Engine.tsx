@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router';
-import { ENGINES, ENGINE_IDS, getCase, isEngineId, strategyPlan, type EngineId, type Params, type Profile } from '../os/data';
+import { ENGINES, isEngineId, strategyPlan, type EngineId, type Params, type Profile } from '../os/data';
 import { saveFile } from '../os/geometry';
-import { Tag, useOs } from '../os/Shell';
+import { useOs } from '../os/Shell';
 import { Viewer } from '../os/Viewer';
 import { FormalCircuit } from '../os/FormalCircuit';
 
@@ -53,24 +53,6 @@ export function EnginePage() {
     setEngine({ additions: [], disabled: new Set(), params: { ...p, scale: next === 'perspective' ? 0.65 : 0.35, fold: 0 } });
     navigate(`/engine/${next}${compose ? '/compose' : ''}`);
   };
-  const addPrinciple = (k: EngineId) => {
-    setEngine({ additions: [...st.additions, k], selected: -1 });
-    closeDialog();
-
-  };
-  const openAdd = () => {
-    const options = ENGINE_IDS.filter(k => k !== id && !st.additions.includes(k));
-    showDialog('Combine a supporting strategy', (
-      <>
-        <p>Keep the current study and add a compatible spatial operation. The connection changes the geometry in the same canvas.</p>
-        {options.length ? options.map(k => (
-          <button key={k} className="pick" onClick={() => addPrinciple(k)}>
-            <div><strong>{ENGINES[k].name}</strong><span>{ENGINES[k].description}</span></div><span>+</span>
-          </button>
-        )) : <p>All available principles are connected. Remove one from the chain to reconnect it.</p>}
-      </>
-    ));
-  };
   const openReference = () => showDialog('Reference → principle', (
     <>
       <span className="eyebrow">Illustrative extraction / not AI image analysis</span>
@@ -104,16 +86,17 @@ export function EnginePage() {
     bodyRef.current?.scrollIntoView({ block: 'start' });
     toast(`Strategy ${String.fromCharCode(65 + i)} loaded into the engine`);
   };
-  const source = getCase(e.source);
 
   return (
     <section className="workspace">
-      <div className="workspace-heading">
-        <h1>Engine<span className="muted"> / Test ground</span></h1>
-        <div className="engine-select"><span className="eyebrow">LIVE FORM STUDY / {e.name}</span><Tag status={e.status} title="Demo engine reconstructed from the source narrative" /></div>
+      <div className="workspace-heading workspace-heading-minimal">
+        <h1>Engine</h1>
+        <div className="engine-quicklinks">
+          <Link to="/engine/layering?preset=09">09 / izna</Link>
+          <Link to="/engine/enclosure?preset=10">10 / Yeonjun</Link>
+          <button onClick={() => navigate(`${base}/compose`)}>Explore brief ↗</button>
+        </div>
       </div>
-
-      <div className="study-intro"><p>Select a strategy. Transform its rhythm. Combine and judge the result.</p><div className="preset-links"><span className="mono">SAMPLE STUDIES</span><Link to="/engine/layering?preset=09">09 / izna ↗</Link><Link to="/engine/enclosure?preset=10">10 / Yeonjun ↗</Link></div></div>
       <div className="engine-body" ref={bodyRef}>
         <Viewer
           kind={e.kind}
@@ -124,23 +107,9 @@ export function EnginePage() {
           dock
           angle={angle.current}
           onAngle={(yaw, pitch) => { angle.current = { yaw, pitch }; }}
-          caption={composed ? 'COMPOSED FORM STUDY' : e.source ? `SCHEMATIC STUDY / CASE ${e.source}` : 'CANDIDATE STRATEGY / SCHEMATIC'}
-          subtitle={composed ? [e.name, ...st.additions.map(k => ENGINES[k].name)].join(' + ') : 'Change a variable. Keep the principle.'}
+          caption="LIVE FORM"
+          subtitle=""
         />
-        <aside className="control-panel circuit-side">
-          <span className="eyebrow">GOVERNING STRATEGY</span>
-          <h2>{e.name}</h2>
-          <p>{e.description}</p>
-          <p className="circuit-side-note">Formal relationships are edited in the circuit below. The larger node governs; smaller nodes transform or support it.</p>
-          <div className="circuit-side-index"><span className="eyebrow">CURRENT COMPOSITION</span>
-            <strong>{e.nodes.filter(n => !st.disabled.has(n)).length} active operations</strong>
-            <strong>{st.additions.length} supporting strategies</strong>
-          </div>
-          <div className="circuit-side-links">
-            {source && <Link className="source" to={`/field/${e.source}`}><span>OBSERVED IN / CASE {e.source}</span>{source.name} ↗</Link>}
-            <button className="text-button" onClick={() => navigate(`${base}/compose`)}>Brief → 3 strategies ↗</button>
-          </div>
-        </aside>
       </div>
 
       <FormalCircuit
@@ -159,7 +128,7 @@ export function EnginePage() {
         onReset={() => { resetEngine(); setScrub(null); }}
         onExport={exportStudy}
       />
-      <div className="study-footer"><span className="mono">SCHEMATIC RESEARCH MODEL / NOT ORIGINAL STAGE GEOMETRY</span><Link to="/tools">Utilities / MAKE ↗</Link></div>
+      <div className="study-footer compact-footer"><Link to="/tools">MAKE ↗</Link></div>
       {compose && (
         <section className="compose" ref={composeRef}>
           <div>
