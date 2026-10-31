@@ -127,6 +127,7 @@ export function EnginePage() {
         onParam={(key, value) => { setParam(key, value); setScrub(null); }}
         onProfile={profile => { setParam('profile', profile); setScrub(null); }}
         onDomain={domain => { setParam('domain', domain); setScrub(null); }}
+        onAdoptVariant={(disabled, additions) => { setEngine({ disabled, additions, selected: -1 }); setScrub(null); }}
         onReset={() => { resetEngine(); setScrub(null); }}
         onExport={exportStudy}
       />
