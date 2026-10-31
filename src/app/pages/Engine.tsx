@@ -125,6 +125,8 @@ export function EnginePage() {
         onRemove={k => { setEngine({ additions: st.additions.filter(a => a !== k), selected: -1 }); setScrub(null); }}
         onMove={(k, direction) => { const a = [...st.additions]; const from = a.indexOf(k), to = from + direction; if (from < 0 || to < 0 || to >= a.length) return; [a[from], a[to]] = [a[to], a[from]]; setEngine({ additions: a }); setScrub(null); }}
         onParam={(key, value) => { setParam(key, value); setScrub(null); }}
+        onProfile={profile => { setParam('profile', profile); setScrub(null); }}
+        onDomain={domain => { setParam('domain', domain); setScrub(null); }}
         onReset={() => { resetEngine(); setScrub(null); }}
         onExport={exportStudy}
       />
