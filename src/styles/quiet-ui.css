@@ -150,3 +150,13 @@
  .case-detail-min .case-formation-steps {grid-template-columns:1fr;gap:8px;}
  .case-detail-min .case-formation-step .case-diagram {aspect-ratio:480/210;}
 }
+
+/* Controls for base geometry live behind the selected governing node. */
+.circuit-base-geometry {padding:11px 0;border-bottom:1px solid var(--os-line);font-size:10px;}
+.circuit-base-geometry summary {cursor:pointer;color:var(--os-muted);font:10px var(--os-mono);width:max-content;}
+.circuit-base-controls {display:flex;align-items:center;gap:15px 22px;flex-wrap:wrap;padding:16px 0 6px;}
+.circuit-base-controls>span {color:var(--os-muted);font:10px var(--os-mono);}
+.circuit-base-controls>div {display:flex;gap:5px;}
+.circuit-base-controls button {min-width:36px;min-height:32px;padding:6px 10px;border:1px solid var(--os-line);color:var(--os-muted);font-size:13px;}
+.circuit-base-controls button[aria-pressed=true] {border-color:var(--os-ink);color:var(--os-ink);}
+.circuit-base-controls button:hover {border-color:var(--os-blue);color:var(--os-blue);}
