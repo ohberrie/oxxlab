@@ -185,3 +185,10 @@
 .make-source-notes {margin:37px 0 0;font:10px/1.5 var(--os-mono);color:var(--os-muted);}
 .os .make-source-notes p {margin:10px 0 0;font-size:11px;max-width:700px;}
 @media(max-width:650px) {.make-min .archive-grid {grid-template-columns:1fr;}.make-min-heading {align-items:flex-start;flex-direction:column;gap:10px;}}
+
+/* CASE ATLAS: true solid models projected from a fixed orthographic 3D camera. */
+.case-axon {width:100%;aspect-ratio:480/300;overflow:hidden;position:relative;background:#fafafa;border:1px solid var(--os-line);}
+.case-axon svg {width:100%;height:100%;display:block;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform-origin:center;}
+.project-card:hover .case-axon svg,.iso-link:focus-visible .case-axon svg {transform:scale(1.045);}
+@media(prefers-color-scheme:dark) {.case-axon {background:#eaeaea;}}
+@media(prefers-reduced-motion:reduce) {.case-axon svg {transition:none;}}
