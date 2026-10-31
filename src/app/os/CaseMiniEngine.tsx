@@ -49,7 +49,7 @@ export function CaseMiniEngine({ project }: { project: Case }) {
   const set = (key: Key,v:number) => setParams(current=>({...current,[key]:v}));
   const runFull = () => setEngine({params:{...params},additions:[...additions],disabled:new Set(),selected:-1});
   return <section className="case-mini" aria-label={'Explore the formal composition for case '+project.id}>
-    <div className="case-mini-top"><h2>Explore the form.</h2><span>Case ${project.id} / interactive study</span></div>
+    <div className="case-mini-top"><h2>Explore the form.</h2><span>Case {project.id} / interactive study</span></div>
     <div className="case-mini-workspace">
       <Viewer kind={ENGINES[engine].kind} params={params} additions={additions} className="case-mini-view" dock caption="LIVE STUDY" subtitle="" />
       <div className="case-mini-controls">
