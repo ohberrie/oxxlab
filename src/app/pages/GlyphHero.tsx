@@ -4,8 +4,8 @@ import { GlyphField, computeGrid, type FieldMode, type Grid, type LogoPlacement,
 
 // The two phrases are the two ways in: intention → form is the Engine, practice → possibility the Cases.
 const PATHS: { to: string; num: string; name: string; phrase: string; eyebrow: string; desc: string; mode: FieldMode }[] = [
-  { to: '/engine/layering', num: '01', name: 'Engine', phrase: 'From intention to form.', eyebrow: 'EXPERIMENT / COMPOSE', desc: 'Select a spatial strategy. Transform it. Combine it with another.', mode: 'dense' },
-  { to: '/field', num: '02', name: 'Cases', phrase: 'From practice to new possibilities.', eyebrow: 'OBSERVE / EXTRACT', desc: 'See how formal decisions emerge from real spatial work.', mode: 'modular' },
+  { to: '/engine/layering', num: '01', name: 'Engine', phrase: 'From intention to form.', eyebrow: 'EXPERIMENT / COMPOSE', desc: 'Connect formal rules. Explore what changes.', mode: 'dense' },
+  { to: '/field', num: '02', name: 'Cases', phrase: 'From practice to new possibilities.', eyebrow: 'OBSERVE / EXTRACT', desc: 'Trace design decisions back to built work.', mode: 'modular' },
 ];
 const PANEL_MODES = PATHS.map(p => p.mode);
 
@@ -147,7 +147,7 @@ export function GlyphHero() {
       clear={clear} rule={layout.rule} active={stage === CARDS ? active : -1} reveal={reveal} />
     <span className="absolute flex items-center justify-center whitespace-nowrap font-mono text-[10px] tracking-[0.2em] text-white/45 transition-opacity duration-700 max-md:text-[9px] max-md:tracking-[0.12em]"
       style={{ ...box(layout.label), opacity: reveal ? 1 : 0, transitionDelay: reveal ? '500ms' : '0ms' }}>
-      OXX LAB / FORMAL REASONING SYSTEM
+      OXX LAB / FROM INTUITION TO FORM
     </span>
     {PATHS.map((s, i) => (
       <span key={s.num} aria-hidden="true" data-lit={lit(i)} style={phraseAt(i)}

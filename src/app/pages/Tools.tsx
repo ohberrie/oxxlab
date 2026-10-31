@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useSearchParams } from 'react-router';
+import { Link } from 'react-router';
 import { flatSvg, saveFile, SAMPLE_SOURCE } from '../os/geometry';
 import { useOs } from '../os/Shell';
 import { Viewer } from '../os/Viewer';
@@ -14,106 +14,39 @@ function useDownloads() {
     source: () => { saveFile('oxx-adaptive-ribs-sample.js', SAMPLE_SOURCE, 'text/javascript'); toast('Schematic sample source saved'); },
   };
 }
-
-interface ArchiveItem {
-  id: string;
-  title: string;
-  type: string;
-  kind: 'spine' | 'flatten';
-  summary: string;
-  input: string;
-  output: string;
-  format: string;
-}
-
-// The Make archive: each utility is catalogued like a library record, linked to its source case.
-const ITEMS: ArchiveItem[] = [
-  { id: 'T-01', title: 'Adaptive Spine Array', type: 'MAKE / supplementary utility', kind: 'spine', summary: 'Sample a path, orient each rib, and adapt its local scale.', input: 'Curved path + rib rule', output: 'Oriented, identifiable ribs', format: 'Interactive' },
-  { id: 'T-02', title: 'Flatten + Label', type: 'Make / fabrication utility', kind: 'flatten', summary: 'Retain part identity while moving from spatial ribs to a flat drawing.', input: 'Rib profiles + part IDs', output: 'Labelled SVG study + sample source', format: 'SVG · JS' },
+const ITEMS = [
+  { id: '01', title: 'Adaptive Spine Array', kind: 'spine' as const, summary: 'Distribute ribs along a continuous curve.', input: 'Curve + rib geometry', output: 'Oriented ribs' },
+  { id: '02', title: 'Flatten + Label', kind: 'flatten' as const, summary: 'Move spatial components into an identifiable flat study.', input: 'Ribs + part IDs', output: 'Labelled SVG' },
 ];
 
 export function ToolsPage() {
-  const download = useDownloads();
-  const { showDialog } = useOs();
-  const [search] = useSearchParams();
-  const index = search.get('view') === 'index';
-  const actions = (item: ArchiveItem) => item.kind === 'spine' ? (
-    <>
-      <button className="archive-action primary" onClick={() => showDialog('Adaptive ribs → flat parts', <SpineDemo />)}>Adjust the array ↗</button>
-    </>
-  ) : (
-    <>
-      <button className="archive-action primary" onClick={() => download.parts()} title="Sample drawing">SVG drawing ↓</button>
-      <button className="archive-action" onClick={download.source} title="Sample source">JS source ↓</button>
-    </>
-  );
-
-  return (
-    <section className="page archive">
-      <Link className="back" to="/engine">← ENGINE</Link>
-      <div className="page-heading">
-        <div><span className="eyebrow">Engine utilities / MAKE</span><h1>From form<br />to parts.</h1></div>
-        <p>Utilities translate spatial intent into fabrication information. Their origin remains connected to the field.</p>
-      </div>
-
-      <div className="archive-toolbar">
-        <span className="mono">{ITEMS.length} records · origin Case 08 · sorted by ID</span>
-        <div className="segmented">
-          <Link to="/tools" replace className={index ? '' : 'active'}>CARDS</Link>
-          <Link to="?view=index" replace className={index ? 'active' : ''}>INDEX</Link>
+  const download=useDownloads();
+  const {showDialog}=useOs();
+  return <section className="page archive make-min">
+    <Link className="back" to="/engine">← Engine</Link>
+    <header className="make-min-heading"><h1>MAKE.</h1><p>From form to parts.</p></header>
+    <div className="archive-grid">
+      {ITEMS.map(item=><article className="archive-card" key={item.id}>
+        <div className="archive-thumb"><Viewer kind={item.kind} interactive={false} params={THUMB} /></div>
+        <div className="make-item-head"><span>{item.id}</span><h2>{item.title}</h2></div>
+        <p>{item.summary}</p>
+        <div className="archive-actions">
+          {item.kind==='spine'?<button className="archive-action primary" onClick={()=>showDialog('Adaptive ribs / flat parts',<SpineDemo />)}>Explore ↗</button>:<>
+            <button className="archive-action primary" onClick={()=>download.parts()}>SVG ↓</button>
+            <button className="archive-action" onClick={download.source}>Source ↓</button>
+          </>}
         </div>
-      </div>
-
-      {index ? (
-        <div className="atlas">
-          <table className="archive-index">
-            <thead><tr><th>NO.</th><th>TITLE</th><th>TYPE</th><th>INPUT → OUTPUT</th><th>FORMAT</th><th>ORIGIN</th><th /></tr></thead>
-            <tbody>
-              {ITEMS.map(item => (
-                <tr key={item.id}>
-                  <td className="archive-no">{item.id}</td>
-                  <td>{item.title}</td>
-                  <td className="mono">{item.type}</td>
-                  <td>{item.input} → {item.output}</td>
-                  <td className="mono">{item.format}</td>
-                  <td><Link to="/field/08">Case 08 ↗</Link></td>
-                  <td><div className="archive-actions">{actions(item)}</div></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <div className="archive-grid">
-          {ITEMS.map(item => (
-            <article key={item.id} className="archive-card">
-              <header>
-                <span className="archive-no">{item.id}</span>
-                <span className="archive-type">{item.type}</span>
-              </header>
-              <div className="archive-thumb">
-                <Viewer kind={item.kind} interactive={false} params={THUMB} />
-              </div>
-              <h2>{item.title}</h2>
-              <p>{item.summary}</p>
-              <dl>
-                <dt>In</dt><dd>{item.input}</dd>
-                <dt>Out</dt><dd>{item.output}</dd>
-                <dt>Format</dt><dd>{item.format}</dd>
-                <dt>Origin</dt><dd><Link to="/field/08">Case 08 ↗</Link></dd>
-              </dl>
-              <div className="archive-actions">{actions(item)}</div>
-            </article>
-          ))}
-        </div>
-      )}
-
-      <p className="field-note">
-        Production workflow described in the supplied Stage 08 narrative. These are newly written schematic demos, not original fabrication files.<br />
-        No joint design, material thickness, tolerance, toolpath or assembly validation. Downloaded files are study assets.
-      </p>
-    </section>
-  );
+        <details className="make-item-notes">
+          <summary>About this utility</summary>
+          <p>{item.input} → {item.output}</p>
+          <p>Linked to <Link to="/field/08">Case 08 / Taeyong ↗</Link>. Reconstructed research utility, not source fabrication documentation.</p>
+        </details>
+      </article>)}
+    </div>
+    <details className="make-source-notes"><summary>Limitations</summary>
+      <p>Schematic studies only. No tested materials, joints, tolerances, toolpaths or assembly validation. Downloads are not manufacturing-ready.</p>
+    </details>
+  </section>;
 }
 
 // Rendered inside the shared dialog, so it keeps its own curvature state.

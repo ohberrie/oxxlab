@@ -1,70 +1,47 @@
 import { Link, useSearchParams } from 'react-router';
-import { CASES, CASE_STRATEGY, caseLogicPath, caseTitle, caseMetadata, type CaseType } from '../os/data';
-import { CaseMedia } from '../os/CaseMedia';
-
-const FILTERS: ('All' | CaseType)[] = ['All', 'Form finding', 'Fabrication'];
+import { CASES, CASE_STRATEGY, caseTitle, caseMetadata } from '../os/data';
+import { CaseAxon } from '../os/CaseAxon';
 
 export function FieldPage() {
-  const [search] = useSearchParams();
-  const type = FILTERS.find(f => f === search.get('type')) ?? 'All';
-  const atlas = search.get('view') === 'atlas';
-  const cases = CASES.filter(c => type === 'All' || c.type === type || (type === 'Fabrication' && c.id === '08'));
-  const href = (patch: Record<string, string | null>) => {
-    const next = new URLSearchParams(search);
-    for (const [k, v] of Object.entries(patch)) if (v === null) next.delete(k); else next.set(k, v);
-    const qs = next.toString();
-    return qs ? '?' + qs : '/field';
+  const [search]=useSearchParams();
+  const archive=search.get('archive')==='1';
+  const atlas=search.get('view')==='atlas';
+  const cases=CASES.filter(c=>!c.held||archive);
+  const href=(patch:Record<string,string|null>)=>{
+    const next=new URLSearchParams(search);
+    for(const [k,v] of Object.entries(patch))v===null?next.delete(k):next.set(k,v);
+    return next.toString()?'?'+next.toString():'/field';
   };
-
-  return <section className="page">
-    <div className="page-heading">
-      <div><span className="eyebrow">Cases / field research / 03—12</span><h1>Form, found<br />in practice.</h1></div>
-      <p>Different briefs. Recurring spatial strategies.<br />Each project records an intention, a formal choice, and what survived reality.</p>
-    </div>
-    <div className="case-field-intro">
-      <span className="eyebrow">READ THE ATLAS</span>
-      <span>01 / OBSERVE</span><span>02 / IDENTIFY THE DOMINANT STRATEGY</span><span>03 / FOLLOW ITS VARIATION</span>
-    </div>
-    <div className="field-toolbar">
-      <div className="filters">
-        {FILTERS.map(f => <Link key={f} to={href({ type: f === 'All' ? null : f })} replace className={type === f ? 'active' : ''}>{f}</Link>)}
+  return <section className="page cases-index-min">
+    <header className="cases-index-heading">
+      <div><h1>Cases.</h1><p>Real spaces. Reusable formal strategies.</p></div>
+      <div className="cases-index-switch">
+        <Link to={href({view:null})} className={!atlas?'active':''} replace>Grid</Link>
+        <Link to={href({view:'atlas'})} className={atlas?'active':''} replace>Index</Link>
       </div>
-      <div className="segmented">
-        <Link to={href({ view: null })} replace className={atlas ? '' : 'active'}>GRID</Link>
-        <Link to={href({ view: 'atlas' })} replace className={atlas ? 'active' : ''}>ATLAS</Link>
-      </div>
-    </div>
-
-    {atlas ? <div className="atlas">
-      <table>
-        <thead><tr><th>CASE / PROJECT</th><th>DOMINANT FORMAL STRATEGY</th><th>SUPPORTING VARIATION</th><th>STATUS</th><th>ENGINE</th></tr></thead>
-        <tbody>{cases.map(c => <tr key={c.id}>
-          <td><Link to={'/field/'+c.id}><strong>{c.id} / {caseTitle(c)}</strong> ↗</Link><small className="case-card-meta">{caseMetadata(c)}</small></td>
+    </header>
+    {atlas?<div className="atlas cases-atlas">
+      <table><thead><tr><th>CASE</th><th>FORMAL STRATEGY</th><th>VARIATION</th></tr></thead>
+        <tbody>{cases.map(c=><tr key={c.id}>
+          <td><Link to={'/field/'+c.id}>{c.id} / {caseTitle(c)} ↗</Link><small className="case-card-meta">{caseMetadata(c)}</small></td>
           <td>{CASE_STRATEGY[c.id].dominant}</td>
           <td>{CASE_STRATEGY[c.id].variation}</td>
-          <td>{c.held ? 'ON HOLD' : c.id === '11' || c.id === '12' ? 'PROVISIONAL' : c.status}</td>
-          <td>{c.held ? '—' : <Link to={caseLogicPath(c)}>EXPLORE ↗</Link>}</td>
         </tr>)}</tbody>
       </table>
-    </div> : <div className="field-grid field-grid-research">
-      {cases.map(c => <article key={c.id} className={'field-card project-card'+(c.held ? ' project-card-held' : '')}>
-        {c.held ? <div className="pending-card project-card-pending">
-          <span className="mono">EARLY PRACTICE / {c.id}</span>
-          <span>FORMAL<br/>MAPPING<br/>ON HOLD</span>
-          <small>Not included in the present extraction study.</small>
-        </div> : <CaseMedia id={c.id} />}
+    </div>:<div className="field-grid field-grid-research">
+      {cases.map(c=><article key={c.id} className={'field-card project-card'+(c.held?' project-card-held':'')}>
+        {c.held?<Link to={'/field/'+c.id} className="pending-card project-card-pending"><span>CASE {c.id}</span><strong>Mapping on hold</strong></Link>:
+          <Link to={'/field/'+c.id} className="iso-link" aria-label={'Open case '+c.id}><CaseAxon id={c.id}/></Link>}
         <div className="project-card-heading">
-          <div><span className="eyebrow">CASE {c.id} <span className="project-card-divider">/</span> {c.held ? 'ARCHIVE' : c.id === '11' || c.id === '12' ? 'PROVISIONAL READING' : 'FORMAL STUDY'}</span>
-            <h2><Link to={'/field/'+c.id}>{caseTitle(c)} <span className="sr-only">— Case {c.id}</span></Link></h2>
-            <p className="case-card-meta">{caseMetadata(c)}</p>
-          </div><span className="project-card-arrow" aria-hidden="true">↗</span>
+          <div><span className="case-card-number">{c.id}</span><h2><Link to={'/field/'+c.id}>{caseTitle(c)}</Link></h2><p className="case-card-meta">{caseMetadata(c)}</p></div>
+          <span className="project-card-arrow" aria-hidden="true">↗</span>
         </div>
-        {!c.held && <div className="project-card-strategy">
-          <div><small>DOMINANT</small><span>{CASE_STRATEGY[c.id].dominant}</span></div>
-          <div><small>VARIATION</small><span>{CASE_STRATEGY[c.id].variation}</span></div>
-        </div>}
+        {!c.held&&<p className="case-card-language">{CASE_STRATEGY[c.id].dominant} <span>+ {CASE_STRATEGY[c.id].variation}</span></p>}
       </article>)}
     </div>}
-    <p className="field-note">The thumbnails are original OXX analytical diagrams—not production photographs, stage CAD files or verified generative reconstructions. Their purpose is to distinguish the governing spatial character of each project. Cases 01–02 are intentionally held; 11–12 are provisional formal readings. Source images are pending for 03–12. Verified photographs will offer ACTUAL / DIAGRAM controls, with desktop hover and mobile tap switching.</p>
+    <div className="cases-index-foot">
+      <Link to={href({archive:archive?null:'1'})} replace>{archive?'Hide early archive':'Early archive / 01–02'} ↗</Link>
+      <details><summary>About these models</summary><p>Solid axonometric models are interpretive 3D form studies, not original stage CAD. Cases 11–12 remain provisional; original built photographs are added only when approved source imagery is available.</p></details>
+    </div>
   </section>;
 }
