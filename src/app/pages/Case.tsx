@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router';
 import { CASE_READING, CASE_STRATEGY, HELD_CASES, caseTitle, caseMetadata, caseLogicPath, getCase } from '../os/data';
 import { CaseDiagram } from '../os/CaseDiagram';
 import { CaseMedia } from '../os/CaseMedia';
+import { CaseFormation } from '../os/CaseFormation';
 
 const CHAPTERS = ['Intent', 'Formal Choice', 'Realization / Built', 'Extraction'] as const;
 
@@ -61,13 +62,7 @@ export function CasePage() {
         </div>
         <div className="case-scene-visual">
           {i === 0 && <div className="case-concept-index"><span className="eyebrow">THE BRIEF IS NOT THE FORM</span><span className="case-concept-large">{c.song ?? c.workingTitle ?? c.name}</span><span>Intent / spatial requirements / directing context</span></div>}
-          {i === 1 && <div className="case-choice-visual">
-            <span className="eyebrow">GOVERNING RELATIONSHIP / RETROSPECTIVE READING</span>
-            <div className="case-choice-node"><small>BASE STRATEGY</small><b>{s.dominant}</b></div>
-            <div className="case-choice-plus">+</div>
-            <div className="case-choice-node"><small>VARIATION</small><b>{s.variation}</b></div>
-            <div className="case-choice-caption">Identified through the specific project; further combinatorial behavior belongs in Engine.</div>
-          </div>}
+          {i === 1 && <CaseFormation id={c.id} dominant={s.dominant} variation={s.variation} />}
           {i === 2 && <div className="case-built-placeholder">
             <span className="eyebrow">SOURCE IMAGE / PENDING</span>
             <div className="case-photo-corners" aria-hidden="true"/>
