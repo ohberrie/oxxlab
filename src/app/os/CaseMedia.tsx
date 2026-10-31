@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import { CaseDiagram } from './CaseDiagram';
+import { CaseIso } from './CaseIso';
 
 // Publish only project-verified, cleared local assets. Never use Drive/private URLs.
 export interface CasePhoto { src: `/cases/${string}`; alt: string; credit: string; }
@@ -17,7 +18,7 @@ export function CaseMedia({ id, large = false, photo = CASE_PHOTOS[id] }: { id: 
       {available && <div className={'case-media-photo'+(diagram ? ' is-hidden' : '')} aria-hidden={diagram}>
         <img src={photo.src} alt={photo.alt} loading="lazy" onError={() => setFailed(true)} />
       </div>}
-      <div className={'case-media-diagram'+(!diagram ? ' is-hidden' : '')} aria-hidden={!diagram}><CaseDiagram id={id} large={large} /></div>
+      <div className={'case-media-diagram'+(!diagram ? ' is-hidden' : '')} aria-hidden={!diagram}>{available ? <CaseDiagram id={id} large={large} /> : <CaseIso id={id} large={large} />}</div>
     </div>
     <div className="case-media-bar">
       {available ? <><div className="case-media-controls" aria-label={'Case '+id+' image view'}>
