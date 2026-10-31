@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from 'react-router';
 import { CASES, CASE_STRATEGY, caseLogicPath, caseTitle, caseMetadata, type CaseType } from '../os/data';
-import { CaseMedia } from '../os/CaseMedia';
+import { CaseIso } from '../os/CaseIso';
 
 const FILTERS: ('All' | CaseType)[] = ['All', 'Form finding', 'Fabrication'];
 
@@ -52,7 +52,7 @@ export function FieldPage() {
           <span className="mono">EARLY PRACTICE / {c.id}</span>
           <span>FORMAL<br/>MAPPING<br/>ON HOLD</span>
           <small>Not included in the present extraction study.</small>
-        </div> : <CaseMedia id={c.id} />}
+        </div> : <Link className="iso-link" to={'/field/'+c.id} aria-label={'Open case '+c.id}><CaseIso id={c.id} /></Link>}
         <div className="project-card-heading">
           <div><span className="eyebrow">CASE {c.id} <span className="project-card-divider">/</span> {c.held ? 'ARCHIVE' : c.id === '11' || c.id === '12' ? 'PROVISIONAL READING' : 'FORMAL STUDY'}</span>
             <h2><Link to={'/field/'+c.id}>{caseTitle(c)} <span className="sr-only">— Case {c.id}</span></Link></h2>
@@ -65,6 +65,6 @@ export function FieldPage() {
         </div>}
       </article>)}
     </div>}
-    <p className="field-note">The thumbnails are original OXX analytical diagrams—not production photographs, stage CAD files or verified generative reconstructions. Their purpose is to distinguish the governing spatial character of each project. Cases 01–02 are intentionally held; 11–12 are provisional formal readings. Source images are pending for 03–12. Verified photographs will offer ACTUAL / DIAGRAM controls, with desktop hover and mobile tap switching.</p>
+    <p className="field-note">Each thumbnail uses the same axonometric camera and is an interpretive formal model—not measured CAD or a verified reconstruction of the built stage. Detailed line diagrams move into each case's formal sequence. Cases 01–02 remain held; 11–12 are provisional. Built photography appears only when original, cleared source images are available.</p>
   </section>;
 }
