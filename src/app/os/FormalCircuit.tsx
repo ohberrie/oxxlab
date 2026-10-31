@@ -17,6 +17,8 @@ interface Props {
   onRemove: (id: EngineId) => void;
   onMove: (id: EngineId, direction: -1 | 1) => void;
   onParam: (key: Key, value: number) => void;
+  onProfile: (profile: Params['profile']) => void;
+  onDomain: (domain: NonNullable<Params['domain']>) => void;
   onReset: () => void;
   onExport: () => void;
 }
@@ -51,7 +53,7 @@ function Glyph({name}:{name:string}) {
     <path d="M10 37H90M50 6V68"/>}
   </svg>;
 }
-export function FormalCircuit({engineId,params,disabled,additions,scrub,onScrub,onBase,onToggle,onAdd,onRemove,onMove,onParam,onReset,onExport}:Props) {
+export function FormalCircuit({engineId,params,disabled,additions,scrub,onScrub,onBase,onToggle,onAdd,onRemove,onMove,onParam,onProfile,onDomain,onReset,onExport}:Props) {
   const [selected,setSelected]=useState('base');
   const [palette,setPalette]=useState<'add'|'replace'|null>(null);
   const [edge,setEdge]=useState<number|null>(null);
@@ -131,6 +133,18 @@ export function FormalCircuit({engineId,params,disabled,additions,scrub,onScrub,
         </>}
       </div>
     </div>
+    {node.role==='base'&&<details className="circuit-base-geometry">
+      <summary>Base geometry</summary>
+      <div className="circuit-base-controls">
+        <span>Profile</span>
+        <div>{([['triangle','△'],['square','□'],['circle','○']] as const).map(([p,g])=>
+          <button key={p} aria-label={p} aria-pressed={params.profile===p} onClick={()=>onProfile(p)}>{g}</button>)}</div>
+        {engineId!=='enclosure'&&<><span>Domain</span><div>
+          <button aria-pressed={(params.domain||'axis')==='axis'} onClick={()=>onDomain('axis')}>Axis</button>
+          <button aria-pressed={params.domain==='planes'} onClick={()=>onDomain('planes')}>Planes</button>
+        </div></>}
+      </div>
+    </details>}
     <div className="circuit-scrubber">
       <span className="circuit-section-name">Process</span>
       <input type="range" aria-label="Scrub process" min={0} max={steps.length-1} value={currentStep} onChange={e=>onScrub(+e.target.value)}/>
