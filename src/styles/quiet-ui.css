@@ -160,3 +160,28 @@
 .circuit-base-controls button {min-width:36px;min-height:32px;padding:6px 10px;border:1px solid var(--os-line);color:var(--os-muted);font-size:13px;}
 .circuit-base-controls button[aria-pressed=true] {border-color:var(--os-ink);color:var(--os-ink);}
 .circuit-base-controls button:hover {border-color:var(--os-blue);color:var(--os-blue);}
+
+/* Branch decisions and quieter fabrication utilities. */
+.circuit-choose {margin-top:12px;padding:9px 10px;border:1px solid var(--os-line);font:11px var(--os-mono);color:var(--os-ink);width:100%;text-align:center;}
+.circuit-choose:hover {color:var(--os-blue);border-color:var(--os-blue);}
+.case-media-diagram .case-iso {height:100%;aspect-ratio:auto;}
+.make-min {padding-top:30px;}
+.make-min-heading {display:flex;align-items:end;justify-content:space-between;gap:18px;margin:28px 0 28px;}
+.os .make-min-heading h1 {font-size:clamp(45px,6vw,75px);letter-spacing:-.06em;}
+.os .make-min-heading p {font-size:12px;color:var(--os-muted);}
+.make-min .archive-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;max-width:980px;}
+.make-min .archive-card {padding:0;border:0;display:flex;flex-direction:column;}
+.make-min .archive-thumb {margin:0 0 17px;border:1px solid var(--os-line);}
+.make-min .archive-thumb .viewer {height:clamp(175px,19vw,280px);}
+.make-item-head {display:flex;gap:14px;align-items:baseline;}
+.make-item-head>span {font:10px var(--os-mono);color:var(--os-muted);}
+.os .make-item-head h2 {font-size:21px;letter-spacing:-.03em;}
+.os .make-min .archive-card>p {font-size:12px;margin:10px 0 16px;color:var(--os-muted);}
+.make-min .archive-actions {margin-top:0;}
+.make-min .archive-action {padding:10px 13px;}
+.make-item-notes {margin-top:15px;padding-top:12px;border-top:1px solid var(--os-line);font-size:10px;color:var(--os-muted);}
+.make-item-notes summary,.make-source-notes summary {cursor:pointer;width:max-content;}
+.os .make-item-notes p {font-size:11px;line-height:1.7;color:var(--os-muted);margin:10px 0;}
+.make-source-notes {margin:37px 0 0;font:10px/1.5 var(--os-mono);color:var(--os-muted);}
+.os .make-source-notes p {margin:10px 0 0;font-size:11px;max-width:700px;}
+@media(max-width:650px) {.make-min .archive-grid {grid-template-columns:1fr;}.make-min-heading {align-items:flex-start;flex-direction:column;gap:10px;}}
