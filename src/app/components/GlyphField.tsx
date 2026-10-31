@@ -12,7 +12,8 @@ import { OXX_PATTERN } from '../oxxPattern';
 // the active one replaces the field cell by cell, sweeping outward from the wordmark, with no
 // gaps between cells so it reads as one sheet, while its own field pattern (panelModes) spreads
 // out from it and the stretch of rule joining it to the wordmark lights up.
-// Rects in `clear` are kept empty of field glyphs.
+// Rects in `clear` are kept empty of field glyphs. With `ambient` off there is no resting field
+// and no pointer trail: only the wordmark reacts until a panel's pattern is called up.
 
 export type FieldMode = 'field' | 'select' | 'dense' | 'modular' | 'layer';
 const MODES: FieldMode[] = ['field', 'select', 'dense', 'modular', 'layer'];
@@ -111,9 +112,9 @@ const PANEL_EASE = 0.3;
 export interface Rule { row: number; col0: number; col1: number }
 const FOCUS_EASE = 0.07; // the panel's pattern spreads over about a second
 
-export function GlyphField({ grid, logo, mode, panels = [], panelModes = [], clear = [], rule, active = -1 }: {
+export function GlyphField({ grid, logo, mode, panels = [], panelModes = [], clear = [], rule, active = -1, ambient = true }: {
   grid: Grid; logo: LogoPlacement; mode: FieldMode; panels?: Rect[]; panelModes?: FieldMode[];
-  clear?: Rect[]; rule?: Rule; active?: number;
+  clear?: Rect[]; rule?: Rule; active?: number; ambient?: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const modeRef = useRef(mode);
@@ -203,7 +204,7 @@ export function GlyphField({ grid, logo, mode, panels = [], panelModes = [], cle
         const d2 = (col + 0.5 - cx) ** 2 + (row + 0.5 - cy) ** 2;
         const i = row * cols + col;
         if (logoDist[i] <= QUIET) scatter[i] = Math.max(scatter[i], Math.exp(-d2 / 14));
-        else trail[i] = Math.max(trail[i], Math.exp(-d2 / 8));
+        else if (ambient) trail[i] = Math.max(trail[i], Math.exp(-d2 / 8));
       }
     };
 
@@ -276,7 +277,7 @@ export function GlyphField({ grid, logo, mode, panels = [], panelModes = [], cle
               if (sc > th + 0.35) level = hash(col, row, tick) < 0.5 ? 2 : 3; // broken into / +
               else if (sc > th) { level = TOP; fam = 2 - lf; }                  // flipped to the other letter's glyph
               else block = true;                                                // at rest: a solid block
-              red = sc > 0.85;
+              red = sc > 0.5;
             } else if (sc > 0.15 && hash(col, row, 24) < 1 - ld / (QUIET + 1)) {
               const th = 0.2 + 0.5 * hash(col, row, 23);                      // debris spilling between letters
               if (sc > th) level = sc > th + 0.3 ? (hash(col, row, tick) < 0.5 ? 2 : 3) : 1;
@@ -287,12 +288,12 @@ export function GlyphField({ grid, logo, mode, panels = [], panelModes = [], cle
 
             const pattern = (m: FieldMode) => {
               switch (m) {
-                case 'field': return base * 0.5; // at rest the field stays a faint texture
+                case 'field': return ambient ? base * 0.5 : 0; // at rest the field stays a faint texture
                 case 'select': return base > 0.45 ? 0.7 : 0.1;
                 case 'dense': return smoothstep(0.26, 0.56, n);
-                case 'modular': {
-                  if (col % 5 === 4 || row % 3 === 2) return 0;
-                  return smoothstep(0.4, 0.62, fbm(Math.floor(col / 5) * 0.25, Math.floor(row / 3) * 0.15, t * 0.05));
+                case 'modular': { // 3×3 cell squares with one-cell gutters
+                  if (col % 4 === 3 || row % 4 === 3) return 0;
+                  return smoothstep(0.4, 0.62, fbm(Math.floor(col / 4) * 0.22, Math.floor(row / 4) * 0.22, t * 0.05));
                 }
                 case 'layer': {
                   const band = Math.floor((row + t * 1.5) / 5);
@@ -354,7 +355,7 @@ export function GlyphField({ grid, logo, mode, panels = [], panelModes = [], cle
       window.removeEventListener('pointermove', onPointer);
       window.removeEventListener('pointerout', onLeave);
     };
-  }, [grid, logo, panels, panelModes, clear, rule]);
+  }, [grid, logo, panels, panelModes, clear, rule, ambient]);
 
   return (
     <canvas
