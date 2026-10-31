@@ -13,9 +13,14 @@ const PANEL_MODES = PATHS.map(p => p.mode);
 const phraseSize = (width: number) => Math.min(22, Math.max(15, width * 0.013));
 const PHRASE_EM = 15.2;
 
-// Intro: each phrase is read in turn, then both give way to their cards.
-// 0 = nothing lit, 1 = left phrase, 2 = right phrase, 3 = cards.
-const STAGE_AT = [250, 1500, 2800];
+// Intro stages: 0 = phrases dim, 1 = left phrase lit, 2 = right phrase lit, 3 = phrases part,
+// 4 = wordmark builds in, 5 = cards.
+// 'open' (default): the phrases start side by side in the centre with no wordmark, light in turn,
+//   then part to the ends of the rule as the wordmark builds in between them.
+// 'split' (?intro=split): the phrases start at the ends of the rule beside the wordmark.
+type Intro = 'open' | 'split';
+const STAGE_AT: Record<Intro, number[]> = { open: [450, 1350, 2400, 2850, 4000], split: [250, 1500, 2800, 2800, 2800] };
+const CARDS = 5;
 let introPlayed = false; // once per page load, so coming back to the landing skips it
 
 interface Layout { grid: Grid; logo: LogoPlacement; label: Rect; rule?: Rule; cards: Rect[]; compact: boolean }
@@ -57,7 +62,8 @@ function layoutHero(width: number, height: number): Layout {
 // Cards open from their end of the rule in stepped cell-like bands. When active the canvas
 // fills the card with white cells and its text turns to ink.
 const CSS = `
-.oxx-phrase { position: absolute; transform: translateY(-50%); white-space: nowrap; color: #fff; opacity: 0; transition: opacity 700ms ease; }
+.oxx-phrase { position: absolute; white-space: nowrap; color: #fff; opacity: 0;
+  transition: opacity 700ms ease, transform 1100ms cubic-bezier(.65,0,.25,1); }
 .oxx-phrase[data-lit='dim'] { opacity: .2; }
 .oxx-phrase[data-lit='on'] { opacity: 1; }
 .oxx-phrase[data-lit='gone'] { opacity: 0; transition-duration: 200ms; }
@@ -75,11 +81,13 @@ const CSS = `
 .oxx-card[data-active='true'] .card-arrow { transform: translate(4px,-4px); }
 .oxx-card:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
 @media(prefers-reduced-motion:reduce){ .oxx-card[data-open='true'] { animation: none } .oxx-phrase { transition: none } }
+.oxx-phrase[data-lit='off'] { transition-duration: 0s; }
 `;
 
 export function GlyphHero() {
   const [size, setSize] = useState(() => ({ w: window.innerWidth, h: window.innerHeight }));
-  const [stage, setStage] = useState(() => (introPlayed || window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 3 : 0));
+  const [intro] = useState<Intro>(() => (new URLSearchParams(window.location.search).get('intro') === 'split' ? 'split' : 'open'));
+  const [stage, setStage] = useState(() => (introPlayed || window.matchMedia('(prefers-reduced-motion: reduce)').matches ? CARDS : -1));
   const [active, setActive] = useState(-1);
   useEffect(() => {
     let timer = 0;
@@ -88,13 +96,13 @@ export function GlyphHero() {
     return () => { clearTimeout(timer); window.removeEventListener('resize', resize); };
   }, []);
   useEffect(() => {
-    if (stage === 3) { introPlayed = true; return; }
-    const timers = STAGE_AT.map((ms, i) => window.setTimeout(() => setStage(s => Math.max(s, i + 1)), ms));
+    if (stage === CARDS) { introPlayed = true; return; }
+    const timers = [0, ...STAGE_AT[intro]].map((ms, i) => window.setTimeout(() => setStage(s => Math.max(s, i)), ms + 60));
     return () => timers.forEach(clearTimeout);
-  }, [stage === 3]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [stage === CARDS]); // eslint-disable-line react-hooks/exhaustive-deps
   // Touch screens can't hover, so once the cards are out they open in turn.
   useEffect(() => {
-    if (stage < 3 || !window.matchMedia('(hover: none)').matches) return;
+    if (stage < CARDS || !window.matchMedia('(hover: none)').matches) return;
     let i = 0;
     const timer = window.setInterval(() => { i = (i + 1) % 3; setActive(i - 1); }, 3400);
     return () => clearInterval(timer);
@@ -104,20 +112,35 @@ export function GlyphHero() {
   const { grid, compact, cards } = layout;
   const clear = useMemo(() => [...layout.cards, layout.label], [layout]);
   const box = (r: Rect) => ({ left: r.col * grid.cell, top: r.row * grid.cell, width: r.w * grid.cell, height: r.h * grid.cell });
-  const lit = (i: number) => (stage === 3 ? 'gone' : stage === i + 1 ? 'on' : stage > 0 ? 'dim' : 'off');
-  // each phrase is centred on the rule, a cell short of where it ends; the card later meets the rule there
+  const lit = (i: number) => {
+    if (stage < 0) return 'off';
+    if (stage >= CARDS) return 'gone';
+    if (stage === 0) return 'dim';
+    if (intro === 'split') return stage === i + 1 ? 'on' : 'dim';
+    return stage > i ? 'on' : 'dim'; // 'open' keeps both lit once read
+  };
+  // Each phrase rests centred on the rule, a cell short of where it ends; the card later meets the
+  // rule there. In the 'open' intro it starts shifted so the two sit side by side in the centre.
   const phraseAt = (i: number) => {
     const c = cards[i], y = (c.row + c.h / 2) * grid.cell;
-    if (compact) return { left: (c.col + 1) * grid.cell, top: y };
-    return i === 0 ? { right: grid.width - (c.col + c.w - 1) * grid.cell, top: y } : { left: (c.col + 1) * grid.cell, top: y };
+    const centred = intro === 'open' && !compact && stage < 3;
+    const halfGap = 14;
+    if (compact) return { left: (c.col + 1) * grid.cell, top: y, transform: 'translateY(-50%)' };
+    if (i === 0) {
+      const right = (c.col + c.w - 1) * grid.cell;
+      return { right: grid.width - right, top: y, transform: `translate(${centred ? grid.width / 2 - halfGap - right : 0}px, -50%)` };
+    }
+    const left = (c.col + 1) * grid.cell;
+    return { left, top: y, transform: `translate(${centred ? grid.width / 2 + halfGap - left : 0}px, -50%)` };
   };
+  const reveal = intro === 'split' || stage >= 4;
 
   return <section className="relative w-full overflow-hidden bg-void" style={{ height: grid.height }} aria-label="OXX / From intention to form">
     <style>{CSS}</style>
     <GlyphField grid={grid} logo={layout.logo} mode="field" ambient={false} panels={cards} panelModes={PANEL_MODES}
-      clear={clear} rule={layout.rule} active={stage === 3 ? active : -1} />
-    <span className="absolute flex items-center justify-center whitespace-nowrap font-mono text-[10px] tracking-[0.2em] text-white/45 max-md:text-[9px] max-md:tracking-[0.12em]"
-      style={box(layout.label)}>
+      clear={clear} rule={layout.rule} active={stage === CARDS ? active : -1} reveal={reveal} />
+    <span className="absolute flex items-center justify-center whitespace-nowrap font-mono text-[10px] tracking-[0.2em] text-white/45 transition-opacity duration-700 max-md:text-[9px] max-md:tracking-[0.12em]"
+      style={{ ...box(layout.label), opacity: reveal ? 1 : 0, transitionDelay: reveal ? '500ms' : '0ms' }}>
       OXX LAB / FORMAL REASONING SYSTEM
     </span>
     {PATHS.map((s, i) => (
@@ -130,11 +153,11 @@ export function GlyphHero() {
       {PATHS.map((s, i) => (
         <Link
           key={s.num} to={s.to} aria-label={`${s.name}: ${s.desc}`}
-          data-open={stage === 3} data-active={stage === 3 && active === i} data-from={!compact && i === 0 ? 'right' : 'left'}
+          data-open={stage === CARDS} data-active={stage === CARDS && active === i} data-from={!compact && i === 0 ? 'right' : 'left'}
           className="oxx-card absolute" style={{ ...box(cards[i]), animationDelay: `${i * 90}ms` }}
           onMouseEnter={() => setActive(i)}
           onMouseLeave={() => setActive(-1)}
-          onFocus={() => { setStage(3); setActive(i); }}
+          onFocus={() => { setStage(CARDS); setActive(i); }}
           onBlur={() => setActive(-1)}>
           <span className="card-sub flex items-center justify-between font-mono text-[10px] tracking-[.12em]">
             <span>{s.num} / {s.eyebrow}</span><span className="card-arrow text-base">↗</span>

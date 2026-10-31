@@ -13,7 +13,8 @@ import { OXX_PATTERN } from '../oxxPattern';
 // gaps between cells so it reads as one sheet, while its own field pattern (panelModes) spreads
 // out from it and the stretch of rule joining it to the wordmark lights up.
 // Rects in `clear` are kept empty of field glyphs. With `ambient` off there is no resting field
-// and no pointer trail: only the wordmark reacts until a panel's pattern is called up.
+// and no pointer trail: only the wordmark's own cells react until a panel's pattern is called up.
+// With `reveal` off the wordmark and rule are hidden; turning it on builds them in.
 
 export type FieldMode = 'field' | 'select' | 'dense' | 'modular' | 'layer';
 const MODES: FieldMode[] = ['field', 'select', 'dense', 'modular', 'layer'];
@@ -112,15 +113,18 @@ const PANEL_EASE = 0.3;
 export interface Rule { row: number; col0: number; col1: number }
 const FOCUS_EASE = 0.07; // the panel's pattern spreads over about a second
 
-export function GlyphField({ grid, logo, mode, panels = [], panelModes = [], clear = [], rule, active = -1, ambient = true }: {
+export function GlyphField({ grid, logo, mode, panels = [], panelModes = [], clear = [], rule, active = -1, ambient = true, reveal = true }: {
   grid: Grid; logo: LogoPlacement; mode: FieldMode; panels?: Rect[]; panelModes?: FieldMode[];
-  clear?: Rect[]; rule?: Rule; active?: number; ambient?: boolean;
+  clear?: Rect[]; rule?: Rule; active?: number; ambient?: boolean; reveal?: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const modeRef = useRef(mode);
   modeRef.current = mode;
   const activeRef = useRef(active);
   activeRef.current = active;
+  // when the wordmark started building in; Infinity while hidden
+  const revealAt = useRef(reveal ? performance.now() : Infinity);
+  useEffect(() => { revealAt.current = reveal ? performance.now() : Infinity; }, [reveal]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -226,7 +230,7 @@ export function GlyphField({ grid, logo, mode, panels = [], panelModes = [], cle
 
     const draw = (now: number) => {
       const t = reduceMotion ? 0 : (now - start) / 1000;
-      const intro = reduceMotion ? 1 : Math.min(1, (now - start) / INTRO_MS);
+      const intro = reduceMotion ? 1 : Math.min(1, Math.max(0, (now - Math.max(start, revealAt.current)) / INTRO_MS));
       const tick = Math.floor(t * 8);
       MODES.forEach((m, k) => { weights[k] += ((m === modeRef.current ? 1 : 0) - weights[k]) * 0.14; });
       const [wField, wSelect, wDense, wModular, wLayer] = weights;
@@ -240,19 +244,35 @@ export function GlyphField({ grid, logo, mode, panels = [], panelModes = [], cle
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       const px = (v: number) => Math.round(v * cell * dpr);
       const hair = Math.max(1, Math.round(dpr));
-      if (rule) {
-        const y = px(rule.row + 0.5);
-        ctx.fillStyle = 'rgba(255,255,255,0.16)';
-        ctx.fillRect(px(rule.col0), y, px(rule.col1) - px(rule.col0), hair);
-        ctx.fillRect(px(rule.col0), y - px(0.5), hair, px(1)); // drafting ticks at both ends
-        ctx.fillRect(px(rule.col1) - hair, y - px(0.5), hair, px(1));
+      if (rule && intro > 0) {
+        // The rule grows out from the centre with the wordmark, and fades to black towards the
+        // centre so the letters stay clear of it.
+        const y = px(rule.row + 0.5), x0 = px(rule.col0), x1 = px(rule.col1), cx = (x0 + x1) / 2;
+        const grow = fade(intro), half = ((x1 - x0) / 2) * grow;
+        const edge = (px(logo.col) - x0) / (x1 - x0); // the wordmark's edge, as a fraction of the rule
+        const ramp = (a: number, inner: number) => {
+          const g = ctx.createLinearGradient(x0, 0, x1, 0);
+          g.addColorStop(0, `rgba(255,255,255,${a})`);
+          g.addColorStop(edge, `rgba(255,255,255,${a * inner})`);
+          g.addColorStop(0.5, 'rgba(255,255,255,0)');
+          g.addColorStop(1 - edge, `rgba(255,255,255,${a * inner})`);
+          g.addColorStop(1, `rgba(255,255,255,${a})`);
+          return g;
+        };
+        ctx.fillStyle = ramp(0.26, 0.12);
+        ctx.fillRect(cx - half, y, 2 * half, hair);
+        if (grow > 0.99) {
+          ctx.fillStyle = 'rgba(255,255,255,0.26)';
+          ctx.fillRect(x0, y - px(0.5), hair, px(1)); // drafting ticks at both ends
+          ctx.fillRect(x1 - hair, y - px(0.5), hair, px(1));
+        }
         // the stretch joining the active panel to the wordmark brightens with it
         const logoEnd = logo.col + 17 * logo.scale;
         panels.forEach((r, k) => {
           if (fills[k] < 0.02) return;
-          const [x0, x1] = centres[k][0] < cols / 2 ? [rule.col0, logo.col] : [logoEnd, rule.col1];
-          ctx.fillStyle = `rgba(255,255,255,${0.7 * fills[k]})`;
-          ctx.fillRect(px(x0), y, px(x1) - px(x0), hair);
+          const [a, b] = centres[k][0] < cols / 2 ? [rule.col0, logo.col] : [logoEnd, rule.col1];
+          ctx.fillStyle = ramp(0.8 * fills[k], 0.1);
+          ctx.fillRect(px(a), y, px(b) - px(a), hair);
         });
       }
       ctx.fillStyle = oxx.paper; // for the wordmark and panel blocks
@@ -278,7 +298,7 @@ export function GlyphField({ grid, logo, mode, panels = [], panelModes = [], cle
               else if (sc > th) { level = TOP; fam = 2 - lf; }                  // flipped to the other letter's glyph
               else block = true;                                                // at rest: a solid block
               red = sc > 0.5;
-            } else if (sc > 0.15 && hash(col, row, 24) < 1 - ld / (QUIET + 1)) {
+            } else if (ambient && sc > 0.15 && hash(col, row, 24) < 1 - ld / (QUIET + 1)) {
               const th = 0.2 + 0.5 * hash(col, row, 23);                      // debris spilling between letters
               if (sc > th) level = sc > th + 0.3 ? (hash(col, row, tick) < 0.5 ? 2 : 3) : 1;
             }
