@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { CASE_STRATEGY, DEFAULT_PARAMS, ENGINES, type Case, type EngineId, type Params, type Profile } from './data';
+import { DEFAULT_PARAMS, ENGINES, type Case, type EngineId, type Params } from './data';
 import { Viewer } from './Viewer';
 import { useOs } from './Shell';
 
@@ -49,24 +49,15 @@ export function CaseMiniEngine({ project }: { project: Case }) {
   const set = (key: Key,v:number) => setParams(current=>({...current,[key]:v}));
   const runFull = () => setEngine({params:{...params},additions:[...additions],disabled:new Set(),selected:-1});
   return <section className="case-mini" aria-label={'Explore the formal composition for case '+project.id}>
-    <div className="case-mini-top"><div><span className="eyebrow">CASE {project.id} / EXPERIMENT WITH THE FORM</span><h2>What changes the relationship?</h2>
-      <p>One fixed strategy composition. Explore its variables here, then unlock other strategies in Engine.</p></div>
-      <span className="case-mini-status">FORMAL RECONSTRUCTION / LIVE</span>
-    </div>
-    <div className="case-mini-composition">
-      <div className="case-mini-main-strategy"><small>GOVERNING</small><strong>{CASE_STRATEGY[project.id]?.dominant ?? ENGINES[engine].name}</strong></div>
-      {additions.map(a=><div className="case-mini-support-strategy" key={a}><span aria-hidden="true">+</span><div><small>SUPPORTING</small><strong>{ENGINES[a].name}</strong></div></div>)}
-      {!additions.length&&<span className="case-mini-transform"><small>VARIATION</small>{CASE_STRATEGY[project.id]?.variation}</span>}
-    </div>
+    <div className="case-mini-top"><h2>Explore the form.</h2><span>Case ${project.id} / interactive study</span></div>
     <div className="case-mini-workspace">
-      <Viewer kind={ENGINES[engine].kind} params={params} additions={additions} className="case-mini-view" dock caption="LIVE PARAMETRIC STUDY / NOT BUILT GEOMETRY" subtitle="Explore the selected formal relationship" />
+      <Viewer kind={ENGINES[engine].kind} params={params} additions={additions} className="case-mini-view" dock caption="LIVE STUDY" subtitle="" />
       <div className="case-mini-controls">
-        <span className="eyebrow">ADJUST THIS CASE</span>
         {controls.map(key=>{const control=C[key],value=params[key]??0;return <label key={key}>{control.label}<output>{Number(value).toFixed(control.step<1?2:0)}</output><input type="range" min={control.min} max={control.max} step={control.step} value={value} onChange={e=>set(key,+e.target.value)}/></label>})}
-        <div className="case-mini-footer"><button onClick={()=>setParams({...preset})}>Reset / Case {project.id}</button>
-          <Link to={'/engine/'+engine} onClick={runFull}>Open composition in Engine ↗</Link></div>
+        <div className="case-mini-footer"><button onClick={()=>setParams({...preset})} title="Reset this variation">↺ Reset</button>
+          <Link to={'/engine/'+engine} onClick={runFull}>Continue in Engine ↗</Link></div>
       </div>
     </div>
-    <p className="case-mini-note">{spec.note} This interactive model tests the extracted language; it does not show actual historical variants, original stage CAD, or fabrication-validated geometry.</p>
+    <details className="case-mini-about"><summary>About this model</summary><p>{spec.note} This experiment does not reproduce original CAD, historical alternatives or validated fabrication details.</p></details>
   </section>;
 }
