@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { GlyphField, computeGrid, type FieldMode, type Grid, type LogoPlacement, type Rect, type Rule } from '../components/GlyphField';
 
 // The two phrases are the two ways in: intention → form is the Engine, practice → possibility the Cases.
@@ -21,6 +21,7 @@ const PHRASE_EM = 15.2;
 type Intro = 'open' | 'split';
 const STAGE_AT: Record<Intro, number[]> = { open: [450, 1350, 2400, 2850, 4000], split: [250, 1500, 2800, 2800, 2800] };
 const CARDS = 5;
+const TAP_MS = 750; // how long a tapped card shows its cell response before navigating
 let introPlayed = false; // once per page load, so coming back to the landing skips it
 
 interface Layout { grid: Grid; logo: LogoPlacement; label: Rect; rule?: Rule; cards: Rect[]; compact: boolean }
@@ -37,7 +38,7 @@ function layoutHero(width: number, height: number): Layout {
   const labelRows = scale + 3; // the system label above the wordmark
   const margin = Math.max(3, Math.round(cols * 0.04));
   const gap = 2 * scale + 2;   // rule visible between a phrase and the wordmark
-  const side = Math.ceil(240 / cell);
+  const side = Math.ceil(200 / cell);
   const reach = Math.max(side, Math.ceil((PHRASE_EM * phraseSize(width)) / cell) + 1);
 
   if (cols - logoW - 2 * margin - 2 * reach >= 2 * gap && rows - navRows >= Math.max(logoH + labelRows, side) + 6) {
@@ -51,9 +52,10 @@ function layoutHero(width: number, height: number): Layout {
 
   const logo = { col: Math.floor((cols - logoW) / 2), row: navRows + labelRows + 3, scale };
   const label = { col: 2, row: logo.row - labelRows, w: cols - 4, h: labelRows - 1 };
-  const ch = Math.ceil(150 / cell);
+  const ch = Math.ceil(120 / cell);
   const start = logo.row + logoH + 5;
-  const cards = PATHS.map((_, i) => ({ col: 3, row: start + i * (ch + 2), w: cols - 6, h: ch }));
+  // wider gutters than the page margin so the field shows around the cards
+  const cards = PATHS.map((_, i) => ({ col: 4, row: start + i * (ch + 2), w: cols - 8, h: ch }));
   const needRows = cards[1].row + ch + 5;
   if (needRows > rows) grid = { ...grid, rows: needRows, height: needRows * cell };
   return { grid, compact: true, logo, label, cards };
@@ -67,7 +69,7 @@ const CSS = `
 .oxx-phrase[data-lit='dim'] { opacity: .2; }
 .oxx-phrase[data-lit='on'] { opacity: 1; }
 .oxx-phrase[data-lit='gone'] { opacity: 0; transition-duration: 200ms; }
-.oxx-card { display: flex; flex-direction: column; justify-content: space-between; padding: 14px 16px; color: #fff;
+.oxx-card { display: flex; flex-direction: column; justify-content: space-between; padding: 12px 14px; color: #fff;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.42); visibility: hidden;
   transition: color 0s linear 90ms, box-shadow 0s linear 90ms; }
 .oxx-card .card-sub { color: rgba(255,255,255,.55); transition: color 0s linear 90ms; }
@@ -100,13 +102,17 @@ export function GlyphHero() {
     const timers = [0, ...STAGE_AT[intro]].map((ms, i) => window.setTimeout(() => setStage(s => Math.max(s, i)), ms + 60));
     return () => timers.forEach(clearTimeout);
   }, [stage === CARDS]); // eslint-disable-line react-hooks/exhaustive-deps
-  // Touch screens can't hover, so once the cards are out they open in turn.
-  useEffect(() => {
-    if (stage < CARDS || !window.matchMedia('(hover: none)').matches) return;
-    let i = 0;
-    const timer = window.setInterval(() => { i = (i + 1) % 3; setActive(i - 1); }, 3400);
-    return () => clearInterval(timer);
-  }, [stage]);
+  // Touch screens can't hover: a tap plays the card's cell response briefly, then navigates.
+  const navigate = useNavigate();
+  const [leaving, setLeaving] = useState(false);
+  const tap = (e: React.MouseEvent, i: number, to: string) => {
+    if (!window.matchMedia('(hover: none)').matches || e.metaKey || e.ctrlKey) return;
+    e.preventDefault();
+    if (leaving) return;
+    setLeaving(true);
+    setActive(i);
+    window.setTimeout(() => navigate(to), TAP_MS);
+  };
 
   const layout = useMemo(() => layoutHero(size.w, size.h), [size]);
   const { grid, compact, cards } = layout;
@@ -156,15 +162,17 @@ export function GlyphHero() {
           data-open={stage === CARDS} data-active={stage === CARDS && active === i} data-from={!compact && i === 0 ? 'right' : 'left'}
           className="oxx-card absolute" style={{ ...box(cards[i]), animationDelay: `${i * 90}ms` }}
           onMouseEnter={() => setActive(i)}
-          onMouseLeave={() => setActive(-1)}
+          onMouseLeave={() => { if (!leaving) setActive(-1); }}
+          onClick={e => tap(e, i, s.to)}
           onFocus={() => { setStage(CARDS); setActive(i); }}
-          onBlur={() => setActive(-1)}>
-          <span className="card-sub flex items-center justify-between font-mono text-[10px] tracking-[.12em]">
-            <span>{s.num} / {s.eyebrow}</span><span className="card-arrow text-base">↗</span>
-          </span>
+          onBlur={() => { if (!leaving) setActive(-1); }}>
+          <span className="card-sub whitespace-nowrap font-mono text-[9.5px] tracking-[.08em]">{s.num} / {s.eyebrow}</span>
           <span>
-            <span className="block font-mono text-[clamp(26px,2.4vw,38px)] font-bold uppercase leading-[.9] tracking-[-.06em]">{s.name}</span>
-            <span className="card-sub mt-3 block max-w-[240px] font-body text-[12px] leading-[1.45]">{s.desc}</span>
+            <span className="flex items-end justify-between">
+              <span className="font-mono text-[clamp(22px,2vw,32px)] font-bold uppercase leading-[.9] tracking-[-.06em]">{s.name}</span>
+              <span className="card-arrow text-base leading-none">↗</span>
+            </span>
+            <span className="card-sub mt-2 block max-w-[240px] font-body text-[11.5px] leading-[1.4]">{s.desc}</span>
           </span>
         </Link>
       ))}

@@ -192,7 +192,10 @@ export function GlyphField({ grid, logo, mode, panels = [], panelModes = [], cle
     clear.forEach(r => each(r, 1, i => { quiet[i] = 1; }));
     const centres = panels.map(r => [r.col + r.w / 2, r.row + r.h / 2]);
     const focus = new Float32Array(panels.length);
-    const spread = cols * 0.6;
+    // on narrow screens the pattern reaches the whole page; on wide ones it stays on its side
+    const narrow = cols < 80;
+    const spread = narrow ? Math.hypot(cols, rows) : cols * 0.6;
+    const focusEase = narrow ? FOCUS_EASE * 2 : FOCUS_EASE; // and arrives fast enough for a tap
     const fills = new Float32Array(panels.length);
 
     const trail = new Float32Array(N);
@@ -237,7 +240,7 @@ export function GlyphField({ grid, logo, mode, panels = [], panelModes = [], cle
       fills.forEach((f, k) => {
         const target = k === activeRef.current ? 1 : 0;
         fills[k] = reduceMotion ? target : f + (target - f) * PANEL_EASE;
-        focus[k] = reduceMotion ? target : focus[k] + (target - focus[k]) * FOCUS_EASE;
+        focus[k] = reduceMotion ? target : focus[k] + (target - focus[k]) * focusEase;
       });
 
       ctx.fillStyle = oxx.void;
