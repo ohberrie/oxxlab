@@ -1,0 +1,152 @@
+
+/* Quiet UI pass — one form, one interaction, the rest on demand. */
+.os .workspace {padding-top:21px;}
+.os .workspace-heading-minimal {margin-bottom:13px;align-items:baseline;}
+.os .workspace-heading-minimal h1 {font-size:25px;letter-spacing:-.8px;}
+.engine-quicklinks {display:flex;gap:22px;align-items:center;flex-wrap:wrap;}
+.engine-quicklinks a,.engine-quicklinks button {font:10px/1.5 var(--os-mono);color:var(--os-muted);white-space:nowrap;}
+.engine-quicklinks :is(a,button):hover {color:var(--os-blue);}
+.engine-body {display:block;grid-template-columns:none;border:0;}
+.main-viewer {width:100%;height:min(64vh,690px);min-height:360px;}
+.formal-circuit.compact-circuit {padding:20px 0 0;margin-top:0;border:0;background:transparent;}
+.compact-circuit .circuit-topline {align-items:center;gap:12px;}
+.circuit-section-name {font:11px/1.5 var(--os-mono);letter-spacing:.02em;color:var(--os-muted);}
+.compact-circuit .circuit-actions button {border:0;padding:6px 8px;font-size:11px;color:var(--os-muted);}
+.compact-circuit .circuit-actions button:hover {color:var(--os-ink);background:transparent;}
+.compact-circuit .circuit-flow {padding:15px 0 18px;overflow-x:auto;gap:0;align-items:center;}
+.compact-circuit .circuit-node {width:110px;min-height:120px;border:1px solid var(--os-line);background:transparent;padding:10px;gap:8px;justify-content:center;align-items:center;text-align:center;}
+.compact-circuit .circuit-node.governing {width:154px;min-height:145px;border:1px solid var(--os-ink);background:transparent;}
+.compact-circuit .circuit-node.support {width:125px;min-height:128px;}
+.compact-circuit .circuit-node:hover {background:var(--os-panel);border-color:var(--os-blue);}
+.compact-circuit .circuit-node.is-selected {border-color:var(--os-blue);box-shadow:inset 0 0 0 1px var(--os-blue);}
+.compact-circuit .circuit-node .circuit-glyph {width:86%;height:60px;}
+.compact-circuit .circuit-node.governing .circuit-glyph {height:79px;width:92%;}
+.compact-circuit .circuit-node strong {font:11px/1.3 var(--os-sans);font-weight:400;min-height:0;letter-spacing:0;}
+.compact-circuit .circuit-node.governing strong {font:13px/1.3 var(--os-sans);font-weight:500;}
+.compact-circuit .circuit-wire {width:35px;flex-basis:35px;}
+.compact-circuit .circuit-add {width:55px;height:86px;min-height:86px;border:1px dashed var(--os-line);font-size:21px;}
+.compact-circuit .circuit-inspector {display:grid;grid-template-columns:155px minmax(190px,1fr) auto;gap:16px;align-items:center;padding:14px 0;border-top:1px solid var(--os-line);border-bottom:1px solid var(--os-line);}
+.circuit-active-name {font:13px/1.4 var(--os-sans);}
+.circuit-primary-slider {display:grid;grid-template-columns:90px minmax(80px,1fr) 38px;align-items:center;gap:12px;font-size:11px;color:var(--os-muted);}
+.circuit-primary-slider output {text-align:right;font:10px var(--os-mono);color:var(--os-soft);}
+.compact-circuit .circuit-primary-slider input[type=range] {margin:0;}
+.compact-circuit .circuit-inspector-controls {justify-content:flex-end;}
+.compact-circuit .circuit-inspector-controls button {font-size:10px;border:0;padding:7px 9px;color:var(--os-muted);}
+.compact-circuit .circuit-inspector-controls button:hover {color:var(--os-blue);background:transparent;}
+.compact-circuit .circuit-scrubber {display:grid;grid-template-columns:155px minmax(140px,1fr) 80px;align-items:center;gap:16px;padding:11px 0 14px;border-top:0;}
+.compact-circuit .circuit-scrubber button {border:0;color:var(--os-muted);padding:5px 0;text-align:right;font:10px var(--os-mono);}
+.compact-circuit .circuit-scrubber input[type=range] {margin:0;}
+.compact-circuit .circuit-palette {border-top:1px solid var(--os-line);padding:12px 0;}
+.compact-circuit .circuit-palette-grid {grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;margin:0;}
+.compact-circuit .circuit-palette-grid button {min-height:99px;padding:10px;border-color:var(--os-line);align-items:center;text-align:center;}
+.compact-circuit .circuit-palette-grid .circuit-glyph {height:54px;}
+.compact-circuit .circuit-palette-grid span {font-size:10px;}
+.circuit-notes {border-top:1px solid var(--os-line);padding:12px 0 0;color:var(--os-muted);font-size:10px;}
+.circuit-notes summary {cursor:pointer;width:max-content;font:10px var(--os-mono);}
+.circuit-notes p {max-width:720px;line-height:1.7;font-size:11px;margin-top:12px;}
+.compact-footer {justify-content:flex-end;padding:10px 0 18px;margin:0;}
+.compact-footer a {font-size:10px;color:var(--os-muted);}
+
+/* Cases — project image first, formal reasoning second. */
+.cases-index-min {padding-top:29px;}
+.cases-index-heading {display:flex;justify-content:space-between;gap:20px;align-items:flex-end;margin:0 0 25px;}
+.os .cases-index-heading h1 {font-size:clamp(44px,5vw,70px);letter-spacing:-.055em;}
+.os .cases-index-heading p {font-size:12px;color:var(--os-muted);margin-top:12px;}
+.cases-index-switch {display:flex;gap:16px;align-items:center;font:11px var(--os-mono);}
+.cases-index-switch a {color:var(--os-muted);border-bottom:1px solid transparent;padding:7px 0;}
+.cases-index-switch a.active {color:var(--os-ink);border-color:var(--os-ink);}
+.cases-index-min .field-grid-research {gap:36px 18px;}
+.cases-index-min .project-card-heading {margin:11px 0 0;align-items:center;}
+.cases-index-min .project-card-heading .case-card-number {font:10px var(--os-mono);color:var(--os-muted);}
+.os .cases-index-min .project-card-heading h2 {font-size:clamp(19px,1.6vw,24px);margin:5px 0 2px;}
+.cases-index-min .project-card-heading .case-card-meta {font-size:10px;margin-top:3px;}
+.cases-index-min .project-card-arrow {align-self:flex-start;color:var(--os-muted);}
+.cases-index-min .case-card-language {font:10px/1.6 var(--os-mono);color:var(--os-ink);margin:13px 0 0;padding-top:10px;border-top:1px solid var(--os-line);text-transform:uppercase;}
+.cases-index-min .case-card-language span {color:var(--os-muted);}
+.cases-index-foot {display:flex;justify-content:space-between;align-items:flex-start;gap:20px;border-top:1px solid var(--os-line);margin-top:45px;padding-top:16px;color:var(--os-muted);font:10px/1.5 var(--os-mono);}
+.cases-index-foot a:hover {color:var(--os-blue);}
+.cases-index-foot details {text-align:right;max-width:480px;}
+.cases-index-foot details summary {cursor:pointer;list-style:none;}
+.cases-index-foot details p {margin:11px 0 0;text-align:left;font:11px/1.6 var(--os-sans);color:var(--os-muted);}
+.cases-index-min .project-card-pending {aspect-ratio:480/302;min-height:0;}
+.cases-index-min .project-card-pending strong {font-size:13px;font-weight:400;}
+
+/* Cases detail — no duplicate status rows or stacked report panels. */
+.case-detail-min {padding-top:26px;}
+.case-detail-heading {display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,380px);gap:30px;align-items:end;margin:27px 0 32px;}
+.os .case-detail-heading h1 {font-size:clamp(44px,5.8vw,80px);letter-spacing:-.06em;margin:10px 0 7px;}
+.case-detail-credit {color:var(--os-muted);font-size:12px;}
+.os .case-detail-intent {font-size:14px;line-height:1.65;color:var(--os-soft);padding-bottom:8px;}
+.case-overview {display:grid;grid-template-columns:minmax(0,1.3fr) minmax(240px,.7fr);gap:32px;align-items:center;}
+.case-overview-media {min-width:0;}
+.case-overview-logic {display:flex;flex-direction:column;gap:10px;justify-content:center;}
+.case-overview-logic>strong {font-size:clamp(18px,2vw,27px);font-weight:400;letter-spacing:-.03em;line-height:1.1;}
+.case-overview-logic .case-overview-sub {font-size:14px;color:var(--os-soft);letter-spacing:0;}
+.case-overview-plus {font:15px var(--os-mono);color:var(--os-muted);padding:2px 0;}
+.os .case-overview-logic p {font-size:12px;color:var(--os-muted);line-height:1.8;margin-top:12px;max-width:410px;}
+.case-detail-min .case-mini {margin-top:60px;padding-top:24px;}
+.case-detail-min .case-mini-top {display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin-bottom:16px;}
+.os .case-detail-min .case-mini-top h2 {font-size:clamp(22px,2.8vw,32px);letter-spacing:-.05em;margin:0;}
+.case-mini-top>span {font:10px var(--os-mono);color:var(--os-muted);}
+.case-detail-min .case-mini-workspace {grid-template-columns:minmax(0,1fr) 232px;}
+.case-detail-min .case-mini-controls {padding:24px 20px;gap:18px;}
+.case-detail-min .case-mini-controls label {font-size:11px;}
+.case-detail-min .case-mini-footer {gap:10px;}
+.case-detail-min .case-mini-footer a {background:transparent;color:var(--os-ink);border-top:1px solid var(--os-line);padding:12px 0 0;text-align:left;}
+.case-detail-min .case-mini-footer a:hover {color:var(--os-blue);}
+.case-mini-about {font-size:10px;color:var(--os-muted);margin:12px 0;}
+.case-mini-about summary {cursor:pointer;width:max-content;}
+.os .case-mini-about p {font-size:11px;margin:9px 0;line-height:1.65;max-width:900px;color:var(--os-muted);}
+.case-process-min {margin:55px 0 36px;padding-top:22px;border-top:1px solid var(--os-line);}
+.case-section-heading {display:flex;justify-content:space-between;align-items:baseline;gap:24px;margin-bottom:18px;}
+.os .case-section-heading h2 {font-size:clamp(22px,2.8vw,32px);letter-spacing:-.05em;}
+.os .case-section-heading p {font-size:11px;color:var(--os-muted);max-width:340px;}
+.case-detail-min .case-formation {background:transparent;padding:0;border:0;}
+.case-detail-min .case-formation-steps {gap:14px;}
+.case-formation-step-name {display:flex;align-items:baseline;gap:10px;padding-bottom:10px;}
+.case-formation-step-name span {font:10px var(--os-mono);color:var(--os-muted);}
+.case-formation-step-name strong {font-size:12px;font-weight:400;}
+.case-detail-min .case-formation-step .case-diagram {aspect-ratio:480/250;background:var(--os-panel);}
+.case-detail-min .case-formation-detail {font:10px/1.5 var(--os-mono);color:var(--os-muted);}
+.case-formation-about {margin-top:14px;font-size:10px;color:var(--os-muted);}
+.case-formation-about summary {cursor:pointer;}
+.os .case-formation-about p {font-size:11px;line-height:1.65;color:var(--os-muted);margin-top:10px;}
+.case-record-min {margin-top:38px;border-top:1px solid var(--os-line);}
+.case-record-min details {border-bottom:1px solid var(--os-line);}
+.case-record-min summary {display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px 0;cursor:pointer;font-size:15px;list-style:none;}
+.case-record-min summary::-webkit-details-marker {display:none;}
+.case-record-min .case-details-icon {color:var(--os-muted);font:18px var(--os-mono);}
+.case-record-min details[open] .case-details-icon {transform:rotate(45deg);}
+.os .case-record-min p {max-width:760px;font-size:12px;line-height:1.85;color:var(--os-soft);margin:0 0 14px;}
+.case-record-min details>p:first-of-type {padding-top:4px;}
+.case-details-link {display:inline-block;margin:10px 0 20px;font:11px var(--os-mono);}
+.case-detail-footer {display:flex;justify-content:space-between;gap:24px;align-items:center;margin-top:50px;padding:18px 0;border-top:1px solid var(--os-line);font-size:12px;}
+.case-detail-footer a:hover {color:var(--os-blue);}
+.held-simple {color:var(--os-muted);margin:40px 0;}
+@media(max-width:850px) {
+ .case-detail-heading {grid-template-columns:1fr;gap:12px;}
+ .case-overview {grid-template-columns:1fr;gap:20px;}
+ .case-overview-logic {gap:8px;}
+ .case-detail-min .case-mini-workspace {grid-template-columns:1fr;}
+ .case-detail-min .case-mini-controls {border-left:0;border-top:1px solid var(--os-line);}
+ .case-section-heading {flex-wrap:wrap;}
+}
+@media(max-width:650px) {
+ .engine-quicklinks {gap:10px;justify-content:flex-end;}
+ .engine-quicklinks a {display:none;}
+ .os .workspace-heading-minimal h1 {font-size:22px;}
+ .main-viewer {height:48vh;min-height:300px;}
+ .compact-circuit .circuit-node {width:93px;min-height:112px;}
+ .compact-circuit .circuit-node.governing {width:125px;min-height:125px;}
+ .compact-circuit .circuit-node.support {width:105px;min-height:113px;}
+ .compact-circuit .circuit-wire {width:24px;flex-basis:24px;}
+ .compact-circuit .circuit-inspector {grid-template-columns:1fr;gap:8px;}
+ .circuit-primary-slider {grid-template-columns:65px 1fr 35px;}
+ .compact-circuit .circuit-inspector-controls {justify-content:flex-start;}
+ .compact-circuit .circuit-scrubber {grid-template-columns:70px 1fr 65px;gap:10px;}
+ .cases-index-heading {gap:14px;}
+ .os .cases-index-heading h1 {font-size:46px;}
+ .case-process-min {margin-top:36px;}
+ .case-detail-min .case-formation-steps {grid-template-columns:1fr;gap:8px;}
+ .case-detail-min .case-formation-step .case-diagram {aspect-ratio:480/210;}
+}
