@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
  * the built stages. Intentionally independent from the generic Engine Viewer.
  * Each composition is based on the known spatial reading of that case.
  */
-interface Props { id: string; large?: boolean; }
+interface Props { id: string; large?: boolean; phase?: 'base' | 'variation' | 'complete' }
 const repeat = (n: number, draw: (i: number) => ReactNode) =>
   Array.from({ length: n }, (_, i) => <g key={i}>{draw(i)}</g>);
 
@@ -109,8 +109,8 @@ const CAPTIONS: Record<string,string> = {
   '12': 'SUSPENDED THICK FRAMES / CENTRAL VOID',
 };
 
-export function CaseDiagram({ id, large = false }: Props) {
-  return <div className={'case-diagram'+(large ? ' case-diagram-large' : '')}>
+export function CaseDiagram({ id, large = false, phase = 'complete' }: Props) {
+  return <div className={'case-diagram phase-'+phase+(large ? ' case-diagram-large' : '')}>
     <svg viewBox="0 0 480 270" role="img" aria-label={'Schematic spatial study for case '+id+': '+(CAPTIONS[id] ?? 'mapping held')} preserveAspectRatio="xMidYMid meet">
       <g stroke="var(--os-ink)" strokeWidth="1.65" fill="none" strokeLinecap="square" strokeLinejoin="miter">
         <Drawing id={id}/>
