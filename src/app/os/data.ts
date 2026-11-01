@@ -1,7 +1,7 @@
 // OXX OS content: formal principles (engines), field cases and the seven-step case reading.
 
 export type Kind = 'converge' | 'cross' | 'radial' | 'offset' | 'spine' | 'flatten' | 'layer' | 'perspective' | 'division' | 'enclosure';
-export type Profile = 'triangle' | 'circle' | 'square';
+export type Profile = 'triangle' | 'square' | 'circle' | 'line' | 'curve';
 export type Status = 'USED' | 'BUILT' | 'EXTRACTED' | 'PROPOSED' | 'CANDIDATE';
 export type EngineId = 'convergence' | 'crossing' | 'radial' | 'offset' | 'layering' | 'perspective' | 'line' | 'division' | 'enclosure';
 

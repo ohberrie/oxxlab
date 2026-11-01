@@ -5,6 +5,15 @@ import { saveFile } from '../os/geometry';
 import { Tag, useOs } from '../os/Shell';
 import { Viewer } from '../os/Viewer';
 
+// Each input profile is chosen by its silhouette; line and curve are open profiles.
+const PROFILES: [Profile, string, string][] = [
+  ['triangle', 'Triangle', 'M12 4 L20.5 19 H3.5 Z'],
+  ['square', 'Rectangle', 'M5 5 H19 V19 H5 Z'],
+  ['circle', 'Circle', 'M12 4 A8 8 0 1 1 11.99 4 Z'],
+  ['line', 'Straight line', 'M4 12 H20'],
+  ['curve', 'Curve', 'M3.5 7 Q12 26 20.5 7'],
+];
+
 export function EnginePage() {
   const { principle, mode } = useParams();
   const go = useNavigate();
@@ -131,13 +140,16 @@ export function EnginePage() {
             <h2>{e.name}</h2>
             <p>{e.description}</p>
           </div>
-          {id !== 'line' && id !== 'division' && <label className="profile-field">Input profile
-            <select className="profile" value={p.profile} onChange={ev => setParam('profile', ev.target.value as Profile)}>
-              <option value="triangle">Triangle</option>
-              <option value="circle">Circle</option>
-              <option value="square">Square</option>
-            </select>
-          </label>}
+          {id !== 'line' && id !== 'division' && <div className="profile-field">
+            <span id="profile-label">Input profile <output>{PROFILES.find(([k]) => k === p.profile)?.[1]}</output></span>
+            <div className="profile-picker" role="radiogroup" aria-labelledby="profile-label">
+              {PROFILES.map(([k, name, path]) => (
+                <button key={k} type="button" role="radio" aria-checked={p.profile === k} aria-label={name} title={name} onClick={() => setParam('profile', k)}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d={path} /></svg>
+                </button>
+              ))}
+            </div>
+          </div>}
           <label>Count <output>{p.count}</output>
             <input type="range" min={3} max={22} value={p.count} onChange={ev => setParam('count', +ev.target.value)} />
           </label>

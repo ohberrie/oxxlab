@@ -7,6 +7,8 @@ export interface Line { pts: Vec3[]; g: number; weight: number; soft: boolean }
 export interface Label { at: Vec3; text: string }
 
 const sides = (shape: Profile) => (shape === 'circle' ? 64 : shape === 'square' ? 4 : 3);
+// Line and curve are open profiles: they are never closed, and only their ends are joined between frames.
+const isOpen = (shape: Profile) => shape === 'line' || shape === 'curve';
 
 export function model(kind: Kind, p: Params, disabled: ReadonlySet<string> = new Set(), additions: readonly EngineId[] = []) {
   const lines: Line[] = [];
@@ -14,13 +16,21 @@ export function model(kind: Kind, p: Params, disabled: ReadonlySet<string> = new
   const on = (n: string) => !disabled.has(n);
   const add = (pts: Vec3[], g = 0, weight = 1, soft = false) => lines.push({ pts, g, weight, soft });
   const profile = (r: number, z = 0, rot = 0): Vec3[] => {
+    if (isOpen(p.profile)) {
+      const c = Math.cos(rot), s = Math.sin(rot);
+      const span: [number, number][] = p.profile === 'line'
+        ? [[-r, 0], [r, 0]]
+        : Array.from({ length: 25 }, (_, j) => { const u = j / 12 - 1; return [r * u, r * 0.6 * (u * u - 0.5)]; });
+      return span.map(([x, y]): Vec3 => [x * c - y * s, x * s + y * c, z]);
+    }
     const n = sides(p.profile);
     return Array.from({ length: n }, (_, j) => {
       const t = (j / n) * Math.PI * 2 - Math.PI / 2 + rot;
       return [r * Math.cos(t), r * Math.sin(t), z];
     });
   };
-  const closed = (pts: Vec3[]) => [...pts, pts[0]];
+  const closed = (pts: Vec3[]) => (isOpen(p.profile) ? pts : [...pts, pts[0]]);
+  const rails = (pts: Vec3[]) => (p.profile === 'circle' ? [] : p.profile === 'curve' ? [0, pts.length - 1] : pts.map((_, j) => j));
   let count = p.count;
 
   if (kind === 'division') {
@@ -49,7 +59,7 @@ export function model(kind: Kind, p: Params, disabled: ReadonlySet<string> = new
       const z = on('Depth') ? (t - 0.5) * p.depth * 1.8 : 0;
       const pts = profile(r, z, rot);
       add(closed(pts), i, i === 0 ? 1.5 : 1);
-      if (prev && (kind === 'perspective' || kind === 'converge') && p.profile !== 'circle') for (let j = 0; j < pts.length; j++) add([prev[j], pts[j]], i, 0.55, true);
+      if (prev && (kind === 'perspective' || kind === 'converge')) for (const j of rails(pts)) add([prev[j], pts[j]], i, 0.55, true);
       prev = pts;
     }
   } else if (kind === 'offset') {

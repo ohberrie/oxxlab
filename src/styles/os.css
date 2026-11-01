@@ -121,7 +121,13 @@
   .control-panel label { display: block; margin: 27px 0 0; font-size: 11px; }
   .control-panel label output { float: right; font: 10px var(--os-mono); color: var(--os-blue); }
   .os input[type='range'] { width: 100%; accent-color: var(--os-blue); height: 3px; margin-top: 16px; cursor: pointer; }
-  select.profile { background: var(--os-surface); border: 1px solid var(--os-line); width: 100%; padding: 9px; margin-top: 11px; font-size: 11px; }
+  .profile-field { margin-top: 27px; font-size: 11px; }
+  .profile-field output { float: right; font: 10px var(--os-mono); color: var(--os-blue); }
+  .profile-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 11px; }
+  .profile-picker button { display: grid; place-items: center; height: 38px; border: 1px solid var(--os-line); background: var(--os-surface); color: var(--os-soft); cursor: pointer; }
+  .profile-picker button:hover { color: var(--os-ink); }
+  .profile-picker button[aria-checked=true] { border-color: var(--os-blue-line); background: var(--os-blue-light); color: var(--os-blue); }
+  .profile-picker svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
   .control-panel .source { border-top: 1px solid var(--os-line); padding-top: 20px; margin-top: 28px; font-size: 11px; line-height: 1.7; display: block; }
   .control-panel .source span { display: block; font: 9px var(--os-mono); color: var(--os-muted); margin-bottom: 7px; }
   .node-strip { display: flex; align-items: center; gap: 8px; padding: 18px 0; flex-wrap: wrap; }
@@ -310,7 +316,7 @@
     .main-viewer { min-height: 350px; height: 48vh; }
     .control-panel { border-left: 0; border-top: 1px solid var(--os-line); display: grid; grid-template-columns: 1fr 1fr; gap: 0 25px; padding: 20px; }
     .control-panel .control-description, .control-panel .source, .control-panel .profile-field { grid-column: 1 / -1; }
-    .control-panel label { margin-top: 20px; }
+    .control-panel label, .control-panel .profile-field { margin-top: 20px; }
     .control-panel .source { margin-top: 20px; padding-top: 15px; }
     .view-dock { left: 15px; right: 15px; bottom: 15px; }
     .strip-actions { margin-left: 0; width: 100%; justify-content: end; padding-top: 10px; }
