@@ -85,7 +85,8 @@ function generateForm(s: Study) {
   const add = (pts: Point[], color: Wire['color']='main', opacity=1, width=1.65, dash?: string) => result.push({ pts, color, opacity, width, dash });
   const transform = (p: Point, scale: number, turn: number): Point => {
     const [x,y,z]=p; const c=Math.cos(turn), si=Math.sin(turn);
-    return [(x*c-y*si)*scale,(x*si+y*c)*scale,z*scale];
+    // Rotating around X reorients vertical frames into floor / wall planes.
+    return [x*scale,(y*c-z*si)*scale,(y*si+z*c)*scale];
   };
   const shape = (kind: Strategy, color: Wire['color'], alpha: number, scale: number, turn: number, supporting=false) => {
     const tr=(p:Point)=>transform(p,scale,turn), n=s.count, amt=s.vary/100;
@@ -131,9 +132,9 @@ function generateForm(s: Study) {
     }
   };
   const together=s.supporting!=='none'&&s.weight>0;
-  shape(s.governing,'main',1,together&&s.relation==='contain'?.78:1,0);
+  shape(s.governing,'main',1,together&&s.relation==='contain'?1.10:1,0);
   if(together) {
-    shape(s.supporting as Strategy,'support',.25+.75*s.weight/100,s.relation==='contain'?1.13:s.relation==='reinforce'?.78:1,s.relation==='cross'?Math.PI/2:s.relation==='construct'?.28:0,true);
+    shape(s.supporting as Strategy,'support',.25+.75*s.weight/100,s.relation==='contain'?.69:s.relation==='reinforce'?.78:1,s.relation==='cross'?Math.PI/2:s.relation==='construct'?.28:0,true);
   }
   for(let i=-2;i<=2;i+=.5) {add([[i,-2,0],[i,2,0]],'grid',.48,.7);add([[-2,i,0],[2,i,0]],'grid',.48,.7);}
   return result;
