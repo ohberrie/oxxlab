@@ -108,8 +108,8 @@ function generateForm(s: Study) {
       }
     } else if(kind==='enclosure'){
       const r=1.08,h=1.76;
-      const bot:Point[]=[[-r,-r,0],[r,-r,0],[r,r,0],[-r,r,0]].map(tr);
-      const top:Point[]=[[-r,-r,h],[r,-r,h],[r,r,h],[-r,r,h]].map(tr);
+      const bot: Point[] = ([[-r,-r,0],[r,-r,0],[r,r,0],[-r,r,0]] as Point[]).map(tr);
+      const top: Point[] = ([[-r,-r,h],[r,-r,h],[r,r,h],[-r,r,h]] as Point[]).map(tr);
       add([...bot,bot[0]],color,alpha,1.8);add([...top,top[0]],color,alpha,1.8);
       for(let i=0;i<4;i++)add([bot[i],top[i]],color,alpha,1.8);
       if(s.variation==='divide')for(let i=1;i<4;i++){
