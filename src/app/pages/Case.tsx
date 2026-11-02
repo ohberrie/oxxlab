@@ -11,9 +11,14 @@ export function CasePage() {
   if (!c) return <section className="page"><Link className="back" to="/field">← CASES</Link><h1>Case not found.</h1></section>;
   if (c.held) return <section className="page case-held-detail">
     <Link className="back" to="/field">← CASES</Link>
-    <span className="eyebrow">CASE {c.id} / MAPPING HELD</span>
-    <h1>{caseTitle(c)}</h1>
-    <p>{caseMetadata(c)}</p>
+    <div className="case-project-top">
+      <div className="case-project-heading">
+        <span className="eyebrow">CASE {c.id} / MAPPING HELD</span>
+        <h1>{caseTitle(c)}</h1>
+        <p className="case-project-artist">{caseMetadata(c)}</p>
+      </div>
+      <CaseMedia id={c.id} large diagramAvailable={false} />
+    </div>
     <div className="case-held-notice">
       <span className="eyebrow">ARCHIVE / NOT IN THE CURRENT FORMAL CORPUS</span>
       <p>These early stage-design projects remain in the archive, but have deliberately not been assigned a dominant formal strategy. The current OXX extraction begins with Case 03.</p>
@@ -34,7 +39,7 @@ export function CasePage() {
         <h1>{caseTitle(c)}</h1>
         <p className="case-project-artist">{caseMetadata(c)}</p>
         <p className="case-project-summary">{c.summary}</p>
-        <span className="eyebrow">BASED ON PROJECT NARRATIVE / VISUAL SCHEMATIC</span>
+        <span className="eyebrow">ORIGINAL STAGE MODEL / FORMAL READING</span>
       </div>
       <CaseMedia id={c.id} large />
     </div>
@@ -81,7 +86,7 @@ export function CasePage() {
         </div>
       </article>)}
     </div>
-    <p className="field-note">Case diagrams are new analytical illustrations based on project descriptions, not photographs or original stage geometry. The source brief and built documentation should be attached as distinct records. Alternative strategies generated later by Engine must not be presented as historical production choices.</p>
+    <p className="field-note">Stage views are rendered from the original SketchUp model. Case diagrams are separate analytical illustrations based on project descriptions. Built photographs and production records remain distinct documentation. Alternative strategies generated later by Engine must not be presented as historical production choices.</p>
     <div className="study-footer"><Link to="/field">← All cases</Link><Link to={caseLogicPath(c)}>Explore in Engine ↗</Link></div>
   </section>;
 }

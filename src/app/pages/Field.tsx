@@ -48,11 +48,7 @@ export function FieldPage() {
       </table>
     </div> : <div className="field-grid field-grid-research">
       {cases.map(c => <article key={c.id} className={'field-card project-card'+(c.held ? ' project-card-held' : '')}>
-        {c.held ? <div className="pending-card project-card-pending">
-          <span className="mono">EARLY PRACTICE / {c.id}</span>
-          <span>FORMAL<br/>MAPPING<br/>ON HOLD</span>
-          <small>Not included in the present extraction study.</small>
-        </div> : <CaseMedia id={c.id} />}
+        <CaseMedia id={c.id} diagramAvailable={!c.held} />
         <div className="project-card-heading">
           <div><span className="eyebrow">CASE {c.id} <span className="project-card-divider">/</span> {c.held ? 'ARCHIVE' : c.id === '11' || c.id === '12' ? 'PROVISIONAL READING' : 'FORMAL STUDY'}</span>
             <h2><Link to={'/field/'+c.id}>{caseTitle(c)} <span className="sr-only">— Case {c.id}</span></Link></h2>
@@ -65,6 +61,6 @@ export function FieldPage() {
         </div>}
       </article>)}
     </div>}
-    <p className="field-note">The thumbnails are original OXX analytical diagrams—not production photographs, stage CAD files or verified generative reconstructions. Their purpose is to distinguish the governing spatial character of each project. Cases 01–02 are intentionally held; 11–12 are provisional formal readings. Source images are pending for 03–12. Verified photographs will offer ACTUAL / DIAGRAM controls, with desktop hover and mobile tap switching.</p>
+    <p className="field-note">Stage views are rendered directly from the original SketchUp model, with the surrounding main stage and Layher faded to emphasize each set. Switch to DIAGRAM for the separate formal reading, using desktop hover or the view controls. Cases 01–02 remain on hold for formal mapping; 11–12 are provisional readings.</p>
   </section>;
 }
