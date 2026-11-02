@@ -10,7 +10,9 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', Component: GlyphHero },
       { path: '/engine', loader: () => redirect('/engine/layering') },
-      { path: '/engine/:principle/:mode?', lazy: () => import('./pages/Engine').then(m => ({ Component: m.EnginePage })) },
+      { path: '/engine/:principle/:mode?', lazy: () => import('./pages/NodeEngine').then(m => ({ Component: m.NodeEnginePage })) },
+      // Keep the original test-ground available without altering its state or styling.
+      { path: '/engine-classic/:principle/:mode?', lazy: () => import('./pages/Engine').then(m => ({ Component: m.EnginePage })) },
       { path: '/field', lazy: () => import('./pages/Field').then(m => ({ Component: m.FieldPage })) },
       { path: '/field/:id', lazy: () => import('./pages/Case').then(m => ({ Component: m.CasePage })) },
       { path: '/tools', lazy: () => import('./pages/Tools').then(m => ({ Component: m.ToolsPage })) },
