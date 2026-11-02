@@ -1,0 +1,26 @@
+name: Verify OXX node engine
+on:
+  pull_request:
+    paths:
+      - 'src/app/pages/NodeEngine.tsx'
+      - 'src/styles/node-engine.css'
+      - 'src/app/routes.ts'
+      - '.github/workflows/verify-node-engine.yml'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: TypeScript validation
+        run: npm run typecheck
+      - name: Existing geometry regression
+        run: node tests/geometry.mjs
+      - name: Production build
+        run: npm run build
