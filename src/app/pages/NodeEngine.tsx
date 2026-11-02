@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
+import type { PointerEvent as ReactPointerEvent, ReactNode } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { saveFile } from '../os/geometry';
 import '../../styles/node-engine.css';
@@ -19,7 +19,6 @@ type CaseKey = '09' | '10' | '04' | '08' | 'custom';
 type Point = [number, number, number];
 type Wire = { pts: Point[]; color: 'main' | 'support' | 'grid'; opacity: number; width: number; dash?: string };
 type Position = { x: number; y: number };
-const BLUE = '#294bdc';
 const STRATEGIES: { id: Strategy; title: string; full: string }[] = [
   { id: 'layering', title: 'Layer', full: 'Sequential Layering' },
   { id: 'perspective', title: 'Converge', full: 'Perspective Convergence' },
@@ -47,7 +46,7 @@ const INIT_POS: Record<NodeId, Position> = {
   relation: { x: 101, y: 277 }, variation: { x: 101, y: 493 },
   parameters: { x: 101, y: 705 }, output: { x: 101, y: 906 },
 };
-const H: Record<NodeId, number> = { governing: 178, supporting: 178, relation: 177, variation: 171, parameters: 159, output: 86 };
+const H: Record<NodeId, number> = { governing: 178, supporting: 178, relation: 177, variation: 171, parameters: 171, output: 86 };
 const W: Record<NodeId, number> = { governing: 207, supporting: 207, relation: 247, variation: 247, parameters: 247, output: 247 };
 const NODE_LINKS: [NodeId, NodeId, string, number, number][] = [
   ['governing', 'relation', '#294bdc', .5, .28],
@@ -172,10 +171,10 @@ function OptionGrid({ values, selected, onPick, role }: {values:NodeOption[]; se
 function RelationGrid({ selected, onPick }: { selected:Relation;onPick:(v:Relation)=>void }) {
   return <div className="ne-rel-options">{RELATIONS.map(v=><button type="button" aria-pressed={selected===v.id} aria-label={'Relationship: '+v.title} className={'ne-rel-option '+(selected===v.id?'chosen':'')} key={v.id} onClick={()=>onPick(v.id)}>{relationGlyph(v.id)}<span>{v.title}</span></button>)}</div>;
 }
-function NodeBox({id,position,onDrag,children}: {id:NodeId;position:Position;onDrag:(id:NodeId,x:number,y:number)=>void;children:React.ReactNode}) {
+function NodeBox({id,position,onDrag,scale,children}: {id:NodeId;position:Position;onDrag:(id:NodeId,x:number,y:number)=>void;scale:number;children:ReactNode}) {
   const gesture=useRef<{id:number;startX:number;startY:number;left:number;top:number}|null>(null);
   const pointerDown=(e:ReactPointerEvent<HTMLElement>)=>{if(e.button!==0)return;gesture.current={id:e.pointerId,startX:e.clientX,startY:e.clientY,left:position.x,top:position.y};e.currentTarget.setPointerCapture(e.pointerId)};
-  const pointerMove=(e:ReactPointerEvent<HTMLElement>)=>{const d=gesture.current;if(!d||d.id!==e.pointerId)return;onDrag(id,clamp(d.left+(e.clientX-d.startX),0,448-W[id]),clamp(d.top+e.clientY-d.startY,5,1060-H[id]));};
+  const pointerMove=(e:ReactPointerEvent<HTMLElement>)=>{const d=gesture.current;if(!d||d.id!==e.pointerId)return;onDrag(id,clamp(d.left+(e.clientX-d.startX)/scale,0,448-W[id]),clamp(d.top+(e.clientY-d.startY)/scale,5,1060-H[id]));};
   return <div className={'ne-node ne-'+id} style={{left:position.x,top:position.y,width:W[id],height:H[id]}}>
     {(id==='relation'||id==='variation'||id==='parameters'||id==='output')&&<span className="ne-socket ne-socket-in"/>}
     {id==='relation'&&<><span className="ne-socket ne-left-in"/><span className="ne-socket ne-right-in"/></>}
@@ -207,12 +206,12 @@ function NodeWorkspace({study,setStudy,reset}: {study:Study;setStudy:(s:Study)=>
       <div className="ne-graph-space" style={{width:448*scale,height:1060*scale}}>
       <div className="ne-graph" style={{transform:'scale('+scale+')'}}>
         <svg className="ne-wires" viewBox="0 0 448 1060" aria-hidden="true">{wires.map((w,i)=><g key={i} opacity={w.hidden?.18:1}><path d={w.path} stroke="var(--ne-surface)" strokeWidth="6" fill="none"/><path d={w.path} stroke={w.color} strokeWidth="2.5" strokeLinecap="round" fill="none"/></g>)}</svg>
-        <NodeBox id="governing" position={positions.governing} onDrag={drag}><span className="ne-help">Choose the main formal order</span><OptionGrid role="Governing" values={STRATEGIES.map(s=>({id:s.id,label:s.title}))} selected={study.governing} onPick={v=>{const next=v as Strategy;setStudy({...study,governing:next,supporting:study.supporting===next?'none':study.supporting})}}/><div className="ne-selection">STRATEGY A <b>{title(study.governing)}</b></div></NodeBox>
-        <NodeBox id="supporting" position={positions.supporting} onDrag={drag}><span className="ne-help">Add a supporting formal order</span><OptionGrid role="Supporting" values={[{id:'none',label:'None'},...STRATEGIES.map(s=>({id:s.id,label:s.title}))]} selected={study.supporting} onPick={v=>modify('supporting',v===study.governing?'none':v as Support)}/><div className="ne-selection">STRATEGY B <b>{title(study.supporting)}</b></div></NodeBox>
-        <NodeBox id="relation" position={positions.relation} onDrag={drag}><span className="ne-help">How the two strategies interact</span><RelationGrid selected={study.relation} onPick={v=>setStudy({...study,relation:v,supporting:study.supporting==='none'?'enclosure':study.supporting})}/></NodeBox>
-        <NodeBox id="variation" position={positions.variation} onDrag={drag}><span className="ne-help">Transform the geometry</span><OptionGrid role="Variation" values={VARIATIONS.map(v=>({id:v.id,label:v.title}))} selected={study.variation} onPick={v=>modify('variation',v as Variation)}/></NodeBox>
-        <NodeBox id="parameters" position={positions.parameters} onDrag={drag}><span className="ne-help">Scrub the parameters</span>{([{key:'count',label:'Repeat',min:3,max:10},{key:'vary',label:'Variation',min:0,max:100},{key:'weight',label:'Relation',min:0,max:100}] as const).map(v=><label className="ne-slider" key={v.key}><span>{v.label}</span><input aria-label={v.label} type="range" min={v.min} max={v.max} value={study[v.key]} onChange={e=>modify(v.key,+e.target.value)}/><b>{study[v.key]}</b></label>)}</NodeBox>
-        <NodeBox id="output" position={positions.output} onDrag={drag}><div className="ne-output"><i/> Connected to live viewport <strong>ACTIVE</strong></div></NodeBox>
+        <NodeBox id="governing" position={positions.governing} onDrag={drag} scale={scale}><span className="ne-help">Choose the main formal order</span><OptionGrid role="Governing" values={STRATEGIES.map(s=>({id:s.id,label:s.title}))} selected={study.governing} onPick={v=>{const next=v as Strategy;setStudy({...study,governing:next,supporting:study.supporting===next?'none':study.supporting})}}/><div className="ne-selection">STRATEGY A <b>{title(study.governing)}</b></div></NodeBox>
+        <NodeBox id="supporting" position={positions.supporting} onDrag={drag} scale={scale}><span className="ne-help">Add a supporting formal order</span><OptionGrid role="Supporting" values={[{id:'none',label:'None'},...STRATEGIES.map(s=>({id:s.id,label:s.title}))]} selected={study.supporting} onPick={v=>modify('supporting',v===study.governing?'none':v as Support)}/><div className="ne-selection">STRATEGY B <b>{title(study.supporting)}</b></div></NodeBox>
+        <NodeBox id="relation" position={positions.relation} onDrag={drag} scale={scale}><span className="ne-help">How the two strategies interact</span><RelationGrid selected={study.relation} onPick={v=>setStudy({...study,relation:v,supporting:study.supporting==='none'?'enclosure':study.supporting})}/></NodeBox>
+        <NodeBox id="variation" position={positions.variation} onDrag={drag} scale={scale}><span className="ne-help">Transform the geometry</span><OptionGrid role="Variation" values={VARIATIONS.map(v=>({id:v.id,label:v.title}))} selected={study.variation} onPick={v=>modify('variation',v as Variation)}/></NodeBox>
+        <NodeBox id="parameters" position={positions.parameters} onDrag={drag} scale={scale}><span className="ne-help">Scrub the parameters</span>{([{key:'count',label:'Repeat',min:3,max:10},{key:'vary',label:'Variation',min:0,max:100},{key:'weight',label:'Relation',min:0,max:100}] as const).map(v=><label className="ne-slider" key={v.key}><span>{v.label}</span><input aria-label={v.label} type="range" min={v.min} max={v.max} value={study[v.key]} onChange={e=>modify(v.key,+e.target.value)}/><b>{study[v.key]}</b></label>)}</NodeBox>
+        <NodeBox id="output" position={positions.output} onDrag={drag} scale={scale}><div className="ne-output"><i/> Connected to live viewport <strong>ACTIVE</strong></div></NodeBox>
       </div>
       </div>
     </div>
