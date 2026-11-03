@@ -41,10 +41,13 @@ const CASES: Record<Exclude<CaseKey, 'custom'>, Study & { name: string; note: st
   '08': { governing: 'line', supporting: 'layering', relation: 'cross', variation: 'offset', count: 9, vary: 62, weight: 70, name: '08 / Taeyong — Bone / Snake', note: 'Curved path with repeated elements. The actual Grasshopper fabrication process is distinct from this new schematic model.' },
 };
 const DEFAULT: Study = (({ name: _name, note: _note, ...study }) => study)(CASES['09']);
+// The node canvas runs horizontally: two sources converge before subsequent operations.
+const GRAPH_WIDTH = 1650;
+const GRAPH_HEIGHT = 500;
 const INIT_POS: Record<NodeId, Position> = {
-  governing: { x: 8, y: 44 }, supporting: { x: 231, y: 44 },
-  relation: { x: 101, y: 277 }, variation: { x: 101, y: 493 },
-  parameters: { x: 101, y: 705 }, output: { x: 101, y: 906 },
+  governing: { x: 38, y: 48 }, supporting: { x: 38, y: 270 },
+  relation: { x: 350, y: 160 }, variation: { x: 681, y: 160 },
+  parameters: { x: 1015, y: 160 }, output: { x: 1343, y: 203 },
 };
 const H: Record<NodeId, number> = { governing: 178, supporting: 178, relation: 177, variation: 171, parameters: 171, output: 86 };
 const W: Record<NodeId, number> = { governing: 207, supporting: 207, relation: 247, variation: 247, parameters: 247, output: 247 };
@@ -172,10 +175,10 @@ function OptionGrid({ values, selected, onPick, role }: {values:NodeOption[]; se
 function RelationGrid({ selected, onPick }: { selected:Relation;onPick:(v:Relation)=>void }) {
   return <div className="ne-rel-options">{RELATIONS.map(v=><button type="button" aria-pressed={selected===v.id} aria-label={'Relationship: '+v.title} className={'ne-rel-option '+(selected===v.id?'chosen':'')} key={v.id} onClick={()=>onPick(v.id)}>{relationGlyph(v.id)}<span>{v.title}</span></button>)}</div>;
 }
-function NodeBox({id,position,onDrag,scale,children}: {id:NodeId;position:Position;onDrag:(id:NodeId,x:number,y:number)=>void;scale:number;children:ReactNode}) {
+function NodeBox({id,position,onDrag,children}: {id:NodeId;position:Position;onDrag:(id:NodeId,x:number,y:number)=>void;children:ReactNode}) {
   const gesture=useRef<{id:number;startX:number;startY:number;left:number;top:number}|null>(null);
   const pointerDown=(e:ReactPointerEvent<HTMLElement>)=>{if(e.button!==0)return;gesture.current={id:e.pointerId,startX:e.clientX,startY:e.clientY,left:position.x,top:position.y};e.currentTarget.setPointerCapture(e.pointerId)};
-  const pointerMove=(e:ReactPointerEvent<HTMLElement>)=>{const d=gesture.current;if(!d||d.id!==e.pointerId)return;onDrag(id,clamp(d.left+(e.clientX-d.startX)/scale,0,448-W[id]),clamp(d.top+(e.clientY-d.startY)/scale,5,1060-H[id]));};
+  const pointerMove=(e:ReactPointerEvent<HTMLElement>)=>{const d=gesture.current;if(!d||d.id!==e.pointerId)return;onDrag(id,clamp(d.left+(e.clientX-d.startX),0,GRAPH_WIDTH-W[id]-10),clamp(d.top+(e.clientY-d.startY),6,GRAPH_HEIGHT-H[id]-6));};
   return <div className={'ne-node ne-'+id} style={{left:position.x,top:position.y,width:W[id],height:H[id]}}>
     {(id==='relation'||id==='variation'||id==='parameters'||id==='output')&&<span className="ne-socket ne-socket-in"/>}
     {id==='relation'&&<><span className="ne-socket ne-left-in"/><span className="ne-socket ne-right-in"/></>}
@@ -186,37 +189,54 @@ function NodeBox({id,position,onDrag,scale,children}: {id:NodeId;position:Positi
 }
 function NodeWorkspace({study,setStudy,reset}: {study:Study;setStudy:(s:Study)=>void;reset:()=>void}) {
   const [positions,setPositions]=useState<Record<NodeId,Position>>(()=>({...INIT_POS}));
-  const [scale,setScale]=useState(1);
   const scrollRef=useRef<HTMLDivElement>(null);
-  useEffect(()=>{
+  const pan=useRef<{id:number;x:number;left:number}|null>(null);
+  // Mouse-drag empty graph space to pan; touch devices retain native horizontal swipe.
+  const panStart=(e:ReactPointerEvent<HTMLDivElement>)=>{
+    if(e.pointerType!=='mouse'||e.button!==0||(e.target as Element).closest('.ne-node'))return;
     const el=scrollRef.current;if(!el)return;
-    const measure=()=>setScale(Math.min(1,Math.max(.64,(el.clientWidth-8)/448)));
-    measure();const ro=new ResizeObserver(measure);ro.observe(el);return ()=>ro.disconnect();
-  },[]);
+    pan.current={id:e.pointerId,x:e.clientX,left:el.scrollLeft};
+    e.currentTarget.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  };
+  const panMove=(e:ReactPointerEvent<HTMLDivElement>)=>{
+    const p=pan.current;if(!p||p.id!==e.pointerId||!scrollRef.current)return;
+    scrollRef.current.scrollLeft=p.left-(e.clientX-p.x);
+  };
+  const panEnd=()=>{pan.current=null;};
+  const jumpTo=(id:NodeId)=>{
+    scrollRef.current?.scrollTo({left:Math.max(0,positions[id].x-35),behavior:'smooth'});
+  };
+  const next=()=>{
+    const left=scrollRef.current?.scrollLeft??0;
+    const candidates:NodeId[]=['relation','variation','parameters','output'];
+    const found=candidates.find(id=>positions[id].x>left+90);
+    jumpTo(found??'governing');
+  };
   const modify=<K extends keyof Study>(key:K,v:Study[K])=>setStudy({...study,[key]:v});
   const drag=(id:NodeId,x:number,y:number)=>setPositions(p=>({...p,[id]:{x,y}}));
   const wires=NODE_LINKS.map(([a,b,c,rx,tx])=>{
     const start=positions[a],end=positions[b];
-    const x1=start.x+W[a]*rx,y1=start.y+H[a],x2=end.x+W[b]*tx,y2=end.y;
-    const diff=Math.max(21,Math.abs(y2-y1)*.43);
-    return {path:'M'+x1+' '+y1+' C'+x1+' '+(y1+diff)+','+x2+' '+(y2-diff)+','+x2+' '+y2,color:c,hidden:a==='supporting'&&study.supporting==='none'};
+    const x1=start.x+W[a],y1=start.y+H[a]*rx,x2=end.x,y2=end.y+H[b]*tx;
+    const diff=Math.max(32,Math.abs(x2-x1)*.46);
+    return {path:'M'+x1+' '+y1+' C'+(x1+diff)+' '+y1+','+(x2-diff)+' '+y2+','+x2+' '+y2,color:c,hidden:a==='supporting'&&study.supporting==='none'};
   });
   return <aside className="ne-editor">
-    <div className="ne-editor-head"><div><span className="ne-caption">02 — NODE WORKSPACE</span><p>Drag node headers · Select animated form verbs</p></div><div className="ne-editor-tools"><button type="button" onClick={()=>scrollRef.current?.scrollTo({top:0,behavior:'smooth'})}>↑ TOP</button><button type="button" onClick={()=>{setPositions({...INIT_POS});reset()}}>↺ RESET</button></div></div>
-    <div className="ne-editor-scroll" ref={scrollRef}>
-      <div className="ne-graph-space" style={{width:448*scale,height:1060*scale}}>
-      <div className="ne-graph" style={{transform:'scale('+scale+')'}}>
-        <svg className="ne-wires" viewBox="0 0 448 1060" aria-hidden="true">{wires.map((w,i)=><g key={i} opacity={w.hidden?.18:1}><path d={w.path} stroke="var(--ne-surface)" strokeWidth="6" fill="none"/><path d={w.path} stroke={w.color} strokeWidth="2.5" strokeLinecap="round" fill="none"/></g>)}</svg>
-        <NodeBox id="governing" position={positions.governing} onDrag={drag} scale={scale}><span className="ne-help">Choose the main formal order</span><OptionGrid role="Governing" values={STRATEGIES.map(s=>({id:s.id,label:s.title}))} selected={study.governing} onPick={v=>{const next=v as Strategy;setStudy({...study,governing:next,supporting:study.supporting===next?'none':study.supporting})}}/><div className="ne-selection">STRATEGY A <b>{title(study.governing)}</b></div></NodeBox>
-        <NodeBox id="supporting" position={positions.supporting} onDrag={drag} scale={scale}><span className="ne-help">Add a supporting formal order</span><OptionGrid role="Supporting" values={[{id:'none',label:'None'},...STRATEGIES.map(s=>({id:s.id,label:s.title}))]} selected={study.supporting} onPick={v=>modify('supporting',v===study.governing?'none':v as Support)}/><div className="ne-selection">STRATEGY B <b>{title(study.supporting)}</b></div></NodeBox>
-        <NodeBox id="relation" position={positions.relation} onDrag={drag} scale={scale}><span className="ne-help">How the two strategies interact</span><RelationGrid selected={study.relation} onPick={v=>setStudy({...study,relation:v,supporting:study.supporting==='none'?'enclosure':study.supporting})}/></NodeBox>
-        <NodeBox id="variation" position={positions.variation} onDrag={drag} scale={scale}><span className="ne-help">Transform the geometry</span><OptionGrid role="Variation" values={VARIATIONS.map(v=>({id:v.id,label:v.title}))} selected={study.variation} onPick={v=>modify('variation',v as Variation)}/></NodeBox>
-        <NodeBox id="parameters" position={positions.parameters} onDrag={drag} scale={scale}><span className="ne-help">Scrub the parameters</span>{([{key:'count',label:'Repeat',min:3,max:10},{key:'vary',label:'Variation',min:0,max:100},{key:'weight',label:'Relation',min:0,max:100}] as const).map(v=><label className="ne-slider" key={v.key}><span>{v.label}</span><input aria-label={v.label} type="range" min={v.min} max={v.max} value={study[v.key]} onChange={e=>modify(v.key,+e.target.value)}/><b>{study[v.key]}</b></label>)}</NodeBox>
-        <NodeBox id="output" position={positions.output} onDrag={drag} scale={scale}><div className="ne-output"><i/> Connected to live viewport <strong>ACTIVE</strong></div></NodeBox>
+    <div className="ne-editor-head"><div><span className="ne-caption">02 — NODE WORKSPACE</span><p>HORIZONTAL FORM LOGIC · A + B → RELATION → VARIATION → OUTPUT</p></div><div className="ne-editor-tools"><button type="button" onClick={()=>jumpTo('governing')} title="Go to governing and supporting strategies">← START</button><button type="button" onClick={next} title="Jump to next operation">NEXT →</button><button type="button" onClick={()=>{setPositions({...INIT_POS});scrollRef.current?.scrollTo({left:0,behavior:'smooth'});reset()}} title="Restore node layout and parameters">↺</button></div></div>
+    <div className="ne-editor-scroll" ref={scrollRef} onPointerDown={panStart} onPointerMove={panMove} onPointerUp={panEnd} onPointerCancel={panEnd} aria-label="Horizontally scrollable connected node workspace">
+      <div className="ne-graph-space" style={{width:GRAPH_WIDTH,height:GRAPH_HEIGHT}}>
+      <div className="ne-graph">
+        <svg className="ne-wires" viewBox={`0 0 ${GRAPH_WIDTH} ${GRAPH_HEIGHT}`} aria-hidden="true">{wires.map((w,i)=><g key={i} opacity={w.hidden?.18:1}><path d={w.path} stroke="var(--ne-surface)" strokeWidth="6" fill="none"/><path d={w.path} stroke={w.color} strokeWidth="2.5" strokeLinecap="round" fill="none"/></g>)}</svg>
+        <NodeBox id="governing" position={positions.governing} onDrag={drag}><span className="ne-help">Choose the main formal order</span><OptionGrid role="Governing" values={STRATEGIES.map(s=>({id:s.id,label:s.title}))} selected={study.governing} onPick={v=>{const next=v as Strategy;setStudy({...study,governing:next,supporting:study.supporting===next?'none':study.supporting})}}/><div className="ne-selection">STRATEGY A <b>{title(study.governing)}</b></div></NodeBox>
+        <NodeBox id="supporting" position={positions.supporting} onDrag={drag}><span className="ne-help">Add a supporting formal order</span><OptionGrid role="Supporting" values={[{id:'none',label:'None'},...STRATEGIES.map(s=>({id:s.id,label:s.title}))]} selected={study.supporting} onPick={v=>modify('supporting',v===study.governing?'none':v as Support)}/><div className="ne-selection">STRATEGY B <b>{title(study.supporting)}</b></div></NodeBox>
+        <NodeBox id="relation" position={positions.relation} onDrag={drag}><span className="ne-help">How the two strategies interact</span><RelationGrid selected={study.relation} onPick={v=>setStudy({...study,relation:v,supporting:study.supporting==='none'?'enclosure':study.supporting})}/></NodeBox>
+        <NodeBox id="variation" position={positions.variation} onDrag={drag}><span className="ne-help">Transform the geometry</span><OptionGrid role="Variation" values={VARIATIONS.map(v=>({id:v.id,label:v.title}))} selected={study.variation} onPick={v=>modify('variation',v as Variation)}/></NodeBox>
+        <NodeBox id="parameters" position={positions.parameters} onDrag={drag}><span className="ne-help">Scrub the parameters</span>{([{key:'count',label:'Repeat',min:3,max:10},{key:'vary',label:'Variation',min:0,max:100},{key:'weight',label:'Relation',min:0,max:100}] as const).map(v=><label className="ne-slider" key={v.key}><span>{v.label}</span><input aria-label={v.label} type="range" min={v.min} max={v.max} value={study[v.key]} onChange={e=>modify(v.key,+e.target.value)}/><b>{study[v.key]}</b></label>)}</NodeBox>
+        <NodeBox id="output" position={positions.output} onDrag={drag}><div className="ne-output"><i/> Connected to live viewport <strong>ACTIVE</strong></div></NodeBox>
       </div>
       </div>
     </div>
-    <div className="ne-editor-foot">Fixed composition pipeline · draggable nodes · experimental geometry</div>
+    <div className="ne-editor-foot"><span>← DRAG EMPTY CANVAS OR SCROLL HORIZONTALLY →</span><span>GOVERNING + SUPPORTING → RELATION → VARIATION → PARAMETERS → OUTPUT</span></div>
   </aside>;
 }
 export function NodeEnginePage() {

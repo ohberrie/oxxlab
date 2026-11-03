@@ -42,12 +42,16 @@
 .oxx-node-engine .ne-editor-tools{display:flex;gap:5px}
 .oxx-node-engine .ne-editor-tools button{font:9px var(--os-mono,monospace);border:1px solid var(--ne-edge);padding:5px 6px}
 .oxx-node-engine .ne-editor-tools button:hover{color:var(--ne-accent);border-color:var(--ne-accent)}
-.oxx-node-engine .ne-editor-scroll{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;position:relative;
+.oxx-node-engine .ne-editor-scroll{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;position:relative;cursor:grab;touch-action:pan-x pan-y;scrollbar-width:thin;
  background-color:var(--ne-view);background-image:radial-gradient(var(--ne-grid-strong) .55px,transparent .7px);background-size:16px 16px}
+.oxx-node-engine .ne-node{cursor:default}
+.oxx-node-engine .ne-editor-head .ne-editor-tools{flex-shrink:0}
+.oxx-node-engine .ne-editor-head>div:first-child{min-width:0}
+.oxx-node-engine .ne-editor-head p{max-width:260px}
 .oxx-node-engine .ne-graph-space{position:relative}
-.oxx-node-engine .ne-graph{width:448px;height:1060px;position:absolute;top:0;left:0;transform-origin:top left}
-.oxx-node-engine .ne-wires{position:absolute;inset:0;width:448px;height:1060px;pointer-events:none;overflow:visible}
-.oxx-node-engine .ne-editor-foot{flex-shrink:0;border-top:1px solid var(--ne-edge);padding:10px 12px;font:9px var(--os-mono,monospace);color:var(--ne-muted);line-height:1.5}
+.oxx-node-engine .ne-graph{width:1650px;height:500px;position:absolute;top:0;left:0;transform-origin:top left}
+.oxx-node-engine .ne-wires{position:absolute;inset:0;width:1650px;height:500px;pointer-events:none;overflow:visible}
+.oxx-node-engine .ne-editor-foot{flex-shrink:0;border-top:1px solid var(--ne-edge);padding:10px 12px;font:9px var(--os-mono,monospace);color:var(--ne-muted);line-height:1.5;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .oxx-node-engine .ne-node{position:absolute;background:var(--ne-surface);border:1px solid var(--ne-edge);box-shadow:0 3px 14px rgba(18,26,35,.075);border-radius:5px;z-index:1;display:flex;flex-direction:column}
 .oxx-node-engine .ne-node-head{user-select:none;touch-action:none;cursor:grab;display:flex;align-items:center;justify-content:space-between;gap:5px;flex-shrink:0;min-height:33px;padding:0 10px;background:var(--ne-view);border-bottom:1px solid var(--ne-edge);border-top:3px solid var(--ne-accent);border-radius:4px 4px 0 0}
 .oxx-node-engine .ne-node-head:active{cursor:grabbing}
@@ -81,11 +85,11 @@
 .oxx-node-engine .ne-output i{width:10px;height:10px;border:2px solid var(--ne-accent);border-radius:50%;box-shadow:0 0 0 3px var(--os-blue-light)}
 .oxx-node-engine .ne-output strong{font-size:9px;color:var(--ne-accent);margin-left:auto}
 .oxx-node-engine .ne-socket{position:absolute;width:12px;height:12px;border:2px solid var(--ne-accent);background:var(--ne-surface);border-radius:50%;z-index:2}
-.oxx-node-engine .ne-socket-out{bottom:-6px;left:calc(50% - 6px)}
-.oxx-node-engine .ne-socket-in{top:-6px;left:calc(50% - 6px)}
+.oxx-node-engine .ne-socket-out{right:-6px;top:calc(50% - 6px)}
+.oxx-node-engine .ne-socket-in{left:-6px;top:calc(50% - 6px)}
 .oxx-node-engine .ne-relation .ne-socket-in{display:none}
-.oxx-node-engine .ne-left-in{top:-6px;left:calc(28% - 6px);border-color:var(--ne-accent)}
-.oxx-node-engine .ne-right-in{top:-6px;left:calc(72% - 6px);border-color:#8875c7}
+.oxx-node-engine .ne-left-in{left:-6px;top:calc(28% - 6px);border-color:var(--ne-accent)}
+.oxx-node-engine .ne-right-in{left:-6px;top:calc(72% - 6px);border-color:#8875c7}
 .oxx-node-engine .ne-supporting .ne-socket-out{border-color:#8875c7}
 .oxx-node-engine .ne-relation .ne-socket-out{border-color:#389e89}
 .oxx-node-engine .ne-variation .ne-socket-out{border-color:#b88449}
@@ -109,7 +113,7 @@
  .oxx-node-engine{padding:22px 3% 40px}
  .oxx-node-engine .ne-workbench{height:auto;display:flex;flex-direction:column}
  .oxx-node-engine .ne-left{height:480px;flex:none;border-right:0;border-bottom:1px solid var(--ne-edge)}
- .oxx-node-engine .ne-editor{height:565px;flex:none}
+ .oxx-node-engine .ne-editor{height:610px;flex:none}
  .oxx-node-engine .ne-trace{min-height:125px}
  .oxx-node-engine .ne-casebar{gap:4px;padding:9px}
  .oxx-node-engine .ne-casebar button{font-size:9px;padding:6px}
